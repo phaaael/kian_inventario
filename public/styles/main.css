@@ -51,3 +51,11 @@ input {
   border-radius: 10px;
   padding: 30px;
 }
+
+.back {
+  text-decoration: none;
+  color: var(--background-color-darker);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
