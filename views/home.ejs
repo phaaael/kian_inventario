@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kian Inventario</title>
+
+    <link rel="stylesheet" href="/styles/main.css">
+</head>
+
+<body>
+
+    <section class="container">
+        <h1><%= data.message %></h1>
+
+        <form class="login" action="/submit/login" method="post">
+            <label for="username">Usuario:</label>
+            <input type="text" id="username" name="username" required>
+            <br>
+        
+            <label for="password">Senha:</label>
+            <input type="password" id="password" name="password" required>
+            <br>
+        
+            <input type="submit" value="Entrar">
+
+            <a href="/register" id="register">Registre-se</a>
+        </form>
+
+    </section>
+</body>
+
+</html>

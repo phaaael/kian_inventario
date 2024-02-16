@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kian Inventario - Menu</title>
+
+    <link rel="stylesheet" href="/styles/inventory.css">
+</head>
+
+<body>
+
+    <section class="container">
+        <h1>Seja Bem-vindo, <%= data.name %> <%= data.surname %> !</h1><br>
+
+        <% if (data.charge === 'Administrador') { %>
+            <a href="#">Gerenciamento de Inventario</a>
+            <a href="#">Visualizar Inventario</a><br>
+        <% } else { %>
+            <a href="#">Visualizar Inventario</a><br>
+        <% } %>
+
+        <a href="/inventory/logout">Desconectar-se</a>
+    </section>
+</body>
+
+</html>

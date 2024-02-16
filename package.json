@@ -1,0 +1,18 @@
+{
+  "dependencies": {
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "express-session": "^1.18.0",
+    "mysql2": "^3.9.1",
+    "node": "^21.6.1"
+  },
+  "name": "kian_inventory",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Raphael Nunes de Sousa", 
+  "license": "ISC",
+  "description": "Aplicação para controle de ativos emprestados da TI na KIAN IMPORTAÇÃO"
+}

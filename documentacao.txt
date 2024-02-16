@@ -1,0 +1,33 @@
+Criação das tabelas:
+
+CREATE TABLE `kian_usuarios` (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  usuario VARCHAR(255) NOT NULL UNIQUE,
+  senha VARCHAR(255) NOT NULL,
+  nome VARCHAR(255) DEFAULT('Sem'),
+  sobrenome VARCHAR(255) DEFAULT('Registro'),
+  cargo VARCHAR(255) DEFAULT('Membro')
+);
+
+Validar conexão com o banco de dados:
+
+database.query('SELECT * FROM usuarios', (err, resultados) => {
+  if (err) {
+    console.error('Erro ao executar a consulta:', err);
+  } else {
+    console.log('Resultados da consulta:', resultados);
+  }
+  
+  database.end();
+});
+
+Gerar uma sessão segura:
+
+const crypto = require('crypto');
+
+function generateSecureToken(length) {
+    return crypto.randomBytes(length).toString('hex');
+}
+
+const secureSessionSecret = generateSecureToken(32);
+console.log('Sessão Secreta Segura:', secureSessionSecret);
