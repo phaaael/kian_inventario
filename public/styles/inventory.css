@@ -33,4 +33,5 @@ a, p {
 .container {
     background: var(--background-color);
     border-radius: 10px;
+    padding: 30px;
 }
