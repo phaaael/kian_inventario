@@ -24,7 +24,7 @@ const inventory = async (req, res) => {
             res.redirect('/')
         }
     } catch (error) {
-        res.render('error', { error: 'Erro ao obter dados do perfil' })
+        res.render('error', { error: 'Erro ao obter dados do invetario' })
     }
 }
 
