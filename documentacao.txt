@@ -14,8 +14,9 @@ CREATE TABLE `kian_usuarios` (
   cargo VARCHAR(255) DEFAULT('Membro')
 );
 
-CREATE TABLE `kian_ativos` (
+CREATE TABLE `kian_emprestimos` (
   id INT AUTO_INCREMENT PRIMARY KEY,
+  responsavel_emprestimo VARCHAR(255) NOT NULL UNIQUE,
   solicitante VARCHAR(255) NOT NULL UNIQUE,
   saida_setor DATE NOT NULL,
   equipamento VARCHAR(255) NOT NULL,

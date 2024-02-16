@@ -16,6 +16,7 @@
             <ul>
                 <% actives.forEach(active => { %>
                     <li>
+                        Responsavel pelo Empréstimo: <%= active.responsible_loan%><br>
                         Solicitante: <%= active.requester %><br>
                         Saída do Setor: <%= active.exit_sector %><br>
                         Equipamento: <%= active.equipment %><br>
@@ -27,7 +28,7 @@
                 
             </ul><br>
         <% } else { %>
-            <p>Nenhum equipamento encontrado.</p>
+            <p>Nenhum equipamento encontrado</p><br>
         <% } %>
 
         <a href="/inventory/menu">Voltar</a>

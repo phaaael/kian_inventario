@@ -22,7 +22,7 @@ async function checkAndSendEmail() {
     const currentDate = new Date();
 
     try {
-        const [rows, fields] = await database.pool.query('SELECT * FROM kian_ativos WHERE previsao_entrega <= ?', [currentDate])
+        const [rows, fields] = await database.pool.query('SELECT * FROM kian_emprestimos WHERE previsao_entrega <= ?', [currentDate])
        
         for (const row of rows) {
             const recipientEmail = 'raphael.sousa@kian.com.br'

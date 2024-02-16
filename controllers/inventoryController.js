@@ -4,11 +4,12 @@ const noticeData = require('../notice')
 const inventory = async (req, res) => {
     try {
         if (req.session && req.session.username) {
-            const [ rows ] = await inventoryDatabase.pool.execute('SELECT * FROM kian_ativos;')
+            const [ rows ] = await inventoryDatabase.pool.execute('SELECT * FROM kian_emprestimos;')
             const userData = await inventoryDatabase.getUserByUsername(req.session.username)
 
             if (rows && userData.cargo === 'Administrador') {
                 const actives = rows.map(active => ({
+                    responsible_loan: active.responsavel_emprestimo,
                     requester: active.solicitante,
                     exit_sector: noticeData.formatDate(new Date (active.saida_setor)),
                     equipment: active.equipamento,
@@ -41,10 +42,10 @@ const inventoryRegistration = (req, res) => {
 }
 
 const inventoryRegisterItem = async (req, res) => {
-    const { requester, exit_sector, equipment, identification_code, delivery_forecast } = req.body
+    const { responsible_loan, requester, exit_sector, equipment, identification_code, delivery_forecast } = req.body
     try {
-        const insert = 'INSERT INTO kian_ativos(solicitante, saida_setor, equipamento, codigo_identificacao, previsao_entrega) VALUES(?, ?, ?, ?, ?)'
-        await inventoryDatabase.pool.execute(insert, [requester, exit_sector, equipment, identification_code, delivery_forecast])
+        const insert = 'INSERT INTO kian_emprestimos(responsavel_emprestimo, solicitante, saida_setor, equipamento, codigo_identificacao, previsao_entrega) VALUES(?, ?, ?, ?, ?, ?)'
+        await inventoryDatabase.pool.execute(insert, [responsible_loan, requester, exit_sector, equipment, identification_code, delivery_forecast])
 
         res.send('<script>alert("Ativo Registrado"); window.location.href = "/inventory/registration";</script>')
     } catch (error) {
