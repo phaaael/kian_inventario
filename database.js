@@ -15,4 +15,4 @@ async function getUserByUsername(username) {
   return rows[0]
 }
 
-module.exports = { pool, getUserByUsername}
+module.exports = { getUserByUsername }
