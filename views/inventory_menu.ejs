@@ -15,10 +15,10 @@
         <h1>Seja Bem-vindo, <%= data.name %> <%= data.surname %> !</h1><br>
 
         <% if (data.charge === 'Administrador') { %>
-            <a href="#">Gerenciamento de Inventario</a>
-            <a href="#">Visualizar Inventario</a><br>
+            <a href="/inventory/management">Gerenciamento de Inventario</a>
+            <a href="/inventory">Visualizar Inventario</a><br>
         <% } else { %>
-            <a href="#">Visualizar Inventario</a><br>
+            <a href="/inventory">Visualizar Inventario</a><br>
         <% } %>
 
         <a href="/inventory/logout">Desconectar-se</a>
