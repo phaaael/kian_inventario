@@ -1,11 +1,11 @@
 const inventoryDatabase = require('../database')
 
 const inventory = (req, res) => {
-
+    res.render('inventory')
 }
 
 const inventoryManagement = (req, res) => {
-
+    res.render('inventory_management')
 }
 
 const getMenuInventory = async (req, res) => {
