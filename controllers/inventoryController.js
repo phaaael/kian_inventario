@@ -4,10 +4,10 @@ const inventory = (req, res) => {
     res.render('inventory')
 }
 
-const inventoryManagement = (req, res) => {
+const inventoryRegistration = (req, res) => {
     try {
         if (req.session && req.session.username) {
-            res.render('inventory_management')
+            res.render('inventory_registration')
         } else {
             res.redirect('/')
         }
@@ -22,7 +22,7 @@ const inventoryRegisterItem = async (req, res) => {
         const insert = 'INSERT INTO kian_ativos(solicitante, saida_setor, equipamento, codigo_identificacao, previsao_entrega) VALUES(?, ?, ?, ?, ?)'
         await inventoryDatabase.pool.execute(insert, [requester, exit_sector, equipment, identification_code, delivery_forecast])
 
-        res.send('<script>alert("Ativo Registrado"); window.location.href = "/inventory/management";</script>')
+        res.send('<script>alert("Ativo Registrado"); window.location.href = "/inventory/registration";</script>')
     } catch (error) {
         res.status(500).send('Erro interno ao enviar registro')
     }
@@ -42,7 +42,7 @@ const getMenuInventory = async (req, res) => {
                     charge: userData.cargo
                 }
 
-                res.render('inventory_menu', { data: data })
+                res.render('inventory_functions', { data: data })
             } else {
                 res.redirect('/')
             }
@@ -64,4 +64,4 @@ const logout = async (req, res) => {
     })
 }
 
-module.exports = { getMenuInventory, inventoryManagement, inventoryRegisterItem, inventory, logout }
+module.exports = { getMenuInventory, inventoryRegistration, inventoryRegisterItem, inventory, logout }

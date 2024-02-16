@@ -7,10 +7,10 @@ router.get('/inventory/menu', inventoryController.getMenuInventory)
 
 router.get('/inventory/logout', inventoryController.logout)
 
-router.get('/inventory/management', inventoryController.inventoryManagement)
+router.get('/inventory/registration', inventoryController.inventoryRegistration)
 
 router.get('/inventory', inventoryController.inventory)
 
-router.post('/inventory/management/submit', inventoryController.inventoryRegisterItem)
+router.post('/inventory/registration/submit', inventoryController.inventoryRegisterItem)
 
 module.exports = router
