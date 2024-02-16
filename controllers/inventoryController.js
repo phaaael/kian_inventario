@@ -1,4 +1,5 @@
 const inventoryDatabase = require('../database')
+const noticeData = require('../notice')
 
 const inventory = async (req, res) => {
     try {
@@ -9,10 +10,10 @@ const inventory = async (req, res) => {
             if (rows && userData.cargo === 'Administrador') {
                 const actives = rows.map(active => ({
                     requester: active.solicitante,
-                    exit_sector: active.saida_setor,
+                    exit_sector: noticeData.formatDate(new Date (active.saida_setor)),
                     equipment: active.equipamento,
                     identification_code: active.codigo_identificacao,
-                    delivery_forecast: active.previsao_entrega
+                    delivery_forecast: noticeData.formatDate(new Date (active.previsao_entrega))
                 }))
 
                 res.render('inventory', { actives: actives } )

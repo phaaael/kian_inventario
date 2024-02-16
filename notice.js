@@ -11,7 +11,7 @@ const transporter = nodemailer.createTransport({
     }
 })
 
-function formatarData(data) {
+function formatDate(data) {
     const dia = data.getDate()
     const mes = data.getMonth() + 1
     const ano = data.getFullYear()
@@ -37,9 +37,9 @@ async function checkAndSendEmail() {
                 Prezado(a),
 
                     
-                Este é um lembrete de que a seguinte entrega está prevista para o dia ${formatarData(row.previsao_entrega)}:
+                Este é um lembrete de que a seguinte entrega está prevista para o dia ${formatDate(row.previsao_entrega)}:
                     - Solicitante: ${row.solicitante}
-                    - Data de Saída do Setor: ${formatarData(row.saida_setor)}
+                    - Data de Saída do Setor: ${formatDate(row.saida_setor)}
                     - Equipamento: ${row.equipamento}
                     - Código de Identificação: ${row.codigo_identificacao}
 
@@ -55,7 +55,6 @@ async function checkAndSendEmail() {
                     text: mailBody
                 };
 
-                // Envia o e-mail
                 await transporter.sendMail(mailOptions)
                 console.log(`E-mail enviado para ${recipientEmail}`)
             }
@@ -66,4 +65,4 @@ async function checkAndSendEmail() {
     }
 }
 
-module.exports = { checkAndSendEmail }
+module.exports = { checkAndSendEmail, formatDate }
