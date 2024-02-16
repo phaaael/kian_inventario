@@ -7,13 +7,15 @@ const loginRouter = require('./routes/loginRouter')
 const registerRouter = require('./routes/registerRouter')
 const inventoryRouter = require('./routes/inventoryRouter')
 
+const notice = require('./notice');
+
 const app = express()
 
-app.set('view engine', 'ejs');
+app.set('view engine', 'ejs')
 
 app.use(bodyParser.urlencoded({ extended: true }))
-app.use(express.json());
-app.use(express.static('public'));
+app.use(express.json())
+app.use(express.static('public'))
 
 app.use(session({
   secret: '3a80d6d355683891d59203e4aef59b04cd55d5f52159bfa64061001b554ac035',
@@ -26,6 +28,8 @@ app.use(homeRouter)
 app.use(loginRouter)
 app.use(registerRouter)
 app.use(inventoryRouter)
+
+setInterval(notice.checkAndSendEmail, 6 * 60 * 60 * 1000)
 
 app.listen(3000, () => {
   console.log(`Servidor rodando em http://localhost:${3000}`)
