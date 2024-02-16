@@ -8,7 +8,7 @@ const login = async (req, res) => {
 
         if (results.length > 0) {
             req.session.username = results[0].usuario
-                res.redirect('/inventory')
+                res.redirect('/inventory/menu')
         } else {
             res.send('<script>alert("Credenciais inválidas!"); window.location.href = "/";</script>')
         }

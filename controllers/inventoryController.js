@@ -1,13 +1,11 @@
 const inventoryDatabase = require('../database')
 
-const logout = async (req, res) => {
-    req.session.destroy((err) => {
-        if (err) {
-          res.status(500).send('Erro ao finalizar sessão')
-        } else {
-          res.redirect('/')
-        }
-    })
+const inventory = (req, res) => {
+
+}
+
+const inventoryManagement = (req, res) => {
+
 }
 
 const getMenuInventory = async (req, res) => {
@@ -34,6 +32,16 @@ const getMenuInventory = async (req, res) => {
     } catch (error) {
         res.render('error', { error: 'Erro ao obter dados do perfil' })
     }
-};
+}
 
-module.exports = { getMenuInventory, logout }
+const logout = async (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+          res.status(500).send('Erro ao finalizar sessão')
+        } else {
+          res.redirect('/')
+        }
+    })
+}
+
+module.exports = { getMenuInventory, inventoryManagement, inventory, logout }
