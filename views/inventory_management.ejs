@@ -16,11 +16,20 @@
     <section class="container">
         <h1>Gerenciamento de Inventário:</h1><br>
         <form class="login" action="/inventory/management/submit" method="post">
-            <input type="text" id="requester" name="requester" placeholder="Solicitante" required>
-            <input type="date" id="exit_sector" name="exit_sector" placeholder="Saída do Setor" required>
-            <input type="text" id="equipment" name="equipment" placeholder="Equipamento" required>
-            <input type="text" id="identification_code" name="identification_code" placeholder="Código de Identificação" required>
-            <input type="date" id="delivery_forecast" name="delivery_forecast" placeholder="Previsão de Entrega" required>
+            <label for="requester">Solicitante:</label>
+            <input type="text" id="requester" name="requester" required><br>
+
+            <label for="exit_sector">Saída do Setor:</label>
+            <input type="date" id="exit_sector" name="exit_sector" required><br>
+
+            <label for="equipment">Equipamento:</label>
+            <input type="text" id="equipment" name="equipment" required><br>
+
+            <label for="identification_code">Código de Identificação:</label>
+            <input type="text" id="identification_code" name="identification_code" required><br>
+
+            <label for="delivery_forecast">Código de Identificação:</label>
+            <input type="date" id="delivery_forecast" name="delivery_forecast" placeholder="Previsão de Entrega" required><br>
         
             <input type="submit" value="Cadastrar">
         </form><br>

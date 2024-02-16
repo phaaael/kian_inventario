@@ -30,6 +30,13 @@ a, p, h1 {
   justify-content: center;
 }
 
+input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
+
 .container {
     background: var(--background-color);
     border-radius: 10px;
