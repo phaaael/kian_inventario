@@ -1,7 +1,30 @@
 const inventoryDatabase = require('../database')
 
-const inventory = (req, res) => {
-    res.render('inventory')
+const inventory = async (req, res) => {
+    try {
+        if (req.session && req.session.username) {
+            const [ rows ] = await inventoryDatabase.pool.execute('SELECT * FROM kian_ativos;')
+            const userData = await inventoryDatabase.getUserByUsername(req.session.username)
+
+            if (rows && userData.cargo === 'Administrador') {
+                const actives = rows.map(active => ({
+                    requester: active.solicitante,
+                    exit_sector: active.saida_setor,
+                    equipment: active.equipamento,
+                    identification_code: active.codigo_identificacao,
+                    delivery_forecast: active.previsao_entrega
+                }))
+
+                res.render('inventory', { actives: actives } )
+            } else {
+                res.send('Usuário sem permissão')
+            }
+        } else {
+            res.redirect('/')
+        }
+    } catch (error) {
+        res.render('error', { error: 'Erro ao obter dados do perfil' })
+    }
 }
 
 const inventoryRegistration = (req, res) => {

@@ -1,1 +1,36 @@
-INVENTARIO
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Usuários</title>
+
+    <link rel="stylesheet" href="/styles/inventory.css">
+</head>
+<body>
+
+    <section class="container">
+        <h1>Equipamentos Emprestados:</h1><br>
+
+        <% if (actives.length > 0) { %>
+            <ul>
+                <% actives.forEach(active => { %>
+                    <li>
+                        Solicitante: <%= active.requester %><br>
+                        Saída do Setor: <%= active.exit_sector %><br>
+                        Equipamento: <%= active.equipment %><br>
+                        Código de Identificação: <%= active.identification_code %><br>
+                        Previsão de Entrega: <%= active.delivery_forecast %><br>
+                    </li>
+                    <a href="#">Equipamento Entregue</a><br>
+                <% }); %>
+                
+            </ul><br>
+        <% } else { %>
+            <p>Nenhum equipamento encontrado.</p>
+        <% } %>
+
+        <a href="/inventory/menu">Voltar</a>
+    </section>
+</body>
+</html>

@@ -22,12 +22,18 @@ body {
   font-family: 'Open sans', sans-serif;
 }
 
-a, p, h1 {
+a, p, h1, li {
   text-decoration: none;
   color: var(--background-color-darker);
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+li {
+  background-color: #d3d3d3;
+  padding: 10px;
+  border-radius: 10px;
 }
 
 input {
