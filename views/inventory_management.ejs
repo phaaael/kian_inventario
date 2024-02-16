@@ -16,8 +16,11 @@
     <section class="container">
         <h1>Gerenciamento de Inventário:</h1><br>
         <form class="login" action="/inventory/management/submit" method="post">
-            <input type="text" id="active_name" name="active_name" placeholder="Nome do Ativo" required>
-            <input type="text" id="active_responsible" name="active_responsible" placeholder="Responsavel pelo Ativo" required>
+            <input type="text" id="requester" name="requester" placeholder="Solicitante" required>
+            <input type="date" id="exit_sector" name="exit_sector" placeholder="Saída do Setor" required>
+            <input type="text" id="equipment" name="equipment" placeholder="Equipamento" required>
+            <input type="text" id="identification_code" name="identification_code" placeholder="Código de Identificação" required>
+            <input type="date" id="delivery_forecast" name="delivery_forecast" placeholder="Previsão de Entrega" required>
         
             <input type="submit" value="Cadastrar">
         </form><br>

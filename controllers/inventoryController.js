@@ -17,10 +17,10 @@ const inventoryManagement = (req, res) => {
 }
 
 const inventoryRegisterItem = async (req, res) => {
-    const { active_name, active_responsible } = req.body
+    const { requester, exit_sector, equipment, identification_code, delivery_forecast } = req.body
     try {
-        const insert = 'INSERT INTO kian_ativos(nome_ativo, responsavel_ativo) VALUES(?, ?)'
-        await inventoryDatabase.pool.execute(insert, [active_name, active_responsible])
+        const insert = 'INSERT INTO kian_ativos(solicitante, saida_setor, equipamento, codigo_identificacao, previsao_entrega) VALUES(?, ?, ?, ?, ?)'
+        await inventoryDatabase.pool.execute(insert, [requester, exit_sector, equipment, identification_code, delivery_forecast])
 
         res.send('<script>alert("Ativo Registrado"); window.location.href = "/inventory/management";</script>')
     } catch (error) {
