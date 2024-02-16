@@ -11,4 +11,6 @@ router.get('/inventory/management', inventoryController.inventoryManagement)
 
 router.get('/inventory', inventoryController.inventory)
 
+router.post('/inventory/management/submit', inventoryController.inventoryRegisterItem)
+
 module.exports = router
