@@ -12,7 +12,7 @@ const inventoryRegistration = (req, res) => {
             res.redirect('/')
         }
     } catch (error) {
-        res.render('error', { error: 'Erro no gerenciamento do inventario' })
+        res.render('error', { error: 'Erro no cadastro de equipamento' })
     }
 }
 
