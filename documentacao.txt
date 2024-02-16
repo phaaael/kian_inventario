@@ -1,3 +1,8 @@
+Credencias do e-mail de lembrete:
+
+iluminacaokian@gmail.com
+1Qaz2wsx@
+
 Criação das tabelas:
 
 CREATE TABLE `kian_usuarios` (
