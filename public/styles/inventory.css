@@ -38,7 +38,7 @@ a, p, h1, li {
   border-radius: 10px;
   display: flex;
   flex-direction: column;
-  align-items: center; /* centralizar horizontalmente */
+  align-items: center;
 }
 
 li {
@@ -48,12 +48,12 @@ li {
   margin-bottom: 10px;
   display: flex;
   flex-direction: column;
-  align-items: center; /* centralizar horizontalmente */
-  text-align: center; /* centralizar o texto */
+  align-items: center;
+  text-align: center;
 }
 
 button[type="submit"] {
-  margin-top: 10px; /* espaço entre o texto e o botão */
+  margin-top: 10px;
   display: inline-block;
   padding: 10px 20px;
   background-color: #383838;
