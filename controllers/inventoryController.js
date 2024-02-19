@@ -9,6 +9,7 @@ const inventory = async (req, res) => {
 
             if (rows && userData.cargo === 'Administrador') {
                 const actives = rows.map(active => ({
+                    id: active.id,
                     responsible_loan: active.responsavel_emprestimo,
                     requester: active.solicitante,
                     exit_sector: noticeData.formatDate(new Date (active.saida_setor)),
@@ -26,6 +27,26 @@ const inventory = async (req, res) => {
         }
     } catch (error) {
         res.render('error', { error: 'Erro ao obter dados do invetario' })
+    }
+}
+
+const inventoryItemDelivered = async (req, res) => {
+    try {
+        if (req.session && req.session.username) {
+            const itemId = req.params.id
+
+            if (!itemId) return res.status(400).send('ID do item não fornecido')
+
+            const updateQuery = 'UPDATE kian_emprestimos SET entregue = ? WHERE id = ?'
+            await inventoryDatabase.pool.execute(updateQuery, [true, itemId])
+
+            res.send('<script>alert("Solicitação Finalizada"); window.location.href = "/inventory";</script>')
+        } else {
+            res.status(403).send('Acesso não autorizado')
+        }
+    } catch (error) {
+        console.error('Erro ao marcar item como entregue:', error)
+        res.status(500).send('Erro interno ao marcar item como entregue')
     }
 }
 
@@ -89,4 +110,4 @@ const logout = async (req, res) => {
     })
 }
 
-module.exports = { getMenuInventory, inventoryRegistration, inventoryRegisterItem, inventory, logout }
+module.exports = { getMenuInventory, inventoryRegistration, inventoryRegisterItem, inventoryItemDelivered, inventory, logout }
