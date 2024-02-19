@@ -17,10 +17,11 @@
         <h1>Seja Bem-vindo, <%= data.name %> <%= data.surname %> !</h1><br>
 
         <% if (data.charge === 'Administrador') { %>
-            <a href="/inventory">Visualizar Equipamentos Emprestados</a>
+            <a href="/inventory">Equipamentos Emprestados</a>
+            <a href="#">Histórico de Emprestimos</a>
             <a href="/inventory/registration">Emprestar Equipamento</a><br>
         <% } else { %>
-            <a href="/inventory">Visualizar Equipamentos Emprestados</a><br>
+            <a href="/inventory">Equipamentos Emprestados</a><br>
         <% } %>
 
         <a href="/inventory/logout">Desconectar-se</a>
