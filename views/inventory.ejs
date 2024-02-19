@@ -17,20 +17,21 @@
         <% if (actives.length > 0) { %>
             <ul>
                 <% actives.forEach(active => { %>
-                    <li>
-                        Identificação da Solicitação: #<%= active.id %><br>
-                        Responsavel pelo Empréstimo: <%= active.responsible_loan%><br>
-                        Solicitante: <%= active.requester %><br>
-                        Saída do Setor: <%= active.exit_sector %><br>
-                        Equipamento: <%= active.equipment %><br>
-                        Código de Identificação: <%= active.identification_code %><br>
-                        Previsão de Entrega: <%= active.delivery_forecast %><br>
-                        <form action="/inventory/delivered/<%= active.id %>" method="POST">
-                            <button type="submit">Finalizar Emprestimo</button>
-                        </form>
-                    </li>
+                    <% if (active.delivered === 0) { %>
+                        <li>
+                            Identificação da Solicitação: #<%= active.id %><br>
+                            Responsavel pelo Empréstimo: <%= active.responsible_loan%><br>
+                            Solicitante: <%= active.requester %><br>
+                            Saída do Setor: <%= active.exit_sector %><br>
+                            Equipamento: <%= active.equipment %><br>
+                            Código de Identificação: <%= active.identification_code %><br>
+                            Previsão de Entrega: <%= active.delivery_forecast %><br>
+                            <form action="/inventory/delivered/<%= active.id %>" method="POST">
+                                <button type="submit">Finalizar Empréstimo</button>
+                            </form>
+                        </li>
+                    <% } %>
                 <% }); %>
-                
             </ul><br>
         <% } else { %>
             <p>Nenhum equipamento encontrado</p><br>
