@@ -48,7 +48,7 @@ const inventoryListAllRequests = async (req, res) => {
                     delivery_forecast: noticeData.formatDate(new Date (active.previsao_entrega)),
                     delivered: active.entregue,
                     loan_completed: active.finalizacao_emprestimo,
-                    completion_date: noticeData.formatDate(new Date (active.dt_finalizacao))
+                    completion_date: noticeData.formatDateWithCheck(active.dt_finalizacao)
                 }))
 
                 res.render('inventory_allrequests', { actives: actives } )

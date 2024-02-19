@@ -18,6 +18,14 @@ function formatDate(data) {
     return `${dia}/${mes}/${ano}`
 }
 
+function formatDateWithCheck(data) {
+    if (data && data !== '1969-12-31T00:00:00.000Z') {
+        return formatDate(data);
+    } else {
+        return 'Pendente';
+    }
+}
+
 async function checkAndSendEmail() {
     const currentDate = new Date();
 
@@ -65,4 +73,4 @@ async function checkAndSendEmail() {
     }
 }
 
-module.exports = { checkAndSendEmail, formatDate }
+module.exports = { checkAndSendEmail, formatDateWithCheck, formatDate }
