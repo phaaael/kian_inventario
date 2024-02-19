@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventário TI - Kian Iluminação</title>
+
+    <link rel="icon" href="https://kian.com.br/wp-content/themes/kian-site/styles/images/favicon.png">
+
+    <link rel="stylesheet" href="/styles/inventory.css">
+</head>
+<body>
+
+    <section class="container">
+        <h1>Histórico de Emprestimos:</h1><br>
+
+        <div class="items-container">
+            <% if (actives.length > 0) { %>
+                <ul>
+                    <% actives.forEach(active => { %>
+                        <li>
+                            Identificação da Solicitação: #<%= active.id %><br>
+                            Responsável pelo Empréstimo: <%= active.responsible_loan%><br>
+                            Solicitante: <%= active.requester %><br>
+                            Saída do Setor: <%= active.exit_sector %><br>
+                            Equipamento: <%= active.equipment %><br>
+                            Código de Identificação: <%= active.identification_code %><br>
+                            Previsão de Entrega: <%= active.delivery_forecast %><br>
+                            Solicitação finalizada por: <%= active.loan_completed %><br>
+                            Data da finalização: <%= active.completion_date %><br>
+                        </li>
+                    <% }); %>
+                </ul>
+            <% } else { %>
+                <p>Nenhum equipamento encontrado</p><br>
+            <% } %>
+        </div><br>
+
+        <a href="/inventory/menu">Voltar</a>
+    </section>
+</body>
+</html>

@@ -31,6 +31,38 @@ const inventory = async (req, res) => {
     }
 }
 
+const inventoryListAllRequests = async (req, res) => {
+    try {
+        if (req.session && req.session.username) {
+            const [ rows ] = await inventoryDatabase.pool.execute('SELECT * FROM kian_emprestimos;')
+            const userData = await inventoryDatabase.getUserByUsername(req.session.username)
+
+            if (rows && userData.cargo === 'Administrador') {
+                const actives = rows.map(active => ({
+                    id: active.id,
+                    responsible_loan: active.responsavel_emprestimo,
+                    requester: active.solicitante,
+                    exit_sector: noticeData.formatDate(new Date (active.saida_setor)),
+                    equipment: active.equipamento,
+                    identification_code: active.codigo_identificacao,
+                    delivery_forecast: noticeData.formatDate(new Date (active.previsao_entrega)),
+                    delivered: active.entregue,
+                    loan_completed: active.finalizacao_emprestimo,
+                    completion_date: noticeData.formatDate(new Date (active.dt_finalizacao))
+                }))
+
+                res.render('inventory_allrequests', { actives: actives } )
+            } else {
+                res.send('Usuário sem permissão')
+            }
+        } else {
+            res.redirect('/')
+        }
+    } catch (error) {
+        res.render('error', { error: 'Erro ao obter dados do invetario' })
+    }
+}
+
 const inventoryItemDelivered = async (req, res) => {
     try {
         if (req.session && req.session.username) {
@@ -116,4 +148,4 @@ const logout = async (req, res) => {
     })
 }
 
-module.exports = { getMenuInventory, inventoryRegistration, inventoryRegisterItem, inventoryItemDelivered, inventory, logout }
+module.exports = { getMenuInventory, inventoryRegistration, inventoryRegisterItem, inventoryItemDelivered, inventoryListAllRequests, inventory, logout }

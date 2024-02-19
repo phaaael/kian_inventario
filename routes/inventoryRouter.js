@@ -11,6 +11,8 @@ router.get('/inventory/registration', inventoryController.inventoryRegistration)
 
 router.get('/inventory', inventoryController.inventory)
 
+router.get('/inventory/all_requests', inventoryController.inventoryListAllRequests)
+
 router.post('/inventory/registration/submit', inventoryController.inventoryRegisterItem)
 
 router.post('/inventory/delivered/:id', inventoryController.inventoryItemDelivered)
