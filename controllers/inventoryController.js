@@ -33,37 +33,28 @@ const inventory = async (req, res) => {
 
 const inventoryItemDelivered = async (req, res) => {
     try {
-        // Verificar se o usuário está autenticado
         if (req.session && req.session.username) {
-            // Obter o ID do item a ser entregue a partir da URL
-            const itemId = req.params.id;
+            const itemId = req.params.id
 
-            // Verificar se o ID do item foi fornecido
-            if (!itemId) {
-                return res.status(400).send('ID do item não fornecido');
-            }
+            if (!itemId) return res.status(400).send('ID do item não fornecido')
 
-            // Obtendo o nome de usuário que está finalizando a solicitação
-            const username = req.session.username;
+            const username = req.session.username
 
-            // Obtendo a data atual
-            const currentDate = new Date();
-            const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' '); // Formato: YYYY-MM-DD HH:MM:SS
+            const currentDate = new Date()
+            const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ')
 
-            // Aqui você faria a lógica para atualizar as colunas finalizacao_emprestimo, data_finalizacao e entregue no banco de dados
-            const updateQuery = 'UPDATE kian_emprestimos SET finalizacao_emprestimo = ?, dt_finalizacao = ?, entregue = ? WHERE id = ?';
-            await inventoryDatabase.pool.execute(updateQuery, [username, formattedDate, true, itemId]);
+            const updateQuery = 'UPDATE kian_emprestimos SET finalizacao_emprestimo = ?, dt_finalizacao = ?, entregue = ? WHERE id = ?'
+            await inventoryDatabase.pool.execute(updateQuery, [username, formattedDate, true, itemId])
 
-            res.send('Item marcado como entregue com sucesso');
+            res.send('Item marcado como entregue com sucesso')
         } else {
-            res.status(403).send('Acesso não autorizado');
+            res.status(403).send('Acesso não autorizado')
         }
     } catch (error) {
-        console.error('Erro ao marcar item como entregue:', error);
-        res.status(500).send('Erro interno ao marcar item como entregue');
+        console.error('Erro ao marcar item como entregue:', error)
+        res.status(500).send('Erro interno ao marcar item como entregue')
     }
 }
-
 
 const inventoryRegistration = (req, res) => {
     try {
