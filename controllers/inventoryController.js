@@ -78,7 +78,7 @@ const inventoryItemDelivered = async (req, res) => {
             const updateQuery = 'UPDATE kian_emprestimos SET finalizacao_emprestimo = ?, dt_finalizacao = ?, entregue = ? WHERE id = ?'
             await inventoryDatabase.pool.execute(updateQuery, [username, formattedDate, true, itemId])
 
-            res.send('<script>alert("Solicitação Finalizada"); window.location.href = "/inventory";</script>')
+            res.send('<script>alert("Empréstimo Finalizado"); window.location.href = "/inventory";</script>')
         } else {
             res.status(403).send('Acesso não autorizado')
         }
@@ -106,7 +106,7 @@ const inventoryRegisterItem = async (req, res) => {
         const insert = 'INSERT INTO kian_emprestimos(responsavel_emprestimo, solicitante, saida_setor, equipamento, codigo_identificacao, previsao_entrega) VALUES(?, ?, ?, ?, ?, ?)'
         await inventoryDatabase.pool.execute(insert, [responsible_loan, requester, exit_sector, equipment, identification_code, delivery_forecast])
 
-        res.send('<script>alert("Solicitação Registrada"); window.location.href = "/inventory/registration";</script>')
+        res.send('<script>alert("Empréstimo Registrado"); window.location.href = "/inventory/registration";</script>')
     } catch (error) {
         res.status(500).send('Erro interno ao enviar registro')
     }
