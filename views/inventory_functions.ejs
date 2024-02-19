@@ -17,9 +17,9 @@
         <h1>Seja Bem-vindo, <%= data.name %> <%= data.surname %> !</h1><br>
 
         <% if (data.charge === 'Administrador') { %>
+            <a href="/inventory/registration">Emprestar Equipamento</a><br>
             <a href="/inventory">Empréstimos Pendentes</a>
             <a href="/inventory/all_requests">Histórico de Empréstimos</a>
-            <a href="/inventory/registration">Emprestar Equipamento</a><br>
         <% } else { %>
             <a href="#">Nenhuma função encontrada</a><br>
         <% } %>
