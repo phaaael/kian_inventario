@@ -30,6 +30,9 @@
                                 <form action="/inventory/delivered/<%= active.id %>" method="POST">
                                     <button type="submit">Finalizar Empréstimo</button>
                                 </form>
+                                <% if (active.finalizacao_emprestimo) { %>
+                                    Finalizado por: <%= active.finalizacao_emprestimo %> em <%= active.data_finalizacao %>
+                                <% } %>
                             </li>
                         <% } %>
                     <% }); %>
@@ -37,7 +40,7 @@
             <% } else { %>
                 <p>Nenhum equipamento encontrado</p><br>
             <% } %>
-        </div><br>
+        </div>
 
         <a href="/inventory/menu">Voltar</a>
     </section>
