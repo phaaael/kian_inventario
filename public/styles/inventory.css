@@ -31,7 +31,7 @@ a, p, h1, li {
 }
 
 .items-container {
-  max-height: 80vh;
+  max-height: 60vh;
   overflow-y: auto;
   background-color: var(--primary-color);
   padding: 20px;
@@ -52,7 +52,14 @@ li {
   text-align: center;
 }
 
-button[type="submit"] {
+a {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
+
+a, button[type="submit"] {
   margin-top: 10px;
   display: inline-block;
   padding: 10px 20px;
@@ -66,8 +73,16 @@ button[type="submit"] {
   transition: background-color 0.3s;
 }
 
-button[type="submit"]:hover {
+a:hover, button[type="submit"]:hover {
   background-color: rgb(29, 28, 28)
+}
+
+.desconectar {
+  background-color: #f11a1a;
+}
+
+.desconectar:hover {
+  background-color: #f33b3b;
 }
 
 .container {

@@ -14,7 +14,7 @@
 <body>
 
     <section class="container">
-        <h1>Gerenciamento de Inventário:</h1><br>
+        <h1>Cadastrar Emprestimo:</h1><br>
         <form class="login" action="/inventory/registration/submit" method="post">
             <label for="responsible_loan">Responsável pelo Empréstimo:</label>
             <input type="text" id="responsible_loan" name="responsible_loan" required><br>
@@ -34,9 +34,9 @@
             <label for="delivery_forecast">Previsão de Entrega:</label>
             <input type="date" id="delivery_forecast" name="delivery_forecast" placeholder="Previsão de Entrega" required><br>
         
-            <input type="submit" value="Cadastrar">
+            <input class="cadastrar" type="submit" value="Cadastrar">
         </form>
-        <a href="/inventory/menu">Voltar</a>
+        <a class="back" href="/inventory/menu">Voltar</a>
     </section>
     
 </body>
