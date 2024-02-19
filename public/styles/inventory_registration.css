@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap');
-
 :root {
   --primary-color: rgb(53, 53, 53);
   --primary-color-darker: rgb(35, 35, 35);
@@ -9,7 +8,6 @@
 * {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 
 body {
@@ -18,7 +16,9 @@ body {
   align-items: center;
   justify-content: center;
   height: 100vh;
+
   background: var(--primary-color);
+
   font-family: 'Open sans', sans-serif;
 }
 
@@ -30,28 +30,21 @@ a, p, h1, li {
   justify-content: center;
 }
 
-.items-container {
-  max-height: 80vh;
-  overflow-y: auto;
-  background-color: var(--primary-color);
-  padding: 20px;
-  border-radius: 10px;
-}
-
 li {
   background-color: #d3d3d3;
   padding: 10px;
   border-radius: 10px;
-  margin-bottom: 10px;
 }
 
-button[type="submit"] {
-  margin: 0 auto;
-  display: block;
+input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
 }
 
 .container {
-  background: var(--background-color);
-  border-radius: 10px;
-  padding: 30px;
+    background: var(--background-color);
+    border-radius: 10px;
+    padding: 30px;
 }
