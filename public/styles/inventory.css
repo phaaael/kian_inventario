@@ -36,6 +36,9 @@ a, p, h1, li {
   background-color: var(--primary-color);
   padding: 20px;
   border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* centralizar horizontalmente */
 }
 
 li {
@@ -43,11 +46,28 @@ li {
   padding: 10px;
   border-radius: 10px;
   margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* centralizar horizontalmente */
+  text-align: center; /* centralizar o texto */
 }
 
 button[type="submit"] {
-  margin: 0 auto;
-  display: block;
+  margin-top: 10px; /* espaço entre o texto e o botão */
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #383838;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  transition: background-color 0.3s;
+}
+
+button[type="submit"]:hover {
+  background-color: rgb(29, 28, 28)
 }
 
 .container {
