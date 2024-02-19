@@ -21,7 +21,8 @@ CREATE TABLE `kian_emprestimos` (
   saida_setor DATE NOT NULL,
   equipamento VARCHAR(255) NOT NULL,
   codigo_identificacao VARCHAR(255) NOT NULL,
-  previsao_entrega DATE NOT NULL
+  previsao_entrega DATE NOT NULL,
+  entregue BOOLEAN
 );
 
 Validar conexão com o banco de dados:
