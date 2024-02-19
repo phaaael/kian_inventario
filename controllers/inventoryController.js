@@ -1,5 +1,5 @@
 const inventoryDatabase = require('../database')
-const noticeData = require('../notice')
+const notice = require('../notice')
 
 const inventory = async (req, res) => {
     try {
@@ -12,10 +12,10 @@ const inventory = async (req, res) => {
                     id: active.id,
                     responsible_loan: active.responsavel_emprestimo,
                     requester: active.solicitante,
-                    exit_sector: noticeData.formatDate(new Date (active.saida_setor)),
+                    exit_sector: notice.formatDate(new Date (active.saida_setor)),
                     equipment: active.equipamento,
                     identification_code: active.codigo_identificacao,
-                    delivery_forecast: noticeData.formatDate(new Date (active.previsao_entrega)),
+                    delivery_forecast: notice.formatDate(new Date (active.previsao_entrega)),
                     delivered: active.entregue
                 }))
 
@@ -42,13 +42,13 @@ const inventoryListAllRequests = async (req, res) => {
                     id: active.id,
                     responsible_loan: active.responsavel_emprestimo,
                     requester: active.solicitante,
-                    exit_sector: noticeData.formatDate(new Date (active.saida_setor)),
+                    exit_sector: notice.formatDate(new Date (active.saida_setor)),
                     equipment: active.equipamento,
                     identification_code: active.codigo_identificacao,
-                    delivery_forecast: noticeData.formatDate(new Date (active.previsao_entrega)),
+                    delivery_forecast: notice.formatDate(new Date (active.previsao_entrega)),
                     delivered: active.entregue,
                     loan_completed: active.finalizacao_emprestimo,
-                    completion_date: noticeData.formatDateWithCheck(active.dt_finalizacao)
+                    completion_date: notice.formatDateWithCheck(active.dt_finalizacao)
                 }))
 
                 res.render('inventory_allrequests', { actives: actives } )
@@ -77,6 +77,12 @@ const inventoryItemDelivered = async (req, res) => {
 
             const updateQuery = 'UPDATE kian_emprestimos SET finalizacao_emprestimo = ?, dt_finalizacao = ?, entregue = ? WHERE id = ?'
             await inventoryDatabase.pool.execute(updateQuery, [username, formattedDate, true, itemId])
+
+            const itemInfoQuery = 'SELECT * FROM kian_emprestimos WHERE id = ?'
+            const [itemRows] = await inventoryDatabase.pool.query(itemInfoQuery, [itemId])
+            const item = itemRows[0]
+            
+            await notice.sendDeliveryConfirmationEmail('raphael.sousa@kian.com.br', item.equipamento, item.solicitante, item.dt_finalizacao)
 
             res.send('<script>alert("Empréstimo Finalizado"); window.location.href = "/inventory";</script>')
         } else {

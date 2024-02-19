@@ -26,6 +26,30 @@ function formatDateWithCheck(data) {
     }
 }
 
+async function sendDeliveryConfirmationEmail(recipientEmail, itemName, username, deliveryDate) {
+    try {
+        const mailBody = `
+            Prezado(a),
+            
+            O item ${itemName} foi entregue com sucesso pelo usuário ${username} na data ${formatDate(deliveryDate)}.
+            
+            Atenciosamente,
+            Kian Inventário`
+
+        const mailOptions = {
+            from: 'iluminacaokian@gmail.com',
+            to: recipientEmail,
+            subject: 'Kian Inventario - Confirmação de Entrega',
+            text: mailBody
+        };
+
+        await transporter.sendMail(mailOptions);
+        console.log(`E-mail de confirmação de entrega enviado para ${recipientEmail}`)
+    } catch (error) {
+        throw error
+    }
+}
+
 async function checkAndSendEmail() {
     const currentDate = new Date();
 
@@ -73,4 +97,4 @@ async function checkAndSendEmail() {
     }
 }
 
-module.exports = { checkAndSendEmail, formatDateWithCheck, formatDate }
+module.exports = { checkAndSendEmail, sendDeliveryConfirmationEmail, formatDateWithCheck, formatDate }
