@@ -82,7 +82,7 @@ const inventoryItemDelivered = async (req, res) => {
             const [itemRows] = await inventoryDatabase.pool.query(itemInfoQuery, [itemId])
             const item = itemRows[0]
             
-            await notice.sendDeliveryConfirmationEmail('raphael.sousa@kian.com.br', item.equipamento, item.solicitante, item.dt_finalizacao)
+            await notice.sendDeliveryConfirmationEmail('raphael.sousa@kian.com.br', itemId, username, item.equipamento, item.solicitante, item.dt_finalizacao)
 
             res.send('<script>alert("Empréstimo Finalizado"); window.location.href = "/inventory";</script>')
         } else {

@@ -26,25 +26,29 @@ function formatDateWithCheck(data) {
     }
 }
 
-async function sendDeliveryConfirmationEmail(recipientEmail, itemName, username, deliveryDate) {
+async function sendDeliveryConfirmationEmail(recipientEmail, id, username, itemName, requester, deliveryDate) {
     try {
         const mailBody = `
-            Prezado(a),
+            Prezados,
             
-            O item ${itemName} foi entregue com sucesso pelo usuário ${username} na data ${formatDate(deliveryDate)}.
+            O equipamento: ${itemName} foi entregue com sucesso pelo usuário ${requester} na data ${formatDate(deliveryDate)}.
+
+            Identificação da Solicitação: #${id}
+
+            Técnico responsável pela finalização: ${username}
             
             Atenciosamente,
+
             Kian Inventário`
 
         const mailOptions = {
             from: 'iluminacaokian@gmail.com',
             to: recipientEmail,
-            subject: 'Kian Inventario - Confirmação de Entrega',
+            subject: 'Kian Inventário - Confirmação de Entrega',
             text: mailBody
         };
 
-        await transporter.sendMail(mailOptions);
-        console.log(`E-mail de confirmação de entrega enviado para ${recipientEmail}`)
+        await transporter.sendMail(mailOptions)
     } catch (error) {
         throw error
     }
@@ -66,10 +70,10 @@ async function checkAndSendEmail() {
 
             if (differenceInDays <= 1) {
                 const mailBody = `
-                Prezado(a),
-
+                Prezados,
                     
                 Este é um lembrete de que a seguinte entrega está prevista para o dia ${formatDate(row.previsao_entrega)}:
+                    - Identificação da Solicitação: #${row.id}
                     - Solicitante: ${row.solicitante}
                     - Data de Saída do Setor: ${formatDate(row.saida_setor)}
                     - Equipamento: ${row.equipamento}
@@ -83,12 +87,11 @@ async function checkAndSendEmail() {
                 const mailOptions = {
                     from: 'iluminacaokian@gmail.com',
                     to: recipientEmail,
-                    subject: 'Kian Inventario - Está chegando a data de recuperarmos nosso equipamento',
+                    subject: 'Kian Inventário - Está chegando a data de recuperarmos nosso equipamento',
                     text: mailBody
                 };
 
                 await transporter.sendMail(mailOptions)
-                console.log(`E-mail enviado para ${recipientEmail}`)
             }
         }
 
