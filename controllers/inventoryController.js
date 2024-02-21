@@ -41,11 +41,15 @@ const inventoryListAllRequests = async (req, res) => {
 
             if (searchChar) {
                 query += ' WHERE'
+                query += ' id LIKE ? OR'
                 query += ' responsavel_emprestimo LIKE ? OR'
                 query += ' solicitante LIKE ? OR'
                 query += ' equipamento LIKE ? OR'
-                query += ' codigo_identificacao LIKE ?'
-                queryParams.push(`%${searchChar}%`, `%${searchChar}%`, `%${searchChar}%`, `%${searchChar}%`)
+                query += ' codigo_identificacao LIKE ? OR'
+                query += ' previsao_entrega LIKE ? OR'
+                query += ' finalizacao_emprestimo LIKE ? OR'
+                query += ' dt_finalizacao LIKE ?'
+                queryParams.push(`%${searchChar}%`, `%${searchChar}%`, `%${searchChar}%`, `%${searchChar}%`, `%${searchChar}%`, `%${searchChar}%`, `%${searchChar}%`, `%${searchChar}%`)
             }
 
             const [rows] = await inventoryDatabase.pool.execute(query, queryParams)
