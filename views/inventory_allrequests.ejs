@@ -15,8 +15,12 @@
         <h1>Histórico de Empréstimos:</h1><br>
 
         <form class="search" action="/inventory/all_requests" method="get">
-            <input type="text" name="searchChar" placeholder="Buscar Registro" value="<%= typeof searchChar !== 'undefined' ? searchChar : '' %>">
-            <button type="submit">Buscar</button>
+            <div style="margin-right: 5px;">
+                <input type="text" name="searchChar" placeholder="Buscar Registro" value="<%= typeof searchChar !== 'undefined' ? searchChar : '' %>">
+            </div>
+            <div style="margin-left: 5px;">
+                <button type="submit">Buscar</button>
+            </div>
         </form>
 
         <div class="items-container">
