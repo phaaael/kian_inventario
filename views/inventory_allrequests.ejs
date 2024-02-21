@@ -14,7 +14,11 @@
     <section class="container">
         <h1>Histórico de Emprestimos:</h1><br>
 
-        <input type="text" value="Buscar Registro">
+        <form class="search" action="/inventory/all_requests" method="get">
+            <input type="text" name="searchChar" placeholder="Buscar Registro" value="<%= typeof searchChar !== 'undefined' ? searchChar : '' %>">
+            <button type="submit">Buscar</button>
+        </form>
+
         <div class="items-container">
             <% if (actives.length > 0) { %>
                 <ul>

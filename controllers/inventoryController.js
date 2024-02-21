@@ -34,7 +34,21 @@ const inventory = async (req, res) => {
 const inventoryListAllRequests = async (req, res) => {
     try {
         if (req.session && req.session.username) {
-            const [ rows ] = await inventoryDatabase.pool.execute('SELECT * FROM kian_emprestimos;')
+            const { searchChar } = req.query
+
+            let query = 'SELECT * FROM kian_emprestimos'
+            let queryParams = []
+
+            if (searchChar) {
+                query += ' WHERE'
+                query += ' responsavel_emprestimo LIKE ? OR'
+                query += ' solicitante LIKE ? OR'
+                query += ' equipamento LIKE ? OR'
+                query += ' codigo_identificacao LIKE ?'
+                queryParams.push(`%${searchChar}%`, `%${searchChar}%`, `%${searchChar}%`, `%${searchChar}%`)
+            }
+
+            const [rows] = await inventoryDatabase.pool.execute(query, queryParams)
             const userData = await inventoryDatabase.getUserByUsername(req.session.username)
 
             if (rows && userData.cargo === 'Administrador') {
@@ -42,16 +56,16 @@ const inventoryListAllRequests = async (req, res) => {
                     id: active.id,
                     responsible_loan: active.responsavel_emprestimo,
                     requester: active.solicitante,
-                    exit_sector: notice.formatDate(new Date (active.saida_setor)),
+                    exit_sector: notice.formatDate(new Date(active.saida_setor)),
                     equipment: active.equipamento,
                     identification_code: active.codigo_identificacao,
-                    delivery_forecast: notice.formatDate(new Date (active.previsao_entrega)),
+                    delivery_forecast: notice.formatDate(new Date(active.previsao_entrega)),
                     delivered: active.entregue,
                     loan_completed: active.finalizacao_emprestimo,
                     completion_date: notice.formatDateWithCheck(active.dt_finalizacao)
                 }))
 
-                res.render('inventory_allrequests', { actives: actives } )
+                res.render('inventory_allrequests', { actives })
             } else {
                 res.send('Usuário sem permissão')
             }
@@ -59,7 +73,7 @@ const inventoryListAllRequests = async (req, res) => {
             res.redirect('/')
         }
     } catch (error) {
-        res.render('error', { error: 'Erro ao obter dados do invetario' })
+        res.render('error', { error: 'Erro ao obter dados do inventário' })
     }
 }
 
@@ -121,7 +135,7 @@ const inventoryRegisterItem = async (req, res) => {
 const getMenuInventory = async (req, res) => {
     try {
         if (req.session && req.session.username) {
-            const username = req.session.username;
+            const username = req.session.username
 
             const userData = await inventoryDatabase.getUserByUsername(username)
 
