@@ -1,5 +1,6 @@
 const nodemailer = require('nodemailer')
 const database = require('./database')
+const { title } = require('process')
 
 const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
@@ -20,9 +21,9 @@ function formatDate(data) {
 
 function formatDateWithCheck(data) {
     if (data && data !== '1969-12-31T00:00:00.000Z') {
-        return formatDate(data);
+        return formatDate(data)
     } else {
-        return 'Pendente';
+        return 'Pendente'
     }
 }
 
@@ -46,7 +47,7 @@ async function sendDeliveryConfirmationEmail(recipientEmail, id, username, itemN
             to: recipientEmail,
             subject: 'Kian Inventário - Confirmação de Entrega',
             text: mailBody
-        };
+        }
 
         await transporter.sendMail(mailOptions)
     } catch (error) {
@@ -55,7 +56,7 @@ async function sendDeliveryConfirmationEmail(recipientEmail, id, username, itemN
 }
 
 async function checkAndSendEmail() {
-    const currentDate = new Date();
+    const currentDate = new Date()
 
     try {
         const [rows, fields] = await database.pool.query('SELECT * FROM kian_emprestimos WHERE previsao_entrega <= ?', [currentDate])
@@ -68,12 +69,13 @@ async function checkAndSendEmail() {
 
             const differenceInDays = Math.ceil(differenceInMilliseconds / (1000 * 60 * 60 * 24))
 
-            if (differenceInDays <= 1) {
+            if (differenceInDays === 1) {
                 const mailBody = `
                 Prezados,
                     
-                Este é um lembrete de que a seguinte entrega está prevista para o dia ${formatDate(row.previsao_entrega)}:
+                Este é um lembrete de que a seguinte entrega está prevista para amanhã (${formatDate(row.previsao_entrega)}):
                     - Identificação da Solicitação: #${row.id}
+                    - Responsável pelo Empréstimo: ${row.responsavel_emprestimo}
                     - Solicitante: ${row.solicitante}
                     - Data de Saída do Setor: ${formatDate(row.saida_setor)}
                     - Equipamento: ${row.equipamento}
@@ -82,14 +84,64 @@ async function checkAndSendEmail() {
                 Atenciosamente,
                 
                 Kian Inventário
-                `;
+                `
 
                 const mailOptions = {
                     from: 'iluminacaokian@gmail.com',
                     to: recipientEmail,
                     subject: 'Kian Inventário - Está chegando a data de recuperarmos nosso equipamento',
                     text: mailBody
-                };
+                }
+
+                await transporter.sendMail(mailOptions)
+            } else if (differenceInDays === 0) {
+                const mailBody = `
+                Prezados,
+                    
+                Este é um lembrete de que a seguinte entrega está prevista para hoje (${formatDate(row.previsao_entrega)}):
+                    - Identificação da Solicitação: #${row.id}
+                    - Responsável pelo Empréstimo: ${row.responsavel_emprestimo}
+                    - Solicitante: ${row.solicitante}
+                    - Data de Saída do Setor: ${formatDate(row.saida_setor)}
+                    - Equipamento: ${row.equipamento}
+                    - Código de Identificação: ${row.codigo_identificacao}
+
+                Atenciosamente,
+                
+                Kian Inventário
+                `
+
+                const mailOptions = {
+                    from: 'iluminacaokian@gmail.com',
+                    to: recipientEmail,
+                    subject: 'Kian Inventário - A entrega está prevista para hoje',
+                    text: mailBody
+                }
+
+                await transporter.sendMail(mailOptions)
+            } else if (differenceInDays < 0 && !row.entregue) {
+                const mailBody = `
+                Prezados,
+                    
+                Este é um lembrete de que a seguinte entrega está atrasada (${formatDate(row.previsao_entrega)}):
+                    - Identificação da Solicitação: #${row.id}
+                    - Responsável pelo Empréstimo: ${row.responsavel_emprestimo}
+                    - Solicitante: ${row.solicitante}
+                    - Data de Saída do Setor: ${formatDate(row.saida_setor)}
+                    - Equipamento: ${row.equipamento}
+                    - Código de Identificação: ${row.codigo_identificacao}
+
+                Atenciosamente,
+                
+                Kian Inventário
+                `
+
+                const mailOptions = {
+                    from: 'iluminacaokian@gmail.com',
+                    to: recipientEmail,
+                    subject: 'Kian Inventário - A entrega está atrasada',
+                    text: mailBody
+                }
 
                 await transporter.sendMail(mailOptions)
             }
@@ -99,5 +151,6 @@ async function checkAndSendEmail() {
         console.error('Erro ao executar a consulta:', error)
     }
 }
+
 
 module.exports = { checkAndSendEmail, sendDeliveryConfirmationEmail, formatDateWithCheck, formatDate }
