@@ -1,6 +1,5 @@
 const nodemailer = require('nodemailer')
 const database = require('./database')
-const { title } = require('process')
 
 const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
