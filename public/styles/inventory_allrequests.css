@@ -74,6 +74,7 @@ body {
 .table-container {
     max-height: 60vh;
     overflow-y: auto;
+    border-radius: 5px;
 }
 
 .items-table {
