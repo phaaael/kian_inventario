@@ -4,48 +4,57 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inventário TI - Kian Iluminação</title>
-
     <link rel="icon" href="https://kian.com.br/wp-content/themes/kian-site/styles/images/favicon.png">
-
-    <link rel="stylesheet" href="/styles/inventory.css">
+    <link rel="stylesheet" href="/styles/inventory_allrequests.css">
 </head>
 <body>
-
-    <section class="container">
-        <h1>Histórico de Empréstimos:</h1><br>
-
-        <form class="search" action="/inventory/all_requests" method="get">
-            <div style="margin-right: 5px;">
-                <input type="text" name="searchChar" placeholder="Buscar Registro" value="<%= typeof searchChar !== 'undefined' ? searchChar : '' %>">
+    <div class="container">
+        <div class="header">
+            <h1>Histórico de Empréstimos:</h1>
+            <div class="search-container">
+                <form class="search" action="/inventory/all_requests" method="get">
+                    <input type="text" name="searchChar" placeholder="Buscar Registro" value="<%= typeof searchChar !== 'undefined' ? searchChar : '' %>">
+                    <button type="submit">Buscar</button>
+                </form>
             </div>
-            <div style="margin-left: 5px;">
-                <button type="submit">Buscar</button>
-            </div>
-        </form>
-
-        <div class="items-container">
-            <% if (actives.length > 0) { %>
-                <ul>
-                    <% actives.forEach(active => { %>
-                        <li>
-                            Identificação da Solicitação: #<%= active.id %><br>
-                            Responsável pelo Empréstimo: <%= active.responsible_loan%><br>
-                            Solicitante: <%= active.requester %><br>
-                            Saída do Setor: <%= active.exit_sector %><br>
-                            Equipamento: <%= active.equipment %><br>
-                            Código de Identificação: <%= active.identification_code %><br>
-                            Previsão de Entrega: <%= active.delivery_forecast %><br>
-                            Solicitação finalizada por: <%= active.loan_completed ? active.loan_completed : 'Pendente' %><br>
-                            Data da finalização: <%= active.completion_date %><br>
-                        </li>
+        </div>
+        <table class="items-table">
+            <thead>
+                <tr>
+                    <th>Identificação da Solicitação</th>
+                    <th>Responsável pelo Empréstimo</th>
+                    <th>Solicitante</th>
+                    <th>Saída do Setor</th>
+                    <th>Equipamento</th>
+                    <th>Código de Identificação</th>
+                    <th>Previsão de Entrega</th>
+                    <th>Solicitação finalizada por</th>
+                    <th>Data da finalização</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (actives.length > 0) { %>
+                    <% actives.forEach((active, index) => { %>
+                        <tr data-index="<%= index %>">
+                            <td>#<%= active.id %></td>
+                            <td><%= active.responsible_loan %></td>
+                            <td><%= active.requester %></td>
+                            <td><%= active.exit_sector %></td>
+                            <td><%= active.equipment %></td>
+                            <td><%= active.identification_code %></td>
+                            <td><%= active.delivery_forecast %></td>
+                            <td><%= active.loan_completed ? active.loan_completed : 'Pendente' %></td>
+                            <td><%= active.completion_date %></td>
+                        </tr>
                     <% }); %>
-                </ul>
-            <% } else { %>
-                <p>Nenhuma solicitação encontrada</p>
-            <% } %>
-        </div><br>
-
+                <% } else { %>
+                    <tr>
+                        <td colspan="9">Nenhuma solicitação encontrada</td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
         <a href="/inventory/menu">Voltar</a>
-    </section>
+    </div>
 </body>
 </html>
