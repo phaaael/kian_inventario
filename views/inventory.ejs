@@ -29,6 +29,7 @@
                         <th>Equipamento</th>
                         <th>Código de Identificação</th>
                         <th>Previsão de Entrega</th>
+                        <th>Funções</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -43,6 +44,11 @@
                                     <td><%= active.equipment %></td>
                                     <td><%= active.identification_code %></td>
                                     <td><%= active.delivery_forecast %></td>
+                                    <td>
+                                        <form action="/inventory/delivered/<%= active.id %>" method="POST">
+                                            <button type="submit">Finalizar Empréstimo</button>
+                                        </form>
+                                    </td>
                                 </tr>
                             <% } %>
                         <% }); %>
