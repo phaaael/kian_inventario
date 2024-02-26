@@ -34,7 +34,8 @@ const inventory = async (req, res) => {
                 exit_sector: notice.formatDate(new Date (active.saida_setor)),
                 equipment: active.equipamento,
                 identification_code: active.codigo_identificacao,
-                delivery_forecast: notice.formatDate(new Date (active.previsao_entrega))
+                delivery_forecast: notice.formatDate(new Date (active.previsao_entrega)),
+                delivered: active.entregue
             }))
 
             res.render('inventory', { actives: actives } )

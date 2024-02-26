@@ -12,7 +12,6 @@
         <div class="header">
             <h1>Empréstimos Pendentes:</h1>
             <div class="search-container">
-
                 <form class="search" action="/inventory/all_requests" method="get">
                     <select name="searchField" style="margin-right: 10px; margin-bottom: 10px;">
                         <option value="id">Identificação da Solicitação</option>
@@ -29,7 +28,6 @@
                     <input type="date" id="endDate" name="endDate" style="margin-right: 10px; margin-bottom: 10px;">
                     <button type="submit" style="margin-bottom: 10px;">Buscar</button>
                 </form>
-
             </div>            
         </div>
         <div class="table-container">
@@ -48,9 +46,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <% if (actives.length > 0) { %>
-                        <% actives.forEach((active, index) => { %>
-                            <% if (active.delivered !== 1) { %>
+                    <% if (actives && actives.length > 0) { %>
+                        <% const filteredActives = actives.filter(active => active.delivered !== 1); %>
+                        <% if (filteredActives.length > 0) { %>
+                            <% filteredActives.forEach((active, index) => { %>
                                 <tr data-index="<%= index %>">
                                     <td>#<%= active.id %></td>
                                     <td><%= active.responsible_loan %></td>
@@ -70,14 +69,18 @@
                                         </form>
                                     </td>
                                 </tr>
-                            <% } %>
-                        <% }); %>
+                            <% }); %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="9">Nenhuma solicitação encontrada</td>
+                            </tr>
+                        <% } %>
                     <% } else { %>
                         <tr>
                             <td colspan="9">Nenhuma solicitação encontrada</td>
                         </tr>
                     <% } %>
-                </tbody>
+                </tbody>                      
             </table>
         </div>
         <a href="/inventory/menu">Voltar</a>
