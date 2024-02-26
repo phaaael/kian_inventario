@@ -2,52 +2,145 @@ const inventoryDatabase = require('../database')
 const notice = require('../notice')
 
 const inventory = async (req, res) => {
-    try {
-        if (req.session && req.session.username) {
-            const { searchChar, searchField, startDate, endDate } = req.query
+    try {     
+        const { searchChar, searchField, startDate, endDate } = req.query
 
-            let query = 'SELECT * FROM kian_emprestimos WHERE 1=1'
-            let queryParams = []
+        let query = 'SELECT * FROM kian_emprestimos WHERE 1=1'
+        let queryParams = []
 
-            if (searchChar && searchField) {
-                query += ` AND ${searchField} LIKE ?`
-                queryParams.push(`%${searchChar}%`)
-            }
+        if (searchChar && searchField) {
+            query += ` AND ${searchField} LIKE ?`
+            queryParams.push(`%${searchChar}%`)
+        }
 
-            if (startDate) {
-                query += ' AND previsao_entrega >= ?'
-                queryParams.push(startDate)
-            }
+        if (startDate) {
+            query += ' AND previsao_entrega >= ?'
+            queryParams.push(startDate)
+        }
 
-            if (endDate) {
-                query += ' AND previsao_entrega <= ?'
-                queryParams.push(endDate)
-            }
+        if (endDate) {
+            query += ' AND previsao_entrega <= ?'
+            queryParams.push(endDate)
+        }
 
-            const [rows] = await inventoryDatabase.pool.execute(query, queryParams)
-            const userData = await inventoryDatabase.getUserByUsername(req.session.username)
+        const [rows] = await inventoryDatabase.pool.execute(query, queryParams)
+        const userData = await inventoryDatabase.getUserByUsername(req.session.username)
 
-            if (rows && userData.cargo === 'Administrador') {
-                const actives = rows.map(active => ({
-                    id: active.id,
-                    responsible_loan: active.responsavel_emprestimo,
-                    requester: active.solicitante,
-                    exit_sector: notice.formatDate(new Date (active.saida_setor)),
-                    equipment: active.equipamento,
-                    identification_code: active.codigo_identificacao,
-                    delivery_forecast: notice.formatDate(new Date (active.previsao_entrega)),
-                    delivered: active.entregue
-                }))
+        if (rows && userData.cargo === 'Administrador') {
+            const actives = rows.map(active => ({
+                id: active.id,
+                responsible_loan: active.responsavel_emprestimo,
+                requester: active.solicitante,
+                exit_sector: notice.formatDate(new Date (active.saida_setor)),
+                equipment: active.equipamento,
+                identification_code: active.codigo_identificacao,
+                delivery_forecast: notice.formatDate(new Date (active.previsao_entrega))
+            }))
 
-                res.render('inventory', { actives: actives } )
-            } else {
-                res.send('Usuário sem permissão')
-            }
+            res.render('inventory', { actives: actives } )
         } else {
-            res.redirect('/')
+            res.send('Usuário sem permissão')
         }
     } catch (error) {
         res.render('error', { error: 'Erro ao obter dados do invetario' })
+    }
+}
+
+const inventoryChangeItem = async (req, res) => {
+    try {       
+        const itemId = req.params.id
+        const [rows] = await inventoryDatabase.pool.execute('SELECT * FROM kian_emprestimos WHERE id = ?', [itemId])
+        const userData = await inventoryDatabase.getUserByUsername(req.session.username)
+
+        if (rows.length > 0 && userData.cargo === 'Administrador') {
+            const active = rows[0]
+            const activeData = {
+                id: active.id,
+                responsible_loan: active.responsavel_emprestimo,
+                requester: active.solicitante,
+                exit_sector: notice.formatDate(new Date(active.saida_setor)),
+                equipment: active.equipamento,
+                identification_code: active.codigo_identificacao,
+                delivery_forecast: notice.formatDate(new Date(active.previsao_entrega)),
+                delivered: active.entregue,
+                loan_completed: active.finalizacao_emprestimo,
+                completion_date: notice.formatDateWithCheck(active.dt_finalizacao)
+            }
+            res.render('inventory_changeitem', { active: activeData })
+        } else {
+            res.send('Usuário sem permissão ou item não encontrado')
+        }
+  
+    } catch (error) {
+        res.render('error', { error: 'Erro ao carregar dados para alteração' })
+    }
+}
+
+const inventoryUpdateRecord = async (req, res) => {
+    try {       
+        const { id, responsible_loan, requester, exit_sector, equipment, identification_code, delivery_forecast, delivered } = req.body
+
+        const [rows] = await inventoryDatabase.pool.execute('SELECT * FROM kian_emprestimos WHERE id = ?', [id])
+        const active = rows[0]
+
+        const updateFields = {}
+
+        if (responsible_loan && responsible_loan !== active.responsavel_emprestimo) {
+            updateFields.responsavel_emprestimo = responsible_loan
+        }
+
+        if (requester && requester !== active.solicitante) {
+            updateFields.solicitante = requester
+        }
+
+        if (exit_sector && exit_sector !== active.saida_setor) {
+            const formattedExitSector = notice.formatDateForUpdate(exit_sector)
+            if (formattedExitSector) {
+                updateFields.saida_setor = formattedExitSector
+            } else {
+                throw new Error('Data de saída inválida')
+            }
+        }
+
+        if (equipment && equipment !== active.equipamento) {
+            updateFields.equipamento = equipment
+        }
+
+        if (identification_code && identification_code !== active.codigo_identificacao) {
+            updateFields.codigo_identificacao = identification_code
+        }
+
+        if (delivery_forecast && delivery_forecast !== active.previsao_entrega) {
+            const formattedDeliveryForecast = notice.formatDateForUpdate(delivery_forecast)
+            if (formattedDeliveryForecast) {
+                updateFields.previsao_entrega = formattedDeliveryForecast
+            } else {
+                throw new Error('Data de entrega prevista inválida')
+            }
+        }
+
+        if (delivered !== undefined && delivered !== active.entregue) {
+            updateFields.entregue = delivered
+        }
+
+        const updateParams = []
+        let updateQuery = 'UPDATE kian_emprestimos SET '
+
+        for (const field in updateFields) {
+            updateQuery += `${field} = ?, `
+            updateParams.push(updateFields[field])
+        }
+
+        updateQuery = updateQuery.slice(0, -2)
+        updateQuery += ' WHERE id = ?'
+        updateParams.push(id)
+
+        await inventoryDatabase.pool.execute(updateQuery, updateParams)
+
+        res.send('<script>alert("Empréstimo Alterado"); window.location.href = "/inventory";</script>')
+    } catch (error) {
+        console.error('Erro ao atualizar registro:', error)
+        res.render('error', { error: 'Erro ao atualizar registro' })
     }
 }
 
@@ -195,4 +288,14 @@ const logout = async (req, res) => {
     })
 }
 
-module.exports = { getMenuInventory, inventoryRegistration, inventoryRegisterItem, inventoryItemDelivered, inventoryListAllRequests, inventory, logout }
+module.exports = {
+    inventory,
+    getMenuInventory,
+    inventoryRegistration,
+    inventoryRegisterItem,
+    inventoryItemDelivered,
+    inventoryListAllRequests,
+    inventoryChangeItem,
+    inventoryUpdateRecord,
+    logout
+}

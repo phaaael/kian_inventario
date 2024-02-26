@@ -18,6 +18,26 @@ function formatDate(data) {
     return `${dia}/${mes}/${ano}`
 }
 
+function formatDateForUpdate(input) {
+    if (!input) return null
+    
+    if (input instanceof Date) return input
+    
+    if (/^\d{4}-\d{2}-\d{2}$/.test(input)) {
+        return new Date(input)
+    }
+
+    const parts = input.split('/');
+    if (parts.length === 3) {
+        const day = parseInt(parts[0], 10)
+        const month = parseInt(parts[1], 10) - 1
+        const year = parseInt(parts[2], 10)
+        return new Date(year, month, day)
+    }
+
+    return null
+}
+
 function formatDateWithCheck(data) {
     if (data && data !== '1969-12-31T00:00:00.000Z') {
         return formatDate(data)
@@ -152,4 +172,4 @@ async function checkAndSendEmail() {
 }
 
 
-module.exports = { checkAndSendEmail, sendDeliveryConfirmationEmail, formatDateWithCheck, formatDate }
+module.exports = { checkAndSendEmail, sendDeliveryConfirmationEmail, formatDateWithCheck, formatDateForUpdate, formatDate }

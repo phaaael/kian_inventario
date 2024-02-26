@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventário TI - Kian Iluminação</title>
+
+    <link rel="icon" href="https://kian.com.br/wp-content/themes/kian-site/styles/images/favicon.png">
+
+    <link rel="stylesheet" href="/styles/inventory_changeitem.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Alterar Informações do Empréstimo:</h1>
+        <form action="/inventory/update_record" method="POST">
+            <input type="hidden" name="id" value="<%= active.id %>">
+            <label for="responsible_loan">Responsável do Empréstimo:</label>
+            <input type="text" name="responsible_loan" value="<%= active.responsible_loan %>"><br>
+            <label for="requester">Solicitante:</label>
+            <input type="text" name="requester" value="<%= active.requester %>"><br>
+            <label for="exit_sector">Saída do Setor:</label>
+            <input type="text" name="exit_sector" value="<%= active.exit_sector %>"><br>
+            <label for="equipment">Equipamento:</label>
+            <input type="text" name="equipment" value="<%= active.equipment %>"><br>
+            <label for="identification_code">Código de Identificação:</label>
+            <input type="text" name="identification_code" value="<%= active.identification_code %>"><br>
+            <label for="delivery_forecast">Previsão de Entrega:</label>
+            <input type="text" name="delivery_forecast" value="<%= active.delivery_forecast %>"><br>
+            <button type="submit">Salvar Alterações</button>
+            <a class="back" href="/inventory">Voltar</a>
+        </form>
+    </div>
+</body>
+</html>
