@@ -17,4 +17,6 @@ router.post('/inventory/registration/submit', inventoryController.inventoryRegis
 
 router.post('/inventory/delivered/:id', inventoryController.inventoryItemDelivered)
 
+router.post('/inventory/change/:id', inventoryController.inventoryChangeItem)
+
 module.exports = router
