@@ -4,7 +4,27 @@ const notice = require('../notice')
 const inventory = async (req, res) => {
     try {
         if (req.session && req.session.username) {
-            const [ rows ] = await inventoryDatabase.pool.execute('SELECT * FROM kian_emprestimos;')
+            const { searchChar, searchField, startDate, endDate } = req.query
+
+            let query = 'SELECT * FROM kian_emprestimos WHERE 1=1'
+            let queryParams = []
+
+            if (searchChar && searchField) {
+                query += ` AND ${searchField} LIKE ?`
+                queryParams.push(`%${searchChar}%`)
+            }
+
+            if (startDate) {
+                query += ' AND previsao_entrega >= ?'
+                queryParams.push(startDate)
+            }
+
+            if (endDate) {
+                query += ' AND previsao_entrega <= ?'
+                queryParams.push(endDate)
+            }
+
+            const [rows] = await inventoryDatabase.pool.execute(query, queryParams)
             const userData = await inventoryDatabase.getUserByUsername(req.session.username)
 
             if (rows && userData.cargo === 'Administrador') {
@@ -34,28 +54,28 @@ const inventory = async (req, res) => {
 const inventoryListAllRequests = async (req, res) => {
     try {
         if (req.session && req.session.username) {
-            const { searchChar, searchField, startDate, endDate } = req.query;
+            const { searchChar, searchField, startDate, endDate } = req.query
 
-            let query = 'SELECT * FROM kian_emprestimos WHERE 1=1';
-            let queryParams = [];
+            let query = 'SELECT * FROM kian_emprestimos WHERE 1=1'
+            let queryParams = []
 
             if (searchChar && searchField) {
-                query += ` AND ${searchField} LIKE ?`;
-                queryParams.push(`%${searchChar}%`);
+                query += ` AND ${searchField} LIKE ?`
+                queryParams.push(`%${searchChar}%`)
             }
 
             if (startDate) {
-                query += ' AND dt_finalizacao >= ?';
-                queryParams.push(startDate);
+                query += ' AND dt_finalizacao >= ?'
+                queryParams.push(startDate)
             }
 
             if (endDate) {
-                query += ' AND dt_finalizacao <= ?';
-                queryParams.push(endDate);
+                query += ' AND dt_finalizacao <= ?'
+                queryParams.push(endDate)
             }
 
-            const [rows] = await inventoryDatabase.pool.execute(query, queryParams);
-            const userData = await inventoryDatabase.getUserByUsername(req.session.username);
+            const [rows] = await inventoryDatabase.pool.execute(query, queryParams)
+            const userData = await inventoryDatabase.getUserByUsername(req.session.username)
 
             if (rows && userData.cargo === 'Administrador') {
                 const actives = rows.map(active => ({
@@ -69,19 +89,19 @@ const inventoryListAllRequests = async (req, res) => {
                     delivered: active.entregue,
                     loan_completed: active.finalizacao_emprestimo,
                     completion_date: notice.formatDateWithCheck(active.dt_finalizacao)
-                }));
+                }))
 
-                res.render('inventory_allrequests', { actives });
+                res.render('inventory_allrequests', { actives })
             } else {
-                res.send('Usuário sem permissão');
+                res.send('Usuário sem permissão')
             }
         } else {
-            res.redirect('/');
+            res.redirect('/')
         }
     } catch (error) {
-        res.render('error', { error: 'Erro ao obter dados do inventário' });
+        res.render('error', { error: 'Erro ao obter dados do inventário' })
     }
-};
+}
 
 
 const inventoryItemDelivered = async (req, res) => {
