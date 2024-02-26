@@ -43,7 +43,8 @@
                         <th>Equipamento</th>
                         <th>Código de Identificação</th>
                         <th>Previsão de Entrega</th>
-                        <th>Funções</th>
+                        <th>Finalizar Empréstimo</th>
+                        <th>Alterar Empréstimo</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -60,7 +61,12 @@
                                     <td><%= active.delivery_forecast %></td>
                                     <td>
                                         <form action="/inventory/delivered/<%= active.id %>" method="POST">
-                                            <button type="submit">Finalizar Empréstimo</button>
+                                            <button class="finish" type="submit">❌</button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <form action="#" method="POST">
+                                            <button class="alter" type="submit">⚙️</button>
                                         </form>
                                     </td>
                                 </tr>
