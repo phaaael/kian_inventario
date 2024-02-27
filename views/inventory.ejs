@@ -13,7 +13,7 @@
             <h1>Empréstimos Pendentes:</h1>
             <div class="search-container">
                 <form class="search" action="/inventory" method="get">
-                    <select name="searchField" style="margin-right: 10px; margin-bottom: 10px;">
+                    <select name="searchField" style="cursor: pointer; margin-right: 10px; margin-bottom: 10px;">
                         <option value="id">Identificação da Solicitação</option>
                         <option value="responsavel_emprestimo">Responsável pelo Empréstimo</option>
                         <option value="solicitante">Solicitante</option>
@@ -23,9 +23,9 @@
                     </select>
                     <input type="text" name="searchChar" placeholder="Buscar Registro" value="<%= typeof searchChar !== 'undefined' ? searchChar : '' %>" style="margin-right: 10px; margin-bottom: 10px;">
                     <label for="startDate" style="margin-right: 5px; margin-bottom: 10px;">Data de Início:</label>
-                    <input type="date" id="startDate" name="startDate" style="margin-right: 10px; margin-bottom: 10px;">
+                    <input type="date" id="startDate" name="startDate" style="cursor: pointer; margin-right: 10px; margin-bottom: 10px;">
                     <label for="endDate" style="margin-right: 5px; margin-bottom: 10px;">Data de Término:</label>
-                    <input type="date" id="endDate" name="endDate" style="margin-right: 10px; margin-bottom: 10px;">
+                    <input type="date" id="endDate" name="endDate" style="cursor: pointer; margin-right: 10px; margin-bottom: 10px;">
                     <button type="submit" style="margin-bottom: 10px;">Buscar</button>
                 </form>
             </div>            
@@ -60,12 +60,12 @@
                                     <td><%= active.delivery_forecast %></td>
                                     <td>
                                         <form action="/inventory/delivered/<%= active.id %>" method="POST">
-                                            <button class="finish" type="submit">❌</button>
+                                            <button style="cursor: pointer;" class="finish" type="submit">❌</button>
                                         </form>
                                     </td>
                                     <td>
                                         <form action="/inventory/change/<%= active.id %>" method="POST">
-                                            <button class="alter" type="submit">⚙️</button>
+                                            <button style="cursor: pointer;" class="alter" type="submit">⚙️</button>
                                         </form>
                                     </td>
                                 </tr>

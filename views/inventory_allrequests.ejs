@@ -14,7 +14,7 @@
             <div class="search-container">
 
                 <form class="search" action="/inventory/all_requests" method="get">
-                    <select name="searchField" style="margin-right: 10px; margin-bottom: 10px;">
+                    <select name="searchField" style="cursor: pointer; margin-right: 10px; margin-bottom: 10px;">
                         <option value="id">Identificação da Solicitação</option>
                         <option value="responsavel_emprestimo">Responsável pelo Empréstimo</option>
                         <option value="solicitante">Solicitante</option>
@@ -24,9 +24,9 @@
                     </select>
                     <input type="text" name="searchChar" placeholder="Buscar Registro" value="<%= typeof searchChar !== 'undefined' ? searchChar : '' %>" style="margin-right: 10px; margin-bottom: 10px;">
                     <label for="startDate" style="margin-right: 5px; margin-bottom: 10px;">Data de Início:</label>
-                    <input type="date" id="startDate" name="startDate" style="margin-right: 10px; margin-bottom: 10px;">
+                    <input type="date" id="startDate" name="startDate" style="cursor: pointer; margin-right: 10px; margin-bottom: 10px;">
                     <label for="endDate" style="margin-right: 5px; margin-bottom: 10px;">Data de Término:</label>
-                    <input type="date" id="endDate" name="endDate" style="margin-right: 10px; margin-bottom: 10px;">
+                    <input type="date" id="endDate" name="endDate" style="cursor: pointer; margin-right: 10px; margin-bottom: 10px;">
                     <button type="submit" style="margin-bottom: 10px;">Buscar</button>
                 </form>
                 <form style="margin-right: 5px; margin-bottom: 5px;" action="/inventory/export_spreadsheet" method="get">
@@ -35,7 +35,7 @@
                     <input type="hidden" name="startDate" value="<%= startDate %>">
                     <input type="hidden" name="endDate" value="<%= endDate %>">
                     <button style="background-color: transparent;" type="submit">
-                        <img style="margin-left: 5px; width: 40px;" class="logo_excel" src="https://img.icons8.com/?size=256&id=117561&format=png" alt="Excel">
+                        <img style="cursor: pointer; margin-left: 5px; width: 40px;" class="logo_excel" src="https://img.icons8.com/?size=256&id=117561&format=png" alt="Excel">
                     </button>
                 </form>
             </div>            
