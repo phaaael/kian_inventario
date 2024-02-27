@@ -186,7 +186,7 @@ const exportInventoryToExcel = async (req, res) => {
                     'Data da Finalização da Solicitação': notice.formatDateWithCheck(active.dt_finalizacao)
                 }))
 
-                spreadsheet.exportToExcel(actives, res)
+                spreadsheet.exportToExcel(actives, res, { searchChar, searchField, startDate, endDate })
             } else {
                 res.send('Usuário sem permissão')
             }
@@ -197,6 +197,7 @@ const exportInventoryToExcel = async (req, res) => {
         res.render('error', { error: 'Erro ao obter dados do inventário' })
     }
 }
+
 
 const inventoryListAllRequests = async (req, res) => {
     try {
@@ -238,7 +239,7 @@ const inventoryListAllRequests = async (req, res) => {
                     completion_date: notice.formatDateWithCheck(active.dt_finalizacao)
                 }))
 
-                res.render('inventory_allrequests', { actives })
+                res.render('inventory_allrequests', { actives, searchField, searchChar, startDate, endDate })
             } else {
                 res.send('Usuário sem permissão')
             }
