@@ -174,16 +174,16 @@ const exportInventoryToExcel = async (req, res) => {
 
             if (rows && userData.cargo === 'Administrador') {
                 const actives = rows.map(active => ({
-                    id: active.id,
-                    responsible_loan: active.responsavel_emprestimo,
-                    requester: active.solicitante,
-                    exit_sector: notice.formatDate(new Date(active.saida_setor)),
-                    equipment: active.equipamento,
-                    identification_code: active.codigo_identificacao,
-                    delivery_forecast: notice.formatDate(new Date(active.previsao_entrega)),
-                    delivered: active.entregue,
-                    loan_completed: active.finalizacao_emprestimo,
-                    completion_date: notice.formatDateWithCheck(active.dt_finalizacao)
+                    'Identificação da Solicitação': active.id,
+                    'Responsável pelo Empréstimo': active.responsavel_emprestimo,
+                    'Solicitante': active.solicitante,
+                    'Sáida do Setor': notice.formatDate(new Date(active.saida_setor)),
+                    'Equipamento': active.equipamento,
+                    'Identificação do Equipamento': active.codigo_identificacao,
+                    'Previsão de Entrega': notice.formatDate(new Date(active.previsao_entrega)),
+                    'Solicitação Entregue': active.entregue,
+                    'Responsável por Finalizar Solicitação': active.finalizacao_emprestimo,
+                    'Data da Finalização da Solicitação': notice.formatDateWithCheck(active.dt_finalizacao)
                 }))
 
                 spreadsheet.exportToExcel(actives, res)
