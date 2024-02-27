@@ -1,4 +1,5 @@
 const inventoryDatabase = require('../database')
+const spreadsheet = require('../spreadsheet_export')
 const notice = require('../notice')
 
 const inventory = async (req, res) => {
@@ -145,6 +146,58 @@ const inventoryUpdateRecord = async (req, res) => {
     }
 }
 
+const exportInventoryToExcel = async (req, res) => {
+    try {
+        if (req.session && req.session.username) {
+            const { searchChar, searchField, startDate, endDate } = req.query
+
+            let query = 'SELECT * FROM kian_emprestimos WHERE 1=1'
+            let queryParams = []
+
+            if (searchChar && searchField) {
+                query += ` AND ${searchField} LIKE ?`
+                queryParams.push(`%${searchChar}%`)
+            }
+
+            if (startDate) {
+                query += ' AND dt_finalizacao >= ?'
+                queryParams.push(startDate)
+            }
+
+            if (endDate) {
+                query += ' AND dt_finalizacao <= ?'
+                queryParams.push(endDate)
+            }
+
+            const [rows] = await inventoryDatabase.pool.execute(query, queryParams)
+            const userData = await inventoryDatabase.getUserByUsername(req.session.username)
+
+            if (rows && userData.cargo === 'Administrador') {
+                const actives = rows.map(active => ({
+                    id: active.id,
+                    responsible_loan: active.responsavel_emprestimo,
+                    requester: active.solicitante,
+                    exit_sector: notice.formatDate(new Date(active.saida_setor)),
+                    equipment: active.equipamento,
+                    identification_code: active.codigo_identificacao,
+                    delivery_forecast: notice.formatDate(new Date(active.previsao_entrega)),
+                    delivered: active.entregue,
+                    loan_completed: active.finalizacao_emprestimo,
+                    completion_date: notice.formatDateWithCheck(active.dt_finalizacao)
+                }))
+
+                spreadsheet.exportToExcel(actives, res)
+            } else {
+                res.send('Usuário sem permissão')
+            }
+        } else {
+            res.redirect('/')
+        }
+    } catch (error) {
+        res.render('error', { error: 'Erro ao obter dados do inventário' })
+    }
+}
+
 const inventoryListAllRequests = async (req, res) => {
     try {
         if (req.session && req.session.username) {
@@ -196,7 +249,6 @@ const inventoryListAllRequests = async (req, res) => {
         res.render('error', { error: 'Erro ao obter dados do inventário' })
     }
 }
-
 
 const inventoryItemDelivered = async (req, res) => {
     try {
@@ -298,5 +350,6 @@ module.exports = {
     inventoryListAllRequests,
     inventoryChangeItem,
     inventoryUpdateRecord,
+    exportInventoryToExcel,
     logout
 }

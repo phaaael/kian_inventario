@@ -13,6 +13,8 @@ router.get('/inventory', inventoryController.inventory)
 
 router.get('/inventory/all_requests', inventoryController.inventoryListAllRequests)
 
+router.get('/inventory/export_spreadsheet', inventoryController.exportInventoryToExcel)
+
 router.post('/inventory/registration/submit', inventoryController.inventoryRegisterItem)
 
 router.post('/inventory/delivered/:id', inventoryController.inventoryItemDelivered)
