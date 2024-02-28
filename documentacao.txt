@@ -3,38 +3,6 @@ Credencias do e-mail de lembrete:
 iluminacaokian@gmail.com
 1Qaz2wsx@
 
-Criação das tabelas:
-
-CREATE TABLE `kian_usuarios` (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  matricula INT NOT NULL UNIQUE,
-  usuario VARCHAR(255) NOT NULL UNIQUE,
-  senha VARCHAR(255) NOT NULL,
-  nome VARCHAR(255) DEFAULT('Sem'),
-  sobrenome VARCHAR(255) DEFAULT('Registro'),
-  cargo VARCHAR(255) DEFAULT('Membro')
-);
-
-CREATE TABLE `kian_emprestimos` (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  responsavel_emprestimo VARCHAR(255) NOT NULL,
-  solicitante VARCHAR(255) NOT NULL,
-  saida_setor DATE NOT NULL,
-  equipamento VARCHAR(255) NOT NULL,
-  codigo_identificacao VARCHAR(255) NOT NULL,
-  previsao_entrega DATE NOT NULL,
-  finalizacao_emprestimo VARCHAR(255),
-  dt_finalizacao DATE,
-  entregue BOOLEAN DEFAULT false
-);
-
-CREATE TABLE `kian_estoque` (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  item VARCHAR(255) NOT NULL UNIQUE,
-  qt_item INT NOT NULL,
-  desc_item VARCHAR(255)
-);
-
 Validar conexão com o banco de dados:
 
 database.query('SELECT * FROM usuarios', (err, resultados) => {
