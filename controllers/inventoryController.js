@@ -51,7 +51,7 @@ const inventory = async (req, res) => {
 const inventoryRequestLoan = async (req, res) => {
     try {
         if (req.method === 'GET') {
-            const query = 'SELECT * FROM KIAN_ESTOQUE WHERE qt_item > 0'
+            const query = 'SELECT * FROM KIAN_ESTOQUE WHERE qt_item > 0;'
             const [itemsInStock] = await inventoryDatabase.pool.execute(query)
             res.render('inventory_requestloan', { itemsInStock })
         } else if (req.method === 'POST') {
@@ -64,7 +64,7 @@ const inventoryRequestLoan = async (req, res) => {
             const [[{ item: itemName }]] = await inventoryDatabase.pool.execute(itemQuery, [item])
 
             const insertQuery = `
-                INSERT INTO KIAN_EMPRESTIMOS (solicitante, saida_setor, equipamento, motivo_emprestimo, previsao_entrega)
+                INSERT INTO KIAN_SOLICITACOES (solicitante, saida_setor, equipamento, motivo_emprestimo, previsao_entrega)
                 VALUES (?, ?, ?, ?, ?)
             `
 
