@@ -15,6 +15,7 @@ CREATE TABLE `kian_emprestimos` (
   saida_setor DATE NOT NULL,
   equipamento VARCHAR(255) NOT NULL,
   codigo_identificacao VARCHAR(255) NOT NULL,
+  motivo_emprestimo VARCHAR(255) NOT NULL,
   previsao_entrega DATE NOT NULL,
   finalizacao_emprestimo VARCHAR(255),
   dt_finalizacao DATE,
