@@ -11,6 +11,8 @@ router.get('/inventory/registration', inventoryController.inventoryRegistration)
 
 router.get('/inventory', inventoryController.inventory)
 
+router.get('/inventory/request_loan', inventoryController.inventoryRequestLoan)
+
 router.get('/inventory/all_requests', inventoryController.inventoryListAllRequests)
 
 router.get('/inventory/export_spreadsheet', inventoryController.exportInventoryToExcel)
