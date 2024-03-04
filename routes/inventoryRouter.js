@@ -19,6 +19,8 @@ router.get('/inventory/export_spreadsheet', inventoryController.exportInventoryT
 
 router.post('/inventory/registration/submit', inventoryController.inventoryRegisterItem)
 
+router.post('/inventory/request_loan', inventoryController.inventoryRequestLoan)
+
 router.post('/inventory/delivered/:id', inventoryController.inventoryItemDelivered)
 
 router.post('/inventory/change/:id', inventoryController.inventoryChangeItem)

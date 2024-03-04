@@ -48,6 +48,36 @@ const inventory = async (req, res) => {
     }
 }
 
+const inventoryRequestLoan = async (req, res) => {
+    try {
+        if (req.method === 'GET') {
+            const query = 'SELECT * FROM KIAN_ESTOQUE WHERE qt_item > 0'
+            const [itemsInStock] = await inventoryDatabase.pool.execute(query)
+            res.render('inventory_requestloan', { itemsInStock })
+        } else if (req.method === 'POST') {
+            const { exit_sector, item, request_reason, delivery_forecast } = req.body
+            const userData = await inventoryDatabase.getUserByUsername(req.session.username)
+
+            if (!userData || !userData.nome) { throw new Error('Usuário não encontrado ou não logado') }
+
+            const itemQuery = 'SELECT item FROM KIAN_ESTOQUE WHERE id = ?'
+            const [[{ item: itemName }]] = await inventoryDatabase.pool.execute(itemQuery, [item])
+
+            const insertQuery = `
+                INSERT INTO KIAN_EMPRESTIMOS (solicitante, saida_setor, equipamento, motivo_emprestimo, previsao_entrega)
+                VALUES (?, ?, ?, ?, ?)
+            `
+
+            await inventoryDatabase.pool.execute(insertQuery, [ userData.nome, exit_sector, itemName, request_reason, delivery_forecast ])
+
+            res.send('<script>alert("Solicitação de empréstimo enviada"); window.location.href = "/inventory/request_loan"</script>')
+        }
+    } catch (error) {
+        console.error(error)
+        res.render('error', { error: 'Erro ao solicitar equipamento: ' + error.message })
+    }
+}
+
 const inventoryChangeItem = async (req, res) => {
     try {       
         const itemId = req.params.id
@@ -295,10 +325,10 @@ const inventoryRegistration = (req, res) => {
 }
 
 const inventoryRegisterItem = async (req, res) => {
-    const { responsible_loan, requester, exit_sector, equipment, identification_code, delivery_forecast } = req.body
+    const { responsible_loan, requester, exit_sector, equipment, request_reason, identification_code, delivery_forecast } = req.body
     try {
-        const insert = 'INSERT INTO kian_emprestimos(responsavel_emprestimo, solicitante, saida_setor, equipamento, codigo_identificacao, previsao_entrega) VALUES(?, ?, ?, ?, ?, ?)'
-        await inventoryDatabase.pool.execute(insert, [responsible_loan, requester, exit_sector, equipment, identification_code, delivery_forecast])
+        const insert = 'INSERT INTO kian_emprestimos(responsavel_emprestimo, solicitante, saida_setor, equipamento, motivo_emprestimo, codigo_identificacao, previsao_entrega) VALUES(?,?, ?, ?, ?, ?, ?)'
+        await inventoryDatabase.pool.execute(insert, [responsible_loan, requester, exit_sector, equipment, request_reason, identification_code, delivery_forecast])
 
         res.send('<script>alert("Empréstimo Registrado"); window.location.href = "/inventory/registration";</script>')
     } catch (error) {
@@ -345,6 +375,7 @@ const logout = async (req, res) => {
 module.exports = {
     inventory,
     getMenuInventory,
+    inventoryRequestLoan,
     inventoryRegistration,
     inventoryRegisterItem,
     inventoryItemDelivered,

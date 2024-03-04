@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventário TI - Kian Iluminação</title>
+
+    <link rel="icon" href="https://kian.com.br/wp-content/themes/kian-site/styles/images/favicon.png">
+
+    <link rel="stylesheet" href="/styles/inventory_requestloan.css">
+</head>
+
+<body>
+
+    <section class="container">
+        <h1>Solicitação de Equipamento:</h1><br>
+        <form class="request_loan" action="/inventory/request_loan" method="post">
+            <label for="exit_sector">Data da Solicitação:</label>
+            <input type="date" id="exit_sector" name="exit_sector" required><br>
+    
+            <label for="equipment">Equipamento:</label>
+            <select name="item" id="equipment" required>
+                <option value="">Escolha Equipamento</option>
+                <% itemsInStock.forEach(item => { %>
+                    <option value="<%= item.id %>"><%= item.item %></option>
+                <% }); %>
+            </select><br>
+
+            <label for="request_reason">Motivo da Solicitação:</label>
+            <input type="text" id="request_reason" name="request_reason" required><br>
+    
+            <label for="delivery_forecast">Previsão de Entrega:</label>
+            <input type="date" id="delivery_forecast" name="delivery_forecast" required><br>
+        
+            <input class="cadastrar" type="submit" value="Cadastrar">
+        </form>
+        <a class="back" href="/inventory/menu">Voltar</a>
+    </section>
+    
+    
+</body>
+
+</html>
