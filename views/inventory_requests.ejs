@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventário TI - Kian Iluminação</title>
+    <link rel="icon" href="https://kian.com.br/wp-content/themes/kian-site/styles/images/favicon.png">
+    <link rel="stylesheet" href="/styles/inventory_requests.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Solicitações Pendentes:</h1>          
+        </div>
+        <div class="table-container">
+            <table class="items-table">
+                <thead>
+                    <tr>
+                        <th>Identificação da Solicitação</th>
+                        <th>Solicitante</th>
+                        <th>Saída do Setor</th>
+                        <th>Equipamento</th>
+                        <th>Previsão de Entrega</th>
+                        <th>Motivo da Solicitação</th>
+                        <th>Aceitar Solicitação</th>
+                        <th>Recusar Solicitação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (actives.length > 0) { %>
+                        <% actives.forEach((active, index) => { %>
+                            <tr data-index="<%= index %>">
+                                <td>#<%= active.id %></td>
+                                <td><%= active.requester %></td>
+                                <td><%= active.exit_sector %></td>
+                                <td><%= active.equipment %></td>
+                                <td><%= active.delivery_forecast %></td>
+                                <td><%= active.loan_reason %></td>
+                                <td>✔️</td>
+                                <td>❌</td>
+                            </tr>
+                        <% }); %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="9">Nenhuma solicitação encontrada</td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+        <a href="/inventory/menu">Voltar</a>
+    </div>
+</body>
+</html>

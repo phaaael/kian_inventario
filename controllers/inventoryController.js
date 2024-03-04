@@ -228,6 +228,35 @@ const exportInventoryToExcel = async (req, res) => {
     }
 }
 
+const inventoryRequests = async (req, res) => {
+    try {
+        if (req.session && req.session.username) {
+            const [rows] = await inventoryDatabase.pool.execute('SELECT * FROM KIAN_SOLICITACOES;')
+            const userData = await inventoryDatabase.getUserByUsername(req.session.username)
+
+            if (rows && userData.cargo === 'Administrador') {
+                const actives = rows.map(active => ({
+                    id: active.id,
+                    requester: active.solicitante,
+                    exit_sector: notice.formatDate(new Date(active.saida_setor)),
+                    equipment: active.equipamento,
+                    delivery_forecast: notice.formatDate(new Date(active.previsao_entrega)), 
+                    loan_reason: active.motivo_emprestimo,
+                    loan_completed: active.finalizacao_emprestimo
+                }))
+
+                res.render('inventory_requests', { actives })
+            } else {
+                res.send('Usuário sem permissão')
+            }
+        } else {
+            res.redirect('/')
+        }
+    } catch (error) {
+        res.render('error', { error: 'Erro ao obter dados do inventário' })
+    }
+}
+
 
 const inventoryListAllRequests = async (req, res) => {
     try {
@@ -375,6 +404,7 @@ const logout = async (req, res) => {
 module.exports = {
     inventory,
     getMenuInventory,
+    inventoryRequests,
     inventoryRequestLoan,
     inventoryRegistration,
     inventoryRegisterItem,
