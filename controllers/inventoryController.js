@@ -241,8 +241,7 @@ const inventoryRequests = async (req, res) => {
                     exit_sector: notice.formatDate(new Date(active.saida_setor)),
                     equipment: active.equipamento,
                     delivery_forecast: notice.formatDate(new Date(active.previsao_entrega)), 
-                    loan_reason: active.motivo_emprestimo,
-                    loan_completed: active.finalizacao_emprestimo
+                    loan_reason: active.motivo_emprestimo
                 }))
 
                 res.render('inventory_requests', { actives })
