@@ -1,6 +1,6 @@
-const inventoryDatabase = require('../database')
-const spreadsheet = require('../spreadsheet_export')
-const notice = require('../notice')
+const inventoryDatabase = require('../resources/database')
+const spreadsheet = require('../resources/spreadsheet_export')
+const notice = require('../resources/notice')
 
 const inventory = async (req, res) => {
     try {     
@@ -79,19 +79,38 @@ const inventoryRequestLoan = async (req, res) => {
 }
 
 const inventoryAcceptItem = async (req, res) => {
-    try {       
+    try {
         const itemId = req.params.id
+        const userData = await inventoryDatabase.getUserByUsername(req.session.username)
+        
 
-        if (!itemId) return res.status(400).json({ success: false, message: 'ID do item não fornecido' })
+        if (!itemId) return res.status(400).json({ success: false, message: 'ID do item não fornecido' });
 
-        const updateQuery = 'UPDATE kian_solicitacoes SET status_solicitacao = ? WHERE id = ?;'
-        await inventoryDatabase.pool.execute(updateQuery, [true, itemId])
+        const updateQuery = 'UPDATE kian_solicitacoes SET status_solicitacao = ? WHERE id = ?;';
+        const [updateResult] = await inventoryDatabase.pool.execute(updateQuery, [true, itemId]);
 
-        res.json({ success: true, message: "Solicitação Aceita" })
+        if (updateResult.affectedRows > 0) {
+            const selectQuery = `SELECT solicitante, saida_setor, equipamento, motivo_emprestimo, previsao_entrega FROM kian_solicitacoes WHERE id = ?;`;
+            const [rows] = await inventoryDatabase.pool.execute(selectQuery, [itemId]);
+
+            if (rows.length > 0) {
+                const loan = rows[0];
+                const insertQuery = `INSERT INTO kian_emprestimos (responsavel_emprestimo, solicitante, saida_setor, equipamento, motivo_emprestimo, previsao_entrega) VALUES (?, ?, ?, ?, ?, ?);`;
+                await inventoryDatabase.pool.execute(insertQuery, [userData.nome, loan.solicitante, loan.saida_setor, loan.equipamento, loan.motivo_emprestimo, loan.previsao_entrega]);
+
+                res.json({ success: true, message: "Solicitação Aceita" });
+            } else {
+                res.status(404).json({ success: false, message: 'Nenhum registro encontrado para atualizar' });
+            }
+        } else {
+            res.status(404).json({ success: false, message: 'Atualização da solicitação falhou' });
+        }
     } catch (error) {
-        res.status(500).json({ success: false, message: 'Erro ao aceitar solicitação' })
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Erro ao aceitar solicitação' });
     }
 }
+
 
 const inventoryRefuseItem = async (req, res) => {
     try {       
