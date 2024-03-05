@@ -78,6 +78,36 @@ const inventoryRequestLoan = async (req, res) => {
     }
 }
 
+const inventoryAcceptItem = async (req, res) => {
+    try {       
+        const itemId = req.params.id
+
+        if (!itemId) return res.status(400).json({ success: false, message: 'ID do item não fornecido' })
+
+        const updateQuery = 'UPDATE kian_solicitacoes SET status_solicitacao = ? WHERE id = ?;'
+        await inventoryDatabase.pool.execute(updateQuery, [true, itemId])
+
+        res.json({ success: true, message: "Solicitação Aceita" })
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Erro ao aceitar solicitação' })
+    }
+}
+
+const inventoryRefuseItem = async (req, res) => {
+    try {       
+        const itemId = req.params.id
+
+        if (!itemId) return res.status(400).json({ success: false, message: 'ID do item não fornecido' })
+
+        const updateQuery = 'UPDATE kian_solicitacoes SET status_solicitacao = ?, solicitacao_recusada = ? WHERE id = ?;'
+        await inventoryDatabase.pool.execute(updateQuery, [true, true, itemId])
+
+        res.json({ success: true, message: "Solicitação Recusada" })
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Erro ao recusar solicitação' })
+    }
+}
+
 const inventoryChangeItem = async (req, res) => {
     try {       
         const itemId = req.params.id
@@ -241,7 +271,8 @@ const inventoryRequests = async (req, res) => {
                     exit_sector: notice.formatDate(new Date(active.saida_setor)),
                     equipment: active.equipamento,
                     delivery_forecast: notice.formatDate(new Date(active.previsao_entrega)), 
-                    loan_reason: active.motivo_emprestimo
+                    loan_reason: active.motivo_emprestimo,
+                    request_status: active.status_solicitacao
                 }))
 
                 res.render('inventory_requests', { actives })
@@ -404,6 +435,8 @@ module.exports = {
     inventory,
     getMenuInventory,
     inventoryRequests,
+    inventoryAcceptItem,
+    inventoryRefuseItem,
     inventoryRequestLoan,
     inventoryRegistration,
     inventoryRegisterItem,

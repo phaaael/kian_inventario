@@ -27,19 +27,34 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <% if (actives.length > 0) { %>
-                        <% actives.forEach((active, index) => { %>
-                            <tr data-index="<%= index %>">
-                                <td>#<%= active.id %></td>
-                                <td><%= active.requester %></td>
-                                <td><%= active.exit_sector %></td>
-                                <td><%= active.equipment %></td>
-                                <td><%= active.delivery_forecast %></td>
-                                <td><%= active.loan_reason %></td>
-                                <td>✔️</td>
-                                <td>❌</td>
+                    <% if (actives && actives.length > 0) { %>
+                        <% const filteredActives = actives.filter(active => active.request_status !== 1); %>
+                        <% if (filteredActives.length > 0) { %>
+                            <% filteredActives.forEach((active, index) => { %>
+                                <tr data-index="<%= index %>">
+                                    <td>#<%= active.id %></td>
+                                    <td><%= active.requester %></td>
+                                    <td><%= active.exit_sector %></td>
+                                    <td><%= active.equipment %></td>
+                                    <td><%= active.delivery_forecast %></td>
+                                    <td><%= active.loan_reason %></td>
+                                    <td>
+                                        <form action="/inventory/accept/<%= active.id %>" method="POST">
+                                            <button style="cursor: pointer; background-color: transparent; font-size: 20px;" class="accept" type="button" onclick="handleRequest('<%= active.id %>', 'accept')">✔️</button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <form action="/inventory/refuse/<%= active.id %>" method="POST">
+                                            <button style="cursor: pointer; background-color: transparent; font-size: 20px;" class="refuse" type="button" onclick="handleRequest('<%= active.id %>', 'refuse')">❌</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="9">Nenhuma solicitação encontrada</td>
                             </tr>
-                        <% }); %>
+                        <% } %>
                     <% } else { %>
                         <tr>
                             <td colspan="9">Nenhuma solicitação encontrada</td>
@@ -49,6 +64,46 @@
             </table>
         </div>
         <a href="/inventory/menu">Voltar</a>
-    </div>
-</body>
+
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <script>
+            function handleRequest(id, action) {
+                let url = `/inventory/${action}/${id}`
+                let successMessage = action === 'accept' ? "Solicitação Aceita." : "Solicitação Recusada."
+                let title = action === 'accept' ? "Sucesso" : "Recusado"
+        
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({})
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Houve um problema com a resposta da rede')
+                    }
+                    return response.json()
+                })
+                .then(data => {
+                    swal({
+                        title: title,
+                        text: data.message || successMessage,
+                        icon: "success",
+                    }).then(() => {
+                        location.reload()
+                    })
+                })
+                .catch(error => {
+                    console.error('Houve um problema com a operação:', error)
+                    swal({
+                        title: "Erro",
+                        text: "Não foi possível concluir a solicitação",
+                        icon: "error",
+                    })
+                })
+            }
+        </script>
+    </body>
 </html>

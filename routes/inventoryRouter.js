@@ -25,6 +25,10 @@ router.post('/inventory/request_loan', inventoryController.inventoryRequestLoan)
 
 router.post('/inventory/delivered/:id', inventoryController.inventoryItemDelivered)
 
+router.post('/inventory/accept/:id', inventoryController.inventoryAcceptItem)
+
+router.post('/inventory/refuse/:id', inventoryController.inventoryRefuseItem)
+
 router.post('/inventory/change/:id', inventoryController.inventoryChangeItem)
 
 router.post('/inventory/update_record', inventoryController.inventoryUpdateRecord)
