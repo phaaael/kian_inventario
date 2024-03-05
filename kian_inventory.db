@@ -29,7 +29,8 @@ CREATE TABLE `kian_solicitacoes` (
   equipamento VARCHAR(255) NOT NULL,
   motivo_emprestimo VARCHAR(255) NOT NULL,
   previsao_entrega DATE NOT NULL,
-  status_solicitacao BOOLEAN DEFAULT false
+  status_solicitacao BOOLEAN DEFAULT false,
+  solicitacao_recusada BOOLEAN DEFAULT false
 );
 
 CREATE TABLE `kian_estoque` (
