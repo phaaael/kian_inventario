@@ -1,4 +1,4 @@
-const registerDatabase = require('../database')
+const registerDatabase = require('../resources/database')
 
 const getRegister = (req, res) => {
     const dynamicData = { message: 'Registrar' }

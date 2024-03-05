@@ -1,4 +1,4 @@
-const loginDatabase = require('../database')
+const loginDatabase = require('../resources/database')
 
 const login = async (req, res) => {
     const { username, password } = req.body

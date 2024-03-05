@@ -7,7 +7,7 @@ const loginRouter = require('./routes/loginRouter')
 const registerRouter = require('./routes/registerRouter')
 const inventoryRouter = require('./routes/inventoryRouter')
 
-const notice = require('./notice');
+const notice = require('./resources/notice');
 
 const app = express()
 
