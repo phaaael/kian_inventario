@@ -6,13 +6,12 @@
     <title>Inventário TI - Kian Iluminação</title>
 
     <link rel="icon" href="https://kian.com.br/wp-content/themes/kian-site/styles/images/favicon.png">
-
     <link rel="stylesheet" href="/styles/inventory_changeitem.css">
 </head>
 <body>
     <div class="container">
         <h1>Alteração de Empréstimo:</h1>
-        <form action="/inventory/update_record" method="POST">
+        <form id="updateRecordForm" action="/inventory/update_record" method="POST">
             <input type="hidden" name="id" value="<%= active.id %>">
             <label for="responsible_loan">Responsável do Empréstimo:</label>
             <input type="text" name="responsible_loan" value="<%= active.responsible_loan %>"><br>
@@ -30,5 +29,8 @@
             <a class="back" href="/inventory">Voltar</a>
         </form>
     </div>
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="/scripts/changeitem.js"></script>
 </body>
 </html>
