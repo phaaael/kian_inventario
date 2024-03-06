@@ -38,5 +38,6 @@ CREATE TABLE `kian_estoque` (
   id INT AUTO_INCREMENT PRIMARY KEY,
   item VARCHAR(255) NOT NULL,
   codigo_identificacao VARCHAR(255) NOT NULL,
-  ultimo_solicitante VARCHAR(255)
+  ultimo_solicitante VARCHAR(255),
+  emprestado BOOLEAN DEFAULT false
 );

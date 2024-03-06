@@ -51,7 +51,7 @@ const inventory = async (req, res) => {
 const inventoryRequestLoan = async (req, res) => {
     try {
         if (req.method === 'GET') {
-            const query = 'SELECT * FROM KIAN_ESTOQUE;'
+            const query = 'SELECT * FROM KIAN_ESTOQUE WHERE emprestado = 0;'
             const [row] = await inventoryDatabase.pool.execute(query)
             res.render('inventory_requestloan', { row })
         } else if (req.method === 'POST') {
@@ -67,8 +67,9 @@ const inventoryRequestLoan = async (req, res) => {
 
             const insertQuery = `
                 INSERT INTO KIAN_SOLICITACOES (solicitante, saida_setor, equipamento, codigo_identificacao, motivo_emprestimo, previsao_entrega)
-                VALUES (?, ?, ?, ?, ?, ?);
+                VALUES (?, ?, ?, ?, ?, ?)
             `
+            
             await inventoryDatabase.pool.execute(insertQuery, [userData.nome, exit_sector, itemName, codigoId, request_reason, delivery_forecast])
 
             res.send('<script>alert("Solicitação de empréstimo enviada"); window.location.href = "/inventory/request_loan"</script>')
@@ -79,39 +80,46 @@ const inventoryRequestLoan = async (req, res) => {
     }
 }
 
+
 const inventoryAcceptItem = async (req, res) => {
     try {
         const itemId = req.params.id
         const userData = await inventoryDatabase.getUserByUsername(req.session.username)
         
+        if (!itemId) return res.status(400).json({ success: false, message: 'ID do item não fornecido' })
 
-        if (!itemId) return res.status(400).json({ success: false, message: 'ID do item não fornecido' });
-
-        const updateQuery = 'UPDATE kian_solicitacoes SET status_solicitacao = ? WHERE id = ?;';
-        const [updateResult] = await inventoryDatabase.pool.execute(updateQuery, [true, itemId]);
+        const updateQuery = 'UPDATE kian_solicitacoes SET status_solicitacao = ? WHERE id = ?'
+        const [updateResult] = await inventoryDatabase.pool.execute(updateQuery, [true, itemId])
 
         if (updateResult.affectedRows > 0) {
-            const selectQuery = `SELECT solicitante, saida_setor, equipamento, motivo_emprestimo, previsao_entrega FROM kian_solicitacoes WHERE id = ?;`;
-            const [rows] = await inventoryDatabase.pool.execute(selectQuery, [itemId]);
+            const selectQuery = `SELECT solicitante, saida_setor, equipamento, codigo_identificacao, motivo_emprestimo, previsao_entrega FROM kian_solicitacoes WHERE id = ?`
+            const [rows] = await inventoryDatabase.pool.execute(selectQuery, [itemId])
 
             if (rows.length > 0) {
-                const loan = rows[0];
-                const insertQuery = `INSERT INTO kian_emprestimos (responsavel_emprestimo, solicitante, saida_setor, equipamento, motivo_emprestimo, previsao_entrega) VALUES (?, ?, ?, ?, ?, ?);`;
-                await inventoryDatabase.pool.execute(insertQuery, [userData.nome, loan.solicitante, loan.saida_setor, loan.equipamento, loan.motivo_emprestimo, loan.previsao_entrega]);
+                const loan = rows[0]
+                const insertQuery = `INSERT INTO kian_emprestimos (responsavel_emprestimo, solicitante, saida_setor, equipamento, codigo_identificacao, motivo_emprestimo, previsao_entrega) VALUES (?, ?, ?, ?, ?, ?, ?)`
+                await inventoryDatabase.pool.execute(insertQuery, [userData.nome, loan.solicitante, loan.saida_setor, loan.equipamento, loan.codigo_identificacao, loan.motivo_emprestimo, loan.previsao_entrega])
 
-                res.json({ success: true, message: "Solicitação Aceita" });
+                const updateStockQuery = 'UPDATE kian_estoque SET emprestado = ? WHERE codigo_identificacao = ?'
+                const [updateEstoqueResult] = await inventoryDatabase.pool.execute(updateStockQuery, [true, loan.codigo_identificacao])
+
+
+                if (updateEstoqueResult.affectedRows == 0) {
+                    throw new Error('Falha ao atualizar status de emprestado no estoque')
+                }
+
+                res.json({ success: true, message: "Solicitação Aceita" })
             } else {
-                res.status(404).json({ success: false, message: 'Nenhum registro encontrado para atualizar' });
+                res.status(404).json({ success: false, message: 'Nenhum registro encontrado para atualizar' })
             }
         } else {
-            res.status(404).json({ success: false, message: 'Atualização da solicitação falhou' });
+            res.status(404).json({ success: false, message: 'Atualização da solicitação falhou' })
         }
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ success: false, message: 'Erro ao aceitar solicitação' });
+        console.error(error)
+        res.status(500).json({ success: false, message: 'Erro ao aceitar solicitação' })
     }
 }
-
 
 const inventoryRefuseItem = async (req, res) => {
     try {       
