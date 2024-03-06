@@ -394,9 +394,9 @@ const inventoryItemDelivered = async (req, res) => {
                 throw new Error('Código de identificação do item não encontrado.');
             }
 
-            await notice.sendDeliveryConfirmationEmail('raphael.sousa@kian.com.br', itemId, username, item.equipamento, item.solicitante, formattedDate)
+            // await notice.sendDeliveryConfirmationEmail('raphael.sousa@kian.com.br', itemId, username, item.equipamento, item.solicitante, formattedDate)
 
-            res.send('<script>alert("Empréstimo Finalizado"); window.location.href = "/inventory";</script>')
+            res.json({ success: true, message: "Empréstimo Finalizado" })
         } else {
             res.status(403).send('Acesso não autorizado')
         }

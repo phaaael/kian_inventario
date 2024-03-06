@@ -6,6 +6,7 @@
     <title>Inventário TI - Kian Iluminação</title>
     <link rel="icon" href="https://kian.com.br/wp-content/themes/kian-site/styles/images/favicon.png">
     <link rel="stylesheet" href="/styles/inventory_allrequests.css">
+    <link rel="stylesheet" href="/styles/alert.css">
 </head>
 <body>
     <div class="container">
@@ -59,7 +60,8 @@
                                     <td><%= active.identification_code %></td>
                                     <td><%= active.delivery_forecast %></td>
                                     <td>
-                                        <form action="/inventory/delivered/<%= active.id %>" method="POST">
+                                        <form class="delivery-form" action="/inventory" method="POST">
+                                            <input type="hidden" name="activeId" value="<%= active.id %>">
                                             <button style="cursor: pointer;" class="finish" type="submit">❌</button>
                                         </form>
                                     </td>
@@ -84,6 +86,9 @@
             </table>
         </div>
         <a href="/inventory/menu">Voltar</a>
+
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <script src="/scripts/inventory.js"></script>
     </div>
 </body>
 </html>
