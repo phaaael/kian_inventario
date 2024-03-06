@@ -290,6 +290,7 @@ const inventoryRequests = async (req, res) => {
                     requester: active.solicitante,
                     exit_sector: notice.formatDate(new Date(active.saida_setor)),
                     equipment: active.equipamento,
+                    identification_code: active.codigo_identificacao,
                     delivery_forecast: notice.formatDate(new Date(active.previsao_entrega)), 
                     loan_reason: active.motivo_emprestimo,
                     request_status: active.status_solicitacao
