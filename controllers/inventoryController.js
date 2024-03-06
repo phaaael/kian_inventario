@@ -226,7 +226,7 @@ const inventoryUpdateRecord = async (req, res) => {
 
         await inventoryDatabase.pool.execute(updateQuery, updateParams)
 
-        res.send('<script>alert("Empréstimo Alterado"); window.location.href = "/inventory";</script>')
+        res.json({ success: true, message: "Empréstimo Alterado" })
     } catch (error) {
         console.error('Erro ao atualizar registro:', error)
         res.render('error', { error: 'Erro ao atualizar registro' })
