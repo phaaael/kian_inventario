@@ -24,7 +24,7 @@
                 <option value="">Escolha Equipamento</option>
                 <% row.forEach(item => { %>
                     <option value="<%= item.id %>"><%= item.item %> - Identificação: <%= item.codigo_identificacao %></option>
-                <% }); %>
+                <% }) %>
             </select><br>            
 
             <label for="request_reason">Motivo da Solicitação:</label>
@@ -32,12 +32,55 @@
     
             <label for="delivery_forecast">Previsão de Entrega:</label>
             <input type="date" id="delivery_forecast" name="delivery_forecast" required><br>
-        
             <input class="cadastrar" type="submit" value="Cadastrar">
+
         </form>
         <a class="back" href="/inventory/menu">Voltar</a>
     </section>
-    
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+        document.querySelector('.request_loan').addEventListener('submit', function(event) {
+            event.preventDefault()
+            let formData = new FormData(this)
+            let object = {}
+            formData.forEach((value, key) => object[key] = value)
+            let json = JSON.stringify(object)
+
+            fetch('/inventory/request_loan', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: json
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Houve um problema com a resposta da rede')
+                }
+                return response.json()
+            })
+            .then(data => {
+                swal({
+                    title: "Sucesso",
+                    text: data.message,
+                    icon: "success",
+                }).then(() => {
+                    location.reload()
+                })
+            })
+            .catch(error => {
+                console.error('Houve um problema com a operação:', error)
+                swal({
+                    title: "Erro",
+                    text: "Não foi possível concluir a solicitação",
+                    icon: "error",
+                })
+            })
+        })
+
+    </script>
     
 </body>
 

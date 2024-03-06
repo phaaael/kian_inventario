@@ -72,14 +72,13 @@ const inventoryRequestLoan = async (req, res) => {
             
             await inventoryDatabase.pool.execute(insertQuery, [userData.nome, exit_sector, itemName, codigoId, request_reason, delivery_forecast])
 
-            res.send('<script>alert("Solicitação de empréstimo enviada"); window.location.href = "/inventory/request_loan"</script>')
+            res.json({ success: true, message: "Solicitação de Empréstimo Enviada" })
         }
     } catch (error) {
         console.error(error)
         res.render('error', { error: 'Erro ao solicitar equipamento: ' + error.message })
     }
 }
-
 
 const inventoryAcceptItem = async (req, res) => {
     try {
