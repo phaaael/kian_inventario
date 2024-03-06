@@ -22,8 +22,8 @@
             <label for="equipment">Equipamento:</label>
             <select name="item" id="equipment" required>
                 <option value="">Escolha Equipamento</option>
-                <% itemsInStock.forEach(item => { %>
-                    <option value="<%= item.id %>"><%= item.item %></option>
+                <% row.forEach(item => { %>
+                    <option value="<%= item.id %>"><%= item.item %> - Identificação: <%= item.codigo_identificacao %></option>
                 <% }); %>
             </select><br>
 

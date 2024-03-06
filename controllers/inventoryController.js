@@ -51,24 +51,25 @@ const inventory = async (req, res) => {
 const inventoryRequestLoan = async (req, res) => {
     try {
         if (req.method === 'GET') {
-            const query = 'SELECT * FROM KIAN_ESTOQUE WHERE qt_item > 0;'
-            const [itemsInStock] = await inventoryDatabase.pool.execute(query)
-            res.render('inventory_requestloan', { itemsInStock })
+            const query = 'SELECT * FROM KIAN_ESTOQUE;'
+            const [row] = await inventoryDatabase.pool.execute(query)
+            res.render('inventory_requestloan', { row })
         } else if (req.method === 'POST') {
             const { exit_sector, item, request_reason, delivery_forecast } = req.body
             const userData = await inventoryDatabase.getUserByUsername(req.session.username)
 
             if (!userData || !userData.nome) { throw new Error('Usuário não encontrado ou não logado') }
 
-            const itemQuery = 'SELECT item FROM KIAN_ESTOQUE WHERE id = ?'
-            const [[{ item: itemName }]] = await inventoryDatabase.pool.execute(itemQuery, [item])
+            const itemQuery = 'SELECT item, codigo_identificacao FROM KIAN_ESTOQUE WHERE id = ?'
+            const [[{ item: itemName, codigo_identificacao: codigoId }]] = await inventoryDatabase.pool.execute(itemQuery, [item])
+
+            if (!itemName || !codigoId) { throw new Error('Item ou Código de Identificação não encontrado.') }
 
             const insertQuery = `
-                INSERT INTO KIAN_SOLICITACOES (solicitante, saida_setor, equipamento, motivo_emprestimo, previsao_entrega)
-                VALUES (?, ?, ?, ?, ?)
+                INSERT INTO KIAN_SOLICITACOES (solicitante, saida_setor, equipamento, codigo_identificacao, motivo_emprestimo, previsao_entrega)
+                VALUES (?, ?, ?, ?, ?, ?);
             `
-
-            await inventoryDatabase.pool.execute(insertQuery, [ userData.nome, exit_sector, itemName, request_reason, delivery_forecast ])
+            await inventoryDatabase.pool.execute(insertQuery, [userData.nome, exit_sector, itemName, codigoId, request_reason, delivery_forecast])
 
             res.send('<script>alert("Solicitação de empréstimo enviada"); window.location.href = "/inventory/request_loan"</script>')
         }
