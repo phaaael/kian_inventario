@@ -381,14 +381,21 @@ const inventoryItemDelivered = async (req, res) => {
             const currentDate = new Date()
             const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ')
 
-            const updateQuery = 'UPDATE kian_emprestimos SET finalizacao_emprestimo = ?, dt_finalizacao = ?, entregue = ? WHERE id = ?'
-            await inventoryDatabase.pool.execute(updateQuery, [username, formattedDate, true, itemId])
+            const updateLoanQuery = 'UPDATE kian_emprestimos SET finalizacao_emprestimo = ?, dt_finalizacao = ?, entregue = ? WHERE id = ?'
+            await inventoryDatabase.pool.execute(updateLoanQuery, [username, formattedDate, true, itemId])
 
-            const itemInfoQuery = 'SELECT * FROM kian_emprestimos WHERE id = ?'
+            const itemInfoQuery = 'SELECT codigo_identificacao FROM kian_emprestimos WHERE id = ?'
             const [itemRows] = await inventoryDatabase.pool.query(itemInfoQuery, [itemId])
             const item = itemRows[0]
-            
-            await notice.sendDeliveryConfirmationEmail('raphael.sousa@kian.com.br', itemId, username, item.equipamento, item.solicitante, item.dt_finalizacao)
+
+            if (item && item.codigo_identificacao) {
+                const updateInventoryQuery = 'UPDATE kian_estoque SET emprestado = 0 WHERE codigo_identificacao = ?'
+                await inventoryDatabase.pool.execute(updateInventoryQuery, [item.codigo_identificacao])
+            } else {
+                throw new Error('Código de identificação do item não encontrado.');
+            }
+
+            await notice.sendDeliveryConfirmationEmail('raphael.sousa@kian.com.br', itemId, username, item.equipamento, item.solicitante, formattedDate)
 
             res.send('<script>alert("Empréstimo Finalizado"); window.location.href = "/inventory";</script>')
         } else {
