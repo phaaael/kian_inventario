@@ -375,15 +375,15 @@ const inventoryItemDelivered = async (req, res) => {
 
             if (!itemId) return res.status(400).send('ID do item não fornecido')
 
-            const username = req.session.username
+            const userData = await inventoryDatabase.getUserByUsername(req.session.username)
 
             const currentDate = new Date()
             const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ')
 
             const updateLoanQuery = 'UPDATE kian_emprestimos SET finalizacao_emprestimo = ?, dt_finalizacao = ?, entregue = ? WHERE id = ?'
-            await inventoryDatabase.pool.execute(updateLoanQuery, [username, formattedDate, true, itemId])
+            await inventoryDatabase.pool.execute(updateLoanQuery, [userData, formattedDate, true, itemId])
 
-            const itemInfoQuery = 'SELECT codigo_identificacao FROM kian_emprestimos WHERE id = ?'
+            const itemInfoQuery = 'SELECT solicitante, equipamento, codigo_identificacao FROM kian_emprestimos WHERE id = ?'
             const [itemRows] = await inventoryDatabase.pool.query(itemInfoQuery, [itemId])
             const item = itemRows[0]
 
@@ -394,7 +394,7 @@ const inventoryItemDelivered = async (req, res) => {
                 throw new Error('Código de identificação do item não encontrado.');
             }
 
-            // await notice.sendDeliveryConfirmationEmail('raphael.sousa@kian.com.br', itemId, username, item.equipamento, item.solicitante, formattedDate)
+            await notice.sendDeliveryConfirmationEmail('raphael.sousa@kian.com.br', itemId, userData.nome, item.equipamento, item.solicitante, formattedDate)
 
             res.json({ success: true, message: "Empréstimo Finalizado" })
         } else {
