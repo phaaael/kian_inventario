@@ -9,13 +9,14 @@
     <link rel="icon" href="https://kian.com.br/wp-content/themes/kian-site/styles/images/favicon.png">
 
     <link rel="stylesheet" href="/styles/inventory_registration.css">
+    <link rel="stylesheet" href="/styles/alert.css">
 </head>
 
 <body>
 
     <section class="container">
         <h1>Cadastrar Empréstimo:</h1><br>
-        <form class="login" action="/inventory/registration/submit" method="post">
+        <form class="registration" action="/inventory/registration/submit" method="post">
             <label for="responsible_loan">Responsável pelo Empréstimo:</label>
             <input type="text" id="responsible_loan" name="responsible_loan" required><br>
 
@@ -42,6 +43,8 @@
         <a class="back" href="/inventory/menu">Voltar</a>
     </section>
     
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="/scripts/registration.js"></script>
 </body>
 
 </html>

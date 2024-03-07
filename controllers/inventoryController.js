@@ -424,7 +424,7 @@ const inventoryRegisterItem = async (req, res) => {
         const insert = 'INSERT INTO kian_emprestimos(responsavel_emprestimo, solicitante, saida_setor, equipamento, motivo_emprestimo, codigo_identificacao, previsao_entrega) VALUES(?,?, ?, ?, ?, ?, ?)'
         await inventoryDatabase.pool.execute(insert, [responsible_loan, requester, exit_sector, equipment, request_reason, identification_code, delivery_forecast])
 
-        res.send('<script>alert("Empréstimo Registrado"); window.location.href = "/inventory/registration";</script>')
+        res.json({ success: true, message: "Empréstimo Registrado" })
     } catch (error) {
         res.status(500).send('Erro interno ao enviar registro')
     }
