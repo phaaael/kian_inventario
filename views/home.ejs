@@ -16,7 +16,7 @@
     <section class="container">
         <h1><%= data.message %></h1>
 
-        <form class="login" action="/submit/login" method="post">
+        <form class="login" action="/login/submit" method="post">
             <label for="username">Usuario:</label>
             <input type="text" id="username" name="username" required>
             <br>
@@ -31,6 +31,9 @@
         </form>
 
     </section>
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="/scripts/home.js"></script>
 </body>
 
 </html>

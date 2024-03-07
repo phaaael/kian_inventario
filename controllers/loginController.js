@@ -8,10 +8,10 @@ const login = async (req, res) => {
 
         if (results.length > 0) {
             req.session.username = results[0].usuario
-                res.redirect('/inventory/menu')
+            res.json({ success: true, message: "Login bem-sucedido", redirectUrl: '/inventory/menu' })
         } else {
-            res.send('<script>alert("Credenciais inválidas!"); window.location.href = "/";</script>')
-        }
+            res.json({ success: false, message: "Credenciais Inválidas" })
+        }             
     } catch (error) {
         res.status(500).send('Erro interno ao verificar credenciais')
     }
