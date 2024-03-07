@@ -53,7 +53,6 @@
     cursor: pointer;
 }
 
-
 .swal-button:not([disabled]):hover {
     background-color: var(--primary-color-darker) !important;
 }
@@ -62,23 +61,18 @@
     background-color: transparent !important;
 }
 
-.swal-icon--success {
+/* Remove the default styling for both success and error icons */
+.swal-icon--success, .swal-icon--error {
     border-color: transparent !important;
     background-color: transparent !important;
 }
 
-.swal-icon--success__ring {
+/* Hide the internal elements of both success and error icons */
+.swal-icon--success__ring, .swal-icon--error__x-mark, .swal-icon--success__hide-corners, .swal-icon--error__line, .swal-icon--success__line {
     display: none;
 }
 
-.swal-icon--success__hide-corners {
-    display: none;
-}
-
-.swal-icon--success__line {
-    display: none;
-}
-
-.swal-icon--success {
+/* Hide the complete icons for consistency */
+.swal-icon--success, .swal-icon--error {
     display: none;
 }
