@@ -381,7 +381,7 @@ const inventoryItemDelivered = async (req, res) => {
             const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ')
 
             const updateLoanQuery = 'UPDATE kian_emprestimos SET finalizacao_emprestimo = ?, dt_finalizacao = ?, entregue = ? WHERE id = ?'
-            await inventoryDatabase.pool.execute(updateLoanQuery, [userData, formattedDate, true, itemId])
+            await inventoryDatabase.pool.execute(updateLoanQuery, [userData.nome, formattedDate, true, itemId])
 
             const itemInfoQuery = 'SELECT solicitante, equipamento, codigo_identificacao FROM kian_emprestimos WHERE id = ?'
             const [itemRows] = await inventoryDatabase.pool.query(itemInfoQuery, [itemId])
