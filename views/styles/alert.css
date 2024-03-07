@@ -61,18 +61,15 @@
     background-color: transparent !important;
 }
 
-/* Remove the default styling for both success and error icons */
 .swal-icon--success, .swal-icon--error {
     border-color: transparent !important;
     background-color: transparent !important;
 }
 
-/* Hide the internal elements of both success and error icons */
 .swal-icon--success__ring, .swal-icon--error__x-mark, .swal-icon--success__hide-corners, .swal-icon--error__line, .swal-icon--success__line {
     display: none;
 }
 
-/* Hide the complete icons for consistency */
 .swal-icon--success, .swal-icon--error {
     display: none;
 }
