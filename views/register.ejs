@@ -9,6 +9,7 @@
     <link rel="icon" href="https://kian.com.br/wp-content/themes/kian-site/styles/images/favicon.png">
 
     <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="/styles/alert.css">
 </head>
 
 <body>
@@ -16,7 +17,7 @@
     <section class="container">
         <h1><%= data.message %></h1>
 
-        <form class="register" action="/submit/register" method="post">
+        <form class="register" action="/register/submit" method="post">
             <label for="username">Usuario:</label>
             <input type="text" id="username" name="username" required>
             <br>
@@ -43,6 +44,9 @@
         
         <a class="back" href="/">Voltar</a>
     </section>
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="/scripts/register.js"></script>
 </body>
 
 </html>
