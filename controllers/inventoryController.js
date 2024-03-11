@@ -259,18 +259,18 @@ const exportInventoryToExcel = async (req, res) => {
             const [rows] = await inventoryDatabase.pool.execute(query, queryParams)
             const userData = await inventoryDatabase.getUserByUsername(req.session.username)
 
-            if (rows && userData.cargo === 'Administrador') {
+            if (userData.cargo === 'Administrador') {
                 const actives = rows.map(active => ({
                     'Identificação da Solicitação': active.id,
                     'Responsável pelo Empréstimo': active.responsavel_emprestimo,
                     'Solicitante': active.solicitante,
-                    'Sáida do Setor': notice.formatDate(new Date(active.saida_setor)),
+                    'Saída do Setor': notice.formatDate(new Date(active.saida_setor)),
                     'Equipamento': active.equipamento,
                     'Identificação do Equipamento': active.codigo_identificacao,
                     'Previsão de Entrega': notice.formatDate(new Date(active.previsao_entrega)),
                     'Solicitação Entregue': active.entregue,
-                    'Responsável por Finalizar Solicitação': active.finalizacao_emprestimo,
-                    'Data da Finalização da Solicitação': notice.formatDateWithCheck(active.dt_finalizacao)
+                    'Responsável por Finalizar Solicitação': active.finalizacao_emprestimo ? active.finalizacao_emprestimo : 'Pendente',
+                    'Data da Finalização da Solicitação': active.dt_finalizacao ? notice.formatDateWithCheck(active.dt_finalizacao) : 'Pendente'
                 }))
 
                 spreadsheet.exportToExcel(actives, res, { searchChar, searchField, startDate, endDate })
@@ -284,6 +284,7 @@ const exportInventoryToExcel = async (req, res) => {
         res.render('error', { error: 'Erro ao obter dados do inventário' })
     }
 }
+
 
 const inventoryRequests = async (req, res) => {
     try {
