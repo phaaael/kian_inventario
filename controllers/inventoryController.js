@@ -318,7 +318,7 @@ const inventoryRequests = async (req, res) => {
 }
 
 
-const inventoryListAllRequests = async (req, res) => {
+const inventoryListAllLoans = async (req, res) => {
     try {
         if (req.session && req.session.username) {
             const { searchChar, searchField, startDate, endDate } = req.query
@@ -358,7 +358,7 @@ const inventoryListAllRequests = async (req, res) => {
                     completion_date: notice.formatDateWithCheck(active.dt_finalizacao)
                 }))
 
-                res.render('inventory_allrequests', { actives, searchField, searchChar, startDate, endDate })
+                res.render('inventory_allloans', { actives, searchField, searchChar, startDate, endDate })
             } else {
                 res.send('Usuário sem permissão')
             }
@@ -478,7 +478,7 @@ module.exports = {
     inventoryRegistration,
     inventoryRegisterItem,
     inventoryItemDelivered,
-    inventoryListAllRequests,
+    inventoryListAllLoans,
     inventoryChangeItem,
     inventoryUpdateRecord,
     exportInventoryToExcel,
