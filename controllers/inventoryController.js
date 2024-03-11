@@ -125,11 +125,14 @@ const inventoryAcceptItem = async (req, res) => {
 const inventoryRefuseItem = async (req, res) => {
     try {
         const itemId = req.params.id
+        const reason = req.body.reason
 
         if (!itemId) return res.status(400).json({ success: false, message: 'ID do item não fornecido' })
 
-        const updateQuery = 'UPDATE kian_solicitacoes SET status_solicitacao = ?, solicitacao_recusada = ? WHERE id = ?;'
-        await inventoryDatabase.pool.execute(updateQuery, [true, true, itemId])
+        if (!reason) return res.status(400).json({ success: false, message: 'Motivo da recusa não fornecido' })
+
+        const updateQuery = 'UPDATE kian_solicitacoes SET status_solicitacao = ?, solicitacao_recusada = ?, motivo_recusa = ? WHERE id = ?'
+        await inventoryDatabase.pool.execute(updateQuery, [true, true, reason, itemId])
 
         const itemInfoQuery = 'SELECT solicitante, equipamento, codigo_identificacao FROM kian_solicitacoes WHERE id = ?'
         const [itemRows] = await inventoryDatabase.pool.query(itemInfoQuery, [itemId])
@@ -139,11 +142,12 @@ const inventoryRefuseItem = async (req, res) => {
             const updateInventoryQuery = 'UPDATE kian_estoque SET emprestado = 0 WHERE codigo_identificacao = ?'
             await inventoryDatabase.pool.execute(updateInventoryQuery, [item.codigo_identificacao])
         } else {
-            throw new Error('Código de identificação do item não encontrado.');
+            return res.status(404).json({ success: false, message: 'Código de identificação do item não encontrado.' })
         }
 
         res.json({ success: true, message: "Solicitação Recusada" })
     } catch (error) {
+        console.error('Erro ao recusar solicitação:', error)
         res.status(500).json({ success: false, message: 'Erro ao recusar solicitação' })
     }
 }
