@@ -19,7 +19,9 @@ router.get('/inventory/all_requests', inventoryController.inventoryListAllReques
 
 router.get ('/inventory/requests', inventoryController.inventoryRequests)
 
-router.get('/inventory/export_spreadsheet', inventoryController.exportInventoryToExcel)
+router.get('/inventory/export_allloans', inventoryController.exportInventoryListAllLoans)
+
+router.get('/inventory/export_allrequests', inventoryController.exportinventoryListAllRequests)
 
 router.post('/inventory/registration/submit', inventoryController.inventoryRegisterItem)
 

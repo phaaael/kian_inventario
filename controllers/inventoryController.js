@@ -235,7 +235,7 @@ const inventoryUpdateRecord = async (req, res) => {
     }
 }
 
-const exportInventoryToExcel = async (req, res) => {
+const exportInventoryListAllLoans = async (req, res) => {
     try {
         if (req.session && req.session.username) {
             const { searchChar, searchField, startDate, endDate } = req.query
@@ -273,6 +273,55 @@ const exportInventoryToExcel = async (req, res) => {
                     'Solicitação Entregue': active.entregue,
                     'Responsável por Finalizar Solicitação': active.finalizacao_emprestimo ? active.finalizacao_emprestimo : 'Pendente',
                     'Data da Finalização da Solicitação': active.dt_finalizacao ? notice.formatDateWithCheck(active.dt_finalizacao) : 'Pendente'
+                }))
+
+                spreadsheet.exportToExcel(actives, res, { searchChar, searchField, startDate, endDate })
+            } else {
+                res.send('Usuário sem permissão')
+            }
+        } else {
+            res.redirect('/')
+        }
+    } catch (error) {
+        res.render('error', { error: 'Erro ao obter dados do inventário' })
+    }
+}
+
+const exportinventoryListAllRequests = async (req, res) => {
+    try {
+        if (req.session && req.session.username) {
+            const { searchChar, searchField, startDate, endDate } = req.query
+
+            let query = 'SELECT * FROM kian_solicitacoes WHERE 1=1'
+            let queryParams = []
+
+            if (searchChar && searchField) {
+                query += ` AND ${searchField} LIKE ?`
+                queryParams.push(`%${searchChar}%`)
+            }
+
+            if (startDate) {
+                query += ' AND dt_finalizacao >= ?'
+                queryParams.push(startDate)
+            }
+
+            if (endDate) {
+                query += ' AND dt_finalizacao <= ?'
+                queryParams.push(endDate)
+            }
+
+            const [rows] = await inventoryDatabase.pool.execute(query, queryParams)
+            const userData = await inventoryDatabase.getUserByUsername(req.session.username)
+
+            if (userData.cargo === 'Administrador') {
+                const actives = rows.map(active => ({
+                    'Identificação da Solicitação': active.id,
+                    'Solicitante': active.solicitante,
+                    'Saída do Setor': notice.formatDate(new Date(active.saida_setor)),
+                    'Equipamento': active.equipamento,
+                    'Identificação do Equipamento': active.codigo_identificacao,
+                    'Previsão de Entrega': notice.formatDate(new Date(active.previsao_entrega)),
+                    'Motivo da Solicitação': active.motivo_emprestimo
                 }))
 
                 spreadsheet.exportToExcel(actives, res, { searchChar, searchField, startDate, endDate })
@@ -531,6 +580,7 @@ module.exports = {
     inventoryListAllRequests,
     inventoryChangeItem,
     inventoryUpdateRecord,
-    exportInventoryToExcel,
+    exportInventoryListAllLoans,
+    exportinventoryListAllRequests,
     logout
 }
