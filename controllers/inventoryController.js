@@ -51,7 +51,14 @@ const inventory = async (req, res) => {
 const inventoryRequestLoan = async (req, res) => {
     try {
         if (req.method === 'GET') {
-            const query = 'SELECT * FROM KIAN_ESTOQUE WHERE emprestado = 0;'
+            const query = `
+                        SELECT kian_estoque.*
+                        FROM kian_estoque
+                        LEFT JOIN kian_solicitacoes ON kian_estoque.id = kian_solicitacoes.equipamento
+                        AND kian_solicitacoes.status_solicitacao IS NULL
+                        WHERE kian_estoque.emprestado = 0 AND kian_solicitacoes.equipamento IS NULL;
+            `
+            
             const [row] = await inventoryDatabase.pool.execute(query)
             res.render('inventory_requestloan', { row })
         } else if (req.method === 'POST') {
@@ -71,6 +78,9 @@ const inventoryRequestLoan = async (req, res) => {
             `
             
             await inventoryDatabase.pool.execute(insertQuery, [userData.nome, exit_sector, itemName, codigoId, request_reason, delivery_forecast])
+
+            const updateQuery = 'UPDATE kian_estoque SET emprestado = 1 WHERE id = ?'
+            await inventoryDatabase.pool.execute(updateQuery, [item])
 
             res.json({ success: true, message: "Solicitação de Empréstimo Enviada" })
         }
@@ -98,14 +108,6 @@ const inventoryAcceptItem = async (req, res) => {
                 const loan = rows[0]
                 const insertQuery = `INSERT INTO kian_emprestimos (responsavel_emprestimo, solicitante, saida_setor, equipamento, codigo_identificacao, motivo_emprestimo, previsao_entrega) VALUES (?, ?, ?, ?, ?, ?, ?)`
                 await inventoryDatabase.pool.execute(insertQuery, [userData.nome, loan.solicitante, loan.saida_setor, loan.equipamento, loan.codigo_identificacao, loan.motivo_emprestimo, loan.previsao_entrega])
-
-                const updateStockQuery = 'UPDATE kian_estoque SET emprestado = ? WHERE codigo_identificacao = ?'
-                const [updateEstoqueResult] = await inventoryDatabase.pool.execute(updateStockQuery, [true, loan.codigo_identificacao])
-
-
-                if (updateEstoqueResult.affectedRows == 0) {
-                    throw new Error('Falha ao atualizar status de emprestado no estoque')
-                }
 
                 res.json({ success: true, message: "Solicitação Aceita" })
             } else {
