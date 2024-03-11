@@ -49,8 +49,7 @@
                         <th>Equipamento</th>
                         <th>Código de Identificação</th>
                         <th>Previsão de Entrega</th>
-                        <th>Solicitação finalizada por</th>
-                        <th>Data da finalização</th>
+                        <th>Motivo da Solicitação</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -63,8 +62,7 @@
                                 <td><%= active.equipment %></td>
                                 <td><%= active.identification_code %></td>
                                 <td><%= active.delivery_forecast %></td>
-                                <td><%= active.loan_completed ? active.loan_completed : 'Pendente' %></td>
-                                <td><%= active.completion_date %></td>
+                                <td><%= active.reason %></td>
                             </tr>
                         <% }); %>
                     <% } else { %>

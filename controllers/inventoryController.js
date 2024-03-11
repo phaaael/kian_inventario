@@ -352,8 +352,7 @@ const inventoryListAllRequests = async (req, res) => {
                     identification_code: active.codigo_identificacao,
                     delivery_forecast: notice.formatDate(new Date(active.previsao_entrega)),
                     delivered: active.entregue,
-                    loan_completed: active.finalizacao_emprestimo,
-                    completion_date: notice.formatDateWithCheck(active.dt_finalizacao)
+                    reason: active.motivo_emprestimo
                 }))
 
                 res.render('inventory_allrequests', { actives, searchField, searchChar, startDate, endDate })
