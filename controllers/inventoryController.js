@@ -287,7 +287,6 @@ const exportInventoryToExcel = async (req, res) => {
     }
 }
 
-
 const inventoryRequests = async (req, res) => {
     try {
         if (req.session && req.session.username) {

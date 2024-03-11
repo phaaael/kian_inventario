@@ -13,7 +13,7 @@ router.get('/inventory', inventoryController.inventory)
 
 router.get('/inventory/request_loan', inventoryController.inventoryRequestLoan)
 
-router.get('/inventory/all_requests', inventoryController.inventoryListAllRequests)
+router.get('/inventory/all_loans', inventoryController.inventoryListAllRequests)
 
 router.get ('/inventory/requests', inventoryController.inventoryRequests)
 
