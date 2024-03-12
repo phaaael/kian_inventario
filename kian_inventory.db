@@ -3,6 +3,7 @@ CREATE TABLE `kian_usuarios` (
   matricula INT NOT NULL UNIQUE,
   usuario VARCHAR(255) NOT NULL UNIQUE,
   senha VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
   nome VARCHAR(255) DEFAULT('Sem'),
   sobrenome VARCHAR(255) DEFAULT('Registro'),
   cargo VARCHAR(255) DEFAULT('Membro')
