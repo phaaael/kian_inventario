@@ -56,6 +56,31 @@ function formatDateWithCheck(data) {
     }
 }
 
+async function requestApproved(recipientEmail, requester) {
+    try {
+        const mailBody = `
+        Prezado(a), ${requester} !
+        
+        Sua solicitação foi aprovada. Nossa equipe está prosseguindo com o processo e em breve entrará em contato com você.
+
+        Atenciosamente,
+
+        Kian Inventário`
+
+        const mailOptions = {
+            from: 'iluminacaokian@gmail.com',
+            to: recipientEmail,
+            // cc: '',
+            subject: 'Kian Inventário - Solicitação Aprovada',
+            text: mailBody
+        }
+
+        await transporter.sendMail(mailOptions)
+    } catch {
+        throw error
+    }
+}
+
 async function requestConfirmation(recipientEmail, id, requester) {
     try {
         const mailBody = `
@@ -73,13 +98,13 @@ async function requestConfirmation(recipientEmail, id, requester) {
             from: 'iluminacaokian@gmail.com',
             to: recipientEmail,
             // cc: '',
-            subject: 'Kian Inventário - Confirmação de Entrega',
+            subject: 'Kian Inventário - Solicitação Registrada',
             text: mailBody
         }
 
         await transporter.sendMail(mailOptions)
     } catch {
-
+        throw error
     }
 }
 
@@ -211,8 +236,9 @@ async function checkAndSendEmail() {
 module.exports = { 
     checkAndSendEmail, 
     sendDeliveryConfirmationEmail, 
-    requestConfirmation,  
-    formatDateWithCheck, 
+    requestConfirmation,
+    requestApproved,
+    formatDateWithCheck,
     formatDateForUpdate, 
     formatDate
 }
