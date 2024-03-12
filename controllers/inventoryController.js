@@ -93,41 +93,6 @@ const inventoryRequestLoan = async (req, res) => {
     }
 }
 
-// const inventoryAcceptItem = async (req, res) => {
-//     try {
-//         const itemId = req.params.id
-//         const userData = await inventoryDatabase.getUserByUsername(req.session.username)
-        
-//         if (!itemId) return res.status(400).json({ success: false, message: 'ID do item não fornecido' })
-
-//         const updateQuery = 'UPDATE kian_solicitacoes SET status_solicitacao = ? WHERE id = ?'
-//         const [updateResult] = await inventoryDatabase.pool.execute(updateQuery, [true, itemId])
-
-//         if (updateResult.affectedRows > 0) {
-//             const selectQuery = `SELECT solicitante, saida_setor, equipamento, codigo_identificacao, motivo_emprestimo, previsao_entrega FROM kian_solicitacoes WHERE id = ?`
-//             const [rows] = await inventoryDatabase.pool.execute(selectQuery, [itemId])
-
-//             if (rows.length > 0) {
-//                 const loan = rows[0]
-//                 const insertQuery = `INSERT INTO kian_emprestimos (responsavel_emprestimo, solicitante, saida_setor, equipamento, codigo_identificacao, motivo_emprestimo, previsao_entrega) VALUES (?, ?, ?, ?, ?, ?, ?)`
-//                 await inventoryDatabase.pool.execute(insertQuery, [userData.nome, loan.solicitante, loan.saida_setor, loan.equipamento, loan.codigo_identificacao, loan.motivo_emprestimo, loan.previsao_entrega])
-
-//                 res.json({ success: true, message: "Solicitação Aceita" })
-
-//                 await notice.requestApproved()
-//             } else {
-//                 res.status(404).json({ success: false, message: 'Nenhum registro encontrado para atualizar' })
-//             }
-//         } else {
-//             res.status(404).json({ success: false, message: 'Atualização da solicitação falhou' })
-//         }
-//     } catch (error) {
-//         console.error(error)
-//         res.status(500).json({ success: false, message: 'Erro ao aceitar solicitação' })
-//     }
-// }
-
-
 const inventoryAcceptItem = async (req, res) => {
     try {
         const itemId = req.params.id
@@ -145,19 +110,14 @@ const inventoryAcceptItem = async (req, res) => {
             if (rows.length > 0) {
                 const loan = rows[0]
 
-                // Novo: Consulta para obter o e-mail do solicitante em kian_usuarios
                 const userEmailQuery = `SELECT email FROM kian_usuarios WHERE nome = ?`
                 const [[userEmail]] = await inventoryDatabase.pool.execute(userEmailQuery, [loan.solicitante])
-
-                // Se o e-mail foi encontrado, você pode continuar com a lógica de envio de e-mail
-                // Certifique-se de incluir verificação para userEmail e userEmail.email antes de enviar
 
                 const insertQuery = `INSERT INTO kian_emprestimos (responsavel_emprestimo, solicitante, saida_setor, equipamento, codigo_identificacao, motivo_emprestimo, previsao_entrega) VALUES (?, ?, ?, ?, ?, ?, ?)`
                 await inventoryDatabase.pool.execute(insertQuery, [userData.nome, loan.solicitante, loan.saida_setor, loan.equipamento, loan.codigo_identificacao, loan.motivo_emprestimo, loan.previsao_entrega])
 
                 res.json({ success: true, message: "Solicitação Aceita" })
 
-                // Aqui é onde você incluiria o código para enviar um e-mail usando as informações do solicitante e seu e-mail
                 await notice.requestApproved(userEmail.email, loan.solicitante)
             } else {
                 res.status(404).json({ success: false, message: 'Nenhum registro encontrado para atualizar' })
