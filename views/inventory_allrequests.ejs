@@ -6,6 +6,7 @@
     <title>Inventário TI - Kian Iluminação</title>
     <link rel="icon" href="https://kian.com.br/wp-content/themes/kian-site/styles/images/favicon.png">
     <link rel="stylesheet" href="/styles/inventory_allrequests.css">
+    <link rel="stylesheet" href="/styles/alert.css">
 </head>
 <body>
     <div class="container">
@@ -50,6 +51,7 @@
                         <th>Código de Identificação</th>
                         <th>Previsão de Entrega</th>
                         <th>Motivo da Solicitação</th>
+                        <th>Motivo da Recusa</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -63,6 +65,13 @@
                                 <td><%= active.identification_code %></td>
                                 <td><%= active.delivery_forecast %></td>
                                 <td><%= active.reason %></td>
+                                <td>
+                                    <% if (active.reason_refusal && active.reason_refusal.trim() !== '') { %>
+                                        <span class="reason-refusal" style="cursor: pointer;" onclick="showAlert('<%- active.reason_refusal %>')">Exibir Motivo</span>
+                                    <% } else { %>
+                                        Solicitação Aprovada
+                                    <% } %>
+                                </td>
                             </tr>
                         <% }); %>
                     <% } else { %>
@@ -75,5 +84,8 @@
         </div>
         <a href="/inventory/menu">Voltar</a>
     </div>
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="/scripts/allrequests.js"></script>
 </body>
 </html>
