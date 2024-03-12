@@ -73,16 +73,19 @@ const inventoryRequestLoan = async (req, res) => {
             if (!itemName || !codigoId) { throw new Error('Item ou Código de Identificação não encontrado.') }
 
             const insertQuery = `
-                INSERT INTO KIAN_SOLICITACOES (solicitante, saida_setor, equipamento, codigo_identificacao, motivo_emprestimo, previsao_entrega)
+                INSERT INTO kian_solicitacoes (solicitante, saida_setor, equipamento, codigo_identificacao, motivo_emprestimo, previsao_entrega)
                 VALUES (?, ?, ?, ?, ?, ?)
             `
             
-            await inventoryDatabase.pool.execute(insertQuery, [userData.nome, exit_sector, itemName, codigoId, request_reason, delivery_forecast])
+            const [ insertResult ] = await inventoryDatabase.pool.execute(insertQuery, [userData.nome, exit_sector, itemName, codigoId, request_reason, delivery_forecast])
+            const insertedId = insertResult.insertId
 
             const updateQuery = 'UPDATE kian_estoque SET emprestado = 1 WHERE id = ?'
             await inventoryDatabase.pool.execute(updateQuery, [item])
-
+            
             res.json({ success: true, message: "Solicitação de Empréstimo Enviada" })
+            
+            await notice.requestConfirmation(userData.email, insertedId, userData.nome)
         }
     } catch (error) {
         console.error(error)
