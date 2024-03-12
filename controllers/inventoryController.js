@@ -336,7 +336,8 @@ const exportinventoryListAllRequests = async (req, res) => {
                     'Equipamento': active.equipamento,
                     'Identificação do Equipamento': active.codigo_identificacao,
                     'Previsão de Entrega': notice.formatDate(new Date(active.previsao_entrega)),
-                    'Motivo da Solicitação': active.motivo_emprestimo
+                    'Motivo da Solicitação': active.motivo_emprestimo,
+                    'Motivo da Recusa': active.motivo_recusa ? active.motivo_recusa : 'Solicitação Aprovada'
                 }))
 
                 spreadsheet.exportToExcel(actives, res, { searchChar, searchField, startDate, endDate })
@@ -416,7 +417,8 @@ const inventoryListAllRequests = async (req, res) => {
                     identification_code: active.codigo_identificacao,
                     delivery_forecast: notice.formatDate(new Date(active.previsao_entrega)),
                     delivered: active.entregue,
-                    reason: active.motivo_emprestimo
+                    reason: active.motivo_emprestimo,      
+                    reason_refusal: active.motivo_recusa
                 }))
 
                 res.render('inventory_allrequests', { actives, searchField, searchChar, startDate, endDate })
