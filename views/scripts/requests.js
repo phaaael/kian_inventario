@@ -66,3 +66,7 @@ function performAction(id, action, reason = '') {
         location.reload()
     })
 }
+
+function showAlert(message) {
+    swal("Motivo da Solicitação", message)
+}

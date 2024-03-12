@@ -40,7 +40,9 @@
                                     <td><%= active.equipment %></td>
                                     <td><%= active.identification_code %></td>
                                     <td><%= active.delivery_forecast %></td>
-                                    <td><%= active.loan_reason %></td>
+                                    <td>
+                                        <span class="loan_reason" style="cursor: pointer; font-weight: bold;" onclick="showAlert('<%= active.loan_reason %>')">Exibir Motivo</span>
+                                    </td>
                                     <td>
                                         <form action="/inventory/accept/<%= active.id %>" method="POST">
                                             <button style="cursor: pointer; background-color: transparent; font-size: 20px;" class="accept" type="button" onclick="handleRequest('<%= active.id %>', 'accept')">✔️</button>
