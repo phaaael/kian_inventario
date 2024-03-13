@@ -71,7 +71,7 @@ function performAction(id, action, reason = '') {
         swal.close()
         const message = action === 'accept' ? "A solicitação foi aceita com sucesso." : "A solicitação foi recusada com sucesso."
         swal({
-            title: action === 'accept' ? "Aceita" : "Recusada",
+            title: action === 'accept' ? "Solicitação Aceita" : "Solicitação Recusada",
             text: message,
             icon: "success",
             button: "OK",
