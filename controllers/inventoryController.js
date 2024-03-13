@@ -146,16 +146,26 @@ const inventoryRefuseItem = async (req, res) => {
 
         const itemInfoQuery = 'SELECT solicitante, equipamento, codigo_identificacao FROM kian_solicitacoes WHERE id = ?'
         const [itemRows] = await inventoryDatabase.pool.query(itemInfoQuery, [itemId])
-        const item = itemRows[0]
+        const item = itemRows[0];
 
-        if (item && item.codigo_identificacao) {
-            const updateInventoryQuery = 'UPDATE kian_estoque SET emprestado = 0 WHERE codigo_identificacao = ?'
-            await inventoryDatabase.pool.execute(updateInventoryQuery, [item.codigo_identificacao])
-        } else {
+        if (!item || !item.codigo_identificacao) {
             return res.status(404).json({ success: false, message: 'Código de identificação do item não encontrado.' })
         }
 
+        const updateInventoryQuery = 'UPDATE kian_estoque SET emprestado = 0 WHERE codigo_identificacao = ?'
+        await inventoryDatabase.pool.execute(updateInventoryQuery, [item.codigo_identificacao])
+
+        const userEmailQuery = 'SELECT email FROM kian_usuarios WHERE nome = ?'
+        const [userRows] = await inventoryDatabase.pool.query(userEmailQuery, [item.solicitante])
+        const user = userRows[0]
+
+        if (!user || !user.email) {
+            return res.status(404).json({ success: false, message: 'E-mail do solicitante não encontrado.' })
+        }
+
         res.json({ success: true, message: "Solicitação Recusada" })
+
+        await notice.requestRefused(user.email, item.solicitante, reason)
     } catch (error) {
         console.error('Erro ao recusar solicitação:', error)
         res.status(500).json({ success: false, message: 'Erro ao recusar solicitação' })

@@ -56,6 +56,33 @@ function formatDateWithCheck(data) {
     }
 }
 
+async function requestRefused(recipientEmail, requester, reason) {
+    try {
+        const mailBody = `
+        Prezado(a), ${requester} !
+        
+        Sua solicitação foi Recusada.
+
+        Motivo: ${reason}
+
+        Atenciosamente,
+
+        Kian Inventário`
+
+        const mailOptions = {
+            from: 'iluminacaokian@gmail.com',
+            to: recipientEmail,
+            // cc: '',
+            subject: 'Kian Inventário - Solicitação Recusada',
+            text: mailBody
+        }
+
+        await transporter.sendMail(mailOptions)
+    } catch {
+        throw error
+    }
+}
+
 async function requestApproved(recipientEmail, requester) {
     try {
         const mailBody = `
@@ -238,6 +265,7 @@ module.exports = {
     sendDeliveryConfirmationEmail, 
     requestConfirmation,
     requestApproved,
+    requestRefused,
     formatDateWithCheck,
     formatDateForUpdate, 
     formatDate
