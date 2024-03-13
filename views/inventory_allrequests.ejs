@@ -65,11 +65,11 @@
                                 <td><%= active.identification_code %></td>
                                 <td><%= active.delivery_forecast %></td>
                                 <td>
-                                    <span class="reason" style="cursor: pointer; font-weight: bold;" onclick="showAlert('<%= active.reason %>')">Exibir Motivo</span>
+                                    <span class="reason" style="cursor: pointer; font-weight: bold;" onclick="alertReason('<%= active.reason %>')">Exibir Motivo</span>
                                 </td>
                                 <td>
                                     <% if (active.reason_refusal && active.reason_refusal.trim() !== '') { %>
-                                        <span class="reason-refusal" style="cursor: pointer; font-weight: bold;" onclick="showAlert('<%- active.reason_refusal %>')">Exibir Motivo</span>
+                                        <span class="reason-refusal" style="cursor: pointer; font-weight: bold;" onclick="alertStatus('<%- active.reason_refusal %>')">Exibir Motivo</span>
                                     <% } else { %>
                                         Solicitação Aprovada
                                     <% } %>
