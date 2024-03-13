@@ -67,7 +67,7 @@ async function requestRefused(recipientEmail, requester, reason) {
 
         Atenciosamente,
 
-        Kian Inventário`
+        Equipe de Inventário Kian`
 
         const mailOptions = {
             from: 'iluminacaokian@gmail.com',
@@ -92,7 +92,7 @@ async function requestApproved(recipientEmail, requester) {
 
         Atenciosamente,
 
-        Kian Inventário`
+        Equipe de Inventário Kian`
 
         const mailOptions = {
             from: 'iluminacaokian@gmail.com',
@@ -119,7 +119,7 @@ async function requestConfirmation(recipientEmail, id, requester) {
 
         Atenciosamente,
 
-        Kian Inventário`
+        Equipe de Inventário Kian`
 
         const mailOptions = {
             from: 'iluminacaokian@gmail.com',
@@ -139,16 +139,16 @@ async function sendDeliveryConfirmationEmail(recipientEmail, id, username, itemN
     try {
         const mailBody = `
             Prezados,
+
+            Informamos que o equipamento ${itemName} foi entregue com sucesso pelo usuário ${requester} na data ${formatDate(deliveryDate)}.
             
-            O equipamento: ${itemName} foi entregue com sucesso pelo usuário ${requester} na data ${formatDate(deliveryDate)}.
-
-            Identificação da Solicitação: #${id}
-
-            Técnico responsável pela finalização: ${username}
+            Identificação da Solicitação: #${id}.
+            
+            Técnico responsável pela finalização: ${username}.
             
             Atenciosamente,
-
-            Kian Inventário`
+            
+            Equipe de Inventário Kian`
 
         const mailOptions = {
             from: 'iluminacaokian@gmail.com',
