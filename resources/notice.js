@@ -56,9 +56,9 @@ function formatDateWithCheck(data) {
     }
 }
 
-async function requestRefused(recipientEmail, requester, reason) {
+async function requestRefused(recipientEmail, requester, reason, id, admin) {
     try {
-        const mailBody = `
+        const mailToUser = `
         Prezado(a), ${requester} !
         
         Sua solicitação foi Recusada.
@@ -69,23 +69,44 @@ async function requestRefused(recipientEmail, requester, reason) {
 
         Equipe de Inventário Kian`
 
-        const mailOptions = {
+        const mailToUserOptions = {
             from: 'iluminacaokian@gmail.com',
             to: recipientEmail,
             // cc: '',
             subject: 'Kian Inventário - Solicitação Recusada',
-            text: mailBody
+            text: mailToUser
         }
 
-        await transporter.sendMail(mailOptions)
+        const mailToAdmin = `
+        Prezados,
+        
+        Solicitação #${id} foi recusada pelo técnico ${admin}.
+
+        Motivo da Recusa: ${reason}
+
+        Atenciosamente,
+
+        Equipe de Inventário Kian`
+
+        const mailToAdminOptions = {
+            from: 'iluminacaokian@gmail.com',
+            to: 'raphael.sousa@kian.com.br', // ti@kian.com.br
+            // cc: '',
+            subject: 'Kian Inventário - Atualização de Solicitação',
+            text: mailToAdmin
+        }
+
+
+        await transporter.sendMail(mailToUserOptions)
+        await transporter.sendMail(mailToAdminOptions)
     } catch {
         throw error
     }
 }
 
-async function requestApproved(recipientEmail, requester) {
+async function requestApproved(recipientEmail, requester, id, admin) {
     try {
-        const mailBody = `
+        const mailToUser = `
         Prezado(a), ${requester} !
         
         Sua solicitação foi aprovada. Nossa equipe está prosseguindo com o processo e em breve entrará em contato com você.
@@ -94,15 +115,33 @@ async function requestApproved(recipientEmail, requester) {
 
         Equipe de Inventário Kian`
 
-        const mailOptions = {
+        const mailToUserOptions = {
             from: 'iluminacaokian@gmail.com',
             to: recipientEmail,
             // cc: '',
             subject: 'Kian Inventário - Solicitação Aprovada',
-            text: mailBody
+            text: mailToUser
         }
 
-        await transporter.sendMail(mailOptions)
+        const mailToAdmin = `
+        Prezados,
+        
+        Solicitação #${id} foi aprovada pelo técnico ${admin}.
+
+        Atenciosamente,
+
+        Equipe de Inventário Kian`
+
+        const mailToAdminOptions = {
+            from: 'iluminacaokian@gmail.com',
+            to: 'raphael.sousa@kian.com.br', // ti@kian.com.br
+            // cc: '',
+            subject: 'Kian Inventário - Atualização de Solicitação',
+            text: mailToAdmin
+        }
+
+        await transporter.sendMail(mailToUserOptions)
+        await transporter.sendMail(mailToAdminOptions)
     } catch {
         throw error
     }
@@ -110,7 +149,7 @@ async function requestApproved(recipientEmail, requester) {
 
 async function requestConfirmation(recipientEmail, id, requester) {
     try {
-        const mailBody = `
+        const mailToUser = `
         Prezado(a), ${requester} !
         
         Recebemos sua solicitação, e ela será analisada por nossa equipe.
@@ -121,15 +160,34 @@ async function requestConfirmation(recipientEmail, id, requester) {
 
         Equipe de Inventário Kian`
 
-        const mailOptions = {
+        const mailToAdmin = `
+        Prezados,
+        
+        Recebemos uma nova solicitação. Identificação da Solicitação: #${id}.
+
+        Atenciosamente,
+
+        Equipe de Inventário Kian`
+
+        const mailToUserOptions = {
             from: 'iluminacaokian@gmail.com',
             to: recipientEmail,
             // cc: '',
-            subject: 'Kian Inventário - Solicitação Registrada',
-            text: mailBody
+            subject: 'Kian Inventário - Solicitação Recebida',
+            text: mailToUser
         }
 
-        await transporter.sendMail(mailOptions)
+        const mailToAdminOptions = {
+            from: 'iluminacaokian@gmail.com',
+            to: recipientEmail, // ti@kian.com.br
+            // cc: '',
+            subject: 'Kian Inventário - Solicitação Registrada',
+            text: mailToAdmin
+        }
+
+
+        await transporter.sendMail(mailToUserOptions)
+        await transporter.sendMail(mailToAdminOptions)
     } catch {
         throw error
     }
@@ -137,12 +195,12 @@ async function requestConfirmation(recipientEmail, id, requester) {
 
 async function sendDeliveryConfirmationEmail(recipientEmail, id, username, itemName, requester, deliveryDate) {
     try {
-        const mailBody = `
+        const mailToUser = `
             Prezados,
 
             Informamos que o equipamento ${itemName} foi entregue com sucesso pelo usuário ${requester} na data ${formatDate(deliveryDate)}.
             
-            Identificação da Solicitação: #${id}.
+            Identificação do Empréstimo: #${id}.
             
             Técnico responsável pela finalização: ${username}.
             
@@ -150,14 +208,35 @@ async function sendDeliveryConfirmationEmail(recipientEmail, id, username, itemN
             
             Equipe de Inventário Kian`
 
-        const mailOptions = {
+        const mailToAdmin = `
+            Prezados,
+
+            Informamos que o equipamento ${itemName} foi entregue com sucesso pelo usuário ${requester} na data ${formatDate(deliveryDate)}.
+            
+            Identificação do Empréstimo: #${id}.
+            
+            Técnico responsável pela finalização: ${username}.
+            
+            Atenciosamente,
+            
+            Equipe de Inventário Kian`
+
+        const mailToUserOptions = {
             from: 'iluminacaokian@gmail.com',
             to: recipientEmail,
             subject: 'Kian Inventário - Confirmação de Entrega',
-            text: mailBody
+            text: mailToUser
         }
 
-        await transporter.sendMail(mailOptions)
+        const mailToAdminOptions = {
+            from: 'iluminacaokian@gmail.com',
+            to: recipientEmail, // ti@kian.com.br
+            subject: 'Kian Inventário - Finalização de Empréstimo',
+            text: mailToAdmin
+        }
+
+        await transporter.sendMail(mailToUserOptions)
+        await transporter.sendMail(mailToAdminOptions)
     } catch (error) {
         throw error
     }
@@ -170,7 +249,7 @@ async function checkAndSendEmail() {
         const [rows, fields] = await database.pool.query('SELECT * FROM kian_emprestimos WHERE previsao_entrega <= ?', [currentDate])
        
         for (const row of rows) {
-            const recipientEmail = 'raphael.sousa@kian.com.br'
+            const recipientEmail = 'raphael.sousa@kian.com.br' // ti@kian.com.br
             const dateFromDatabase = new Date(row.previsao_entrega)
 
             const differenceInMilliseconds = dateFromDatabase - currentDate

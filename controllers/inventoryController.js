@@ -116,7 +116,7 @@ const inventoryAcceptItem = async (req, res) => {
                 const insertQuery = `INSERT INTO kian_emprestimos (responsavel_emprestimo, solicitante, saida_setor, equipamento, codigo_identificacao, motivo_emprestimo, previsao_entrega) VALUES (?, ?, ?, ?, ?, ?, ?)`
                 await inventoryDatabase.pool.execute(insertQuery, [userData.nome, loan.solicitante, loan.saida_setor, loan.equipamento, loan.codigo_identificacao, loan.motivo_emprestimo, loan.previsao_entrega])
                 
-                await notice.requestApproved(userEmail.email, loan.solicitante)
+                await notice.requestApproved(userEmail.email, loan.solicitante, itemId, userData.nome)
                 
                 res.json({ success: true, message: "Solicitação Aceita" })
             } else {
@@ -136,6 +136,7 @@ const inventoryRefuseItem = async (req, res) => {
     try {
         const itemId = req.params.id
         const reason = req.body.reason
+        const userData = await inventoryDatabase.getUserByUsername(req.session.username)
 
         if (!itemId) return res.status(400).json({ success: false, message: 'ID do item não fornecido' })
 
@@ -165,7 +166,7 @@ const inventoryRefuseItem = async (req, res) => {
 
         res.json({ success: true, message: "Solicitação Recusada" })
 
-        await notice.requestRefused(user.email, item.solicitante, reason)
+        await notice.requestRefused(user.email, item.solicitante, reason, itemId, userData.nome)
     } catch (error) {
         console.error('Erro ao recusar solicitação:', error)
         res.status(500).json({ success: false, message: 'Erro ao recusar solicitação' })
