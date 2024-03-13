@@ -1,3 +1,3 @@
 function showAlert(message) {
-    swal("Motivo da Recusa", message)
+    swal("Motivo da Solicitação", message)
 }
