@@ -32,11 +32,7 @@
 .swal-text {
     color: var(--primary-color) !important;
     font-family: 'Open Sans', sans-serif;
-    text-align: center !important;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
+    text-align: center;
 }
 
 .swal-button-container {
