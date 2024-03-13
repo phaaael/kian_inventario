@@ -39,8 +39,22 @@ function handleRequest(id, action) {
 }
 
 function performAction(id, action, reason = '') {
+    swal({
+        title: "Processando...",
+        text: "Por favor, aguarde enquanto a solicitação está sendo processada.",
+        icon: "info",
+        buttons: false,
+        closeOnClickOutside: false,
+        closeOnEsc: false,
+        timerProgressBar: true,
+        onBeforeOpen: () => {
+            Swal.showLoading()
+        }
+    })
+
     let url = `/inventory/${action}/${id}`
     let data = { reason: reason }
+
     fetch(url, {
         method: 'POST',
         headers: {
@@ -54,16 +68,26 @@ function performAction(id, action, reason = '') {
         }
         return response.json()
     }).then(data => {
-        if (action === 'accept') {
-            swal("Aceita", "A solicitação foi aceita com sucesso.", "success")
-        } else {
-            swal("Recusada", "A solicitação foi recusada com sucesso.", "success")
-        }
+        swal.close()
+        const message = action === 'accept' ? "A solicitação foi aceita com sucesso." : "A solicitação foi recusada com sucesso."
+        swal({
+            title: action === 'accept' ? "Aceita" : "Recusada",
+            text: message,
+            icon: "success",
+            button: "OK",
+        }).then(() => {
+            location.reload()
+        })
     }).catch(error => {
         console.error('Houve um erro:', error)
-        swal("Erro", "Não foi possível processar a sua solicitação.", "error")
-    }).finally(() => {
-        location.reload()
+        swal({
+            title: "Erro",
+            text: "Não foi possível processar a sua solicitação.",
+            icon: "error",
+            button: "OK",
+        }).then(() => {
+            location.reload()
+        })
     })
 }
 

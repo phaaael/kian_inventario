@@ -115,10 +115,10 @@ const inventoryAcceptItem = async (req, res) => {
 
                 const insertQuery = `INSERT INTO kian_emprestimos (responsavel_emprestimo, solicitante, saida_setor, equipamento, codigo_identificacao, motivo_emprestimo, previsao_entrega) VALUES (?, ?, ?, ?, ?, ?, ?)`
                 await inventoryDatabase.pool.execute(insertQuery, [userData.nome, loan.solicitante, loan.saida_setor, loan.equipamento, loan.codigo_identificacao, loan.motivo_emprestimo, loan.previsao_entrega])
-
-                res.json({ success: true, message: "Solicitação Aceita" })
-
+                
                 await notice.requestApproved(userEmail.email, loan.solicitante)
+                
+                res.json({ success: true, message: "Solicitação Aceita" })
             } else {
                 res.status(404).json({ success: false, message: 'Nenhum registro encontrado para atualizar' })
             }
