@@ -196,30 +196,30 @@ async function requestConfirmation(recipientEmail, id, requester) {
 async function sendDeliveryConfirmationEmail(recipientEmail, id, username, itemName, requester, deliveryDate) {
     try {
         const mailToUser = `
-            Prezados,
+        Prezados,
 
-            Informamos que o equipamento ${itemName} foi entregue com sucesso pelo usuário ${requester} na data ${formatDate(deliveryDate)}.
+        Informamos que o equipamento ${itemName} foi entregue com sucesso pelo usuário ${requester} na data ${formatDate(deliveryDate)}.
             
-            Identificação do Empréstimo: #${id}.
+        Identificação do Empréstimo: #${id}.
             
-            Técnico responsável pela finalização: ${username}.
+        Técnico responsável pela finalização: ${username}.
             
-            Atenciosamente,
+        Atenciosamente,
             
-            Equipe de Inventário Kian`
+        Equipe de Inventário Kian`
 
         const mailToAdmin = `
-            Prezados,
+        Prezados,
 
-            Informamos que o equipamento ${itemName} foi entregue com sucesso pelo usuário ${requester} na data ${formatDate(deliveryDate)}.
+        Informamos que o equipamento ${itemName} foi entregue com sucesso pelo usuário ${requester} na data ${formatDate(deliveryDate)}.
             
-            Identificação do Empréstimo: #${id}.
+        Identificação do Empréstimo: #${id}.
             
-            Técnico responsável pela finalização: ${username}.
+        Técnico responsável pela finalização: ${username}.
             
-            Atenciosamente,
+        Atenciosamente,
             
-            Equipe de Inventário Kian`
+        Equipe de Inventário Kian`
 
         const mailToUserOptions = {
             from: 'iluminacaokian@gmail.com',
@@ -258,20 +258,19 @@ async function checkAndSendEmail() {
 
             if (differenceInDays === 1) {
                 const mailBody = `
-                Prezados,
+        Prezados,
                     
-                Este é um lembrete de que a seguinte entrega está prevista para amanhã (${formatDate(row.previsao_entrega)}):
-                    - Identificação da Solicitação: #${row.id}
-                    - Responsável pelo Empréstimo: ${row.responsavel_emprestimo}
-                    - Solicitante: ${row.solicitante}
-                    - Data de Saída do Setor: ${formatDate(row.saida_setor)}
-                    - Equipamento: ${row.equipamento}
-                    - Código de Identificação: ${row.codigo_identificacao}
+            Este é um lembrete de que a seguinte entrega está prevista para amanhã (${formatDate(row.previsao_entrega)}):
+                - Identificação da Solicitação: #${row.id}
+                - Responsável pelo Empréstimo: ${row.responsavel_emprestimo}
+                - Solicitante: ${row.solicitante}
+                - Data de Saída do Setor: ${formatDate(row.saida_setor)}
+                - Equipamento: ${row.equipamento}
+                - Código de Identificação: ${row.codigo_identificacao}
 
-                Atenciosamente,
+        Atenciosamente,
                 
-                Kian Inventário
-                `
+        Equipe de Inventário Kian`
 
                 const mailOptions = {
                     from: 'iluminacaokian@gmail.com',
@@ -283,20 +282,19 @@ async function checkAndSendEmail() {
                 await transporter.sendMail(mailOptions)
             } else if (differenceInDays === 0) {
                 const mailBody = `
-                Prezados,
+        Prezados,
                     
-                Este é um lembrete de que a seguinte entrega está prevista para hoje (${formatDate(row.previsao_entrega)}):
-                    - Identificação da Solicitação: #${row.id}
-                    - Responsável pelo Empréstimo: ${row.responsavel_emprestimo}
-                    - Solicitante: ${row.solicitante}
-                    - Data de Saída do Setor: ${formatDate(row.saida_setor)}
-                    - Equipamento: ${row.equipamento}
-                    - Código de Identificação: ${row.codigo_identificacao}
+            Este é um lembrete de que a seguinte entrega está prevista para hoje (${formatDate(row.previsao_entrega)}):
+                - Identificação da Solicitação: #${row.id}
+                - Responsável pelo Empréstimo: ${row.responsavel_emprestimo}
+                - Solicitante: ${row.solicitante}
+                - Data de Saída do Setor: ${formatDate(row.saida_setor)}
+                - Equipamento: ${row.equipamento}
+                - Código de Identificação: ${row.codigo_identificacao}
 
-                Atenciosamente,
+        Atenciosamente,
                 
-                Kian Inventário
-                `
+        Equipe de Inventário Kian`
 
                 const mailOptions = {
                     from: 'iluminacaokian@gmail.com',
@@ -308,20 +306,19 @@ async function checkAndSendEmail() {
                 await transporter.sendMail(mailOptions)
             } else if (differenceInDays < 0 && !row.entregue) {
                 const mailBody = `
-                Prezados,
+        Prezados,
                     
-                Este é um lembrete de que a seguinte entrega está atrasada (${formatDate(row.previsao_entrega)}):
-                    - Identificação da Solicitação: #${row.id}
-                    - Responsável pelo Empréstimo: ${row.responsavel_emprestimo}
-                    - Solicitante: ${row.solicitante}
-                    - Data de Saída do Setor: ${formatDate(row.saida_setor)}
-                    - Equipamento: ${row.equipamento}
-                    - Código de Identificação: ${row.codigo_identificacao}
+            Este é um lembrete de que a seguinte entrega está atrasada (${formatDate(row.previsao_entrega)}):
+                - Identificação da Solicitação: #${row.id}
+                - Responsável pelo Empréstimo: ${row.responsavel_emprestimo}
+                - Solicitante: ${row.solicitante}
+                - Data de Saída do Setor: ${formatDate(row.saida_setor)}
+                - Equipamento: ${row.equipamento}
+                - Código de Identificação: ${row.codigo_identificacao}
 
-                Atenciosamente,
+        Atenciosamente,
                 
-                Kian Inventário
-                `
+        Equipe de Inventário Kian`
 
                 const mailOptions = {
                     from: 'iluminacaokian@gmail.com',

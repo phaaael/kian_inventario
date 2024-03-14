@@ -131,7 +131,6 @@ const inventoryAcceptItem = async (req, res) => {
     }
 }
 
-
 const inventoryRefuseItem = async (req, res) => {
     try {
         const itemId = req.params.id
