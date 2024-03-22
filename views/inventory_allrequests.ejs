@@ -70,6 +70,8 @@
                                 <td>
                                     <% if (active.reason_refusal && active.reason_refusal.trim() !== '') { %>
                                         <span class="reason-refusal" style="cursor: pointer; font-weight: bold;" onclick="alertStatus('<%- active.reason_refusal %>')">Exibir Motivo</span>
+                                    <% } else if (active.status === 0) { %>
+                                        Solicitação Pendente
                                     <% } else { %>
                                         Solicitação Aprovada
                                     <% } %>

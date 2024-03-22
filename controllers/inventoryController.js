@@ -357,7 +357,10 @@ const exportinventoryListAllRequests = async (req, res) => {
                     'Identificação do Equipamento': active.codigo_identificacao,
                     'Previsão de Entrega': notice.formatDate(new Date(active.previsao_entrega)),
                     'Motivo da Solicitação': active.motivo_emprestimo,
-                    'Motivo da Recusa': active.motivo_recusa ? active.motivo_recusa : 'Solicitação Aprovada'
+                    'Status da Solicitação': (active.status_solicitacao === 0 && (!active.motivo_recusa || active.motivo_recusa.trim() === '')) ? 'Solicitação Pendente' :
+                    (active.status_solicitacao === 1 && (!active.motivo_recusa || active.motivo_recusa.trim() === '')) ? 'Solicitação Aprovada' :
+                    (active.status_solicitacao === 1 && active.motivo_recusa && active.motivo_recusa.trim() !== '') ? active.motivo_recusa :
+                    'Status Indefinido'                
                 }))
 
                 spreadsheet.exportToExcel(actives, res, { searchChar, searchField, startDate, endDate })
@@ -438,7 +441,8 @@ const inventoryListAllRequests = async (req, res) => {
                     delivery_forecast: notice.formatDate(new Date(active.previsao_entrega)),
                     delivered: active.entregue,
                     reason: active.motivo_emprestimo,      
-                    reason_refusal: active.motivo_recusa
+                    reason_refusal: active.motivo_recusa,
+                    status: active.status_solicitacao
                 }))
 
                 res.render('inventory_allrequests', { actives, searchField, searchChar, startDate, endDate })
