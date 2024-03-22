@@ -93,4 +93,5 @@ a:hover, input:hover, button[type="submit"]:hover {
   background: var(--background-color);
   border-radius: 10px;
   padding: 30px;
+  width: 800px;
 }
