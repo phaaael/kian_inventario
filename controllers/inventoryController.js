@@ -378,25 +378,47 @@ const exportinventoryListAllRequests = async (req, res) => {
 const inventoryRequests = async (req, res) => {
     try {
         if (req.session && req.session.username) {
-            const [rows] = await inventoryDatabase.pool.execute('SELECT * FROM KIAN_SOLICITACOES;')
             const userData = await inventoryDatabase.getUserByUsername(req.session.username)
-
-            if (rows && userData.cargo === 'Administrador') {
-                const actives = rows.map(active => ({
-                    id: active.id,
-                    requester: active.solicitante,
-                    exit_sector: notice.formatDate(new Date(active.saida_setor)),
-                    equipment: active.equipamento,
-                    identification_code: active.codigo_identificacao,
-                    delivery_forecast: notice.formatDate(new Date(active.previsao_entrega)), 
-                    loan_reason: active.motivo_emprestimo,
-                    request_status: active.status_solicitacao
-                }))
-
-                res.render('inventory_requests', { actives })
-            } else {
-                res.send('Usuário sem permissão')
+            if (!userData || userData.cargo !== 'Administrador') {
+                return res.send('Usuário sem permissão')
             }
+
+            const { searchChar, searchField, startDate, endDate } = req.query
+
+            const allowedFields = ['id', 'solicitante', 'equipamento', 'codigo_identificacao']
+
+            let query = 'SELECT * FROM kian_solicitacoes WHERE 1=1'
+            let queryParams = [];
+
+            if (searchChar && allowedFields.includes(searchField)) {
+                query += ` AND ${searchField} LIKE ?`
+                queryParams.push(`%${searchChar}%`)
+            }
+
+            if (startDate) {
+                query += ' AND saida_setor >= ?'
+                queryParams.push(startDate)
+            }
+            
+            if (endDate) {
+                query += ' AND saida_setor <= ?'
+                queryParams.push(endDate)
+            }
+
+            const [rows] = await inventoryDatabase.pool.execute(query, queryParams);
+
+            const actives = rows.map(active => ({
+                id: active.id,
+                requester: active.solicitante,
+                exit_sector: notice.formatDate(new Date(active.saida_setor)),
+                equipment: active.equipamento,
+                identification_code: active.codigo_identificacao,
+                delivery_forecast: notice.formatDate(new Date(active.previsao_entrega)), 
+                loan_reason: active.motivo_emprestimo,
+                request_status: active.status_solicitacao
+            }))
+
+            res.render('inventory_requests', { actives, searchField, searchChar, startDate, endDate })
         } else {
             res.redirect('/')
         }

@@ -12,6 +12,23 @@
     <div class="container">
         <div class="header">
             <h1>Solicitações Pendentes:</h1>          
+            <div class="search-container">
+
+                <form class="search" action="/inventory/requests" method="get">
+                    <select name="searchField" style="cursor: pointer; margin-right: 10px; margin-bottom: 10px;">
+                        <option value="id">Identificação da Solicitação</option>
+                        <option value="solicitante">Solicitante</option>
+                        <option value="equipamento">Equipamento</option>
+                        <option value="codigo_identificacao">Código de Identificação</option>
+                    </select>
+                    <input type="text" name="searchChar" placeholder="Buscar Registro" value="<%= typeof searchChar !== 'undefined' ? searchChar : '' %>" style="margin-right: 10px; margin-bottom: 10px;">
+                    <label for="startDate" style="margin-right: 5px; margin-bottom: 10px;">Data de Início:</label>
+                    <input type="date" id="startDate" name="startDate" style="cursor: pointer; margin-right: 10px; margin-bottom: 10px;">
+                    <label for="endDate" style="margin-right: 5px; margin-bottom: 10px;">Data de Término:</label>
+                    <input type="date" id="endDate" name="endDate" style="cursor: pointer; margin-right: 10px; margin-bottom: 10px;">
+                    <button type="submit" style="margin-bottom: 10px;">Buscar</button>
+                </form>
+            </div>            
         </div>
         <div class="table-container">
             <table class="items-table">
