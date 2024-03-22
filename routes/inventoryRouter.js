@@ -13,6 +13,8 @@ router.get('/inventory', inventoryController.inventory)
 
 router.get('/inventory/request_loan', inventoryController.inventoryRequestLoan)
 
+router.get('/inventory/request_supplement', inventoryController.inventoryRequestSupplement)
+
 router.get('/inventory/all_loans', inventoryController.inventoryListAllLoans)
 
 router.get('/inventory/all_requests', inventoryController.inventoryListAllRequests)
@@ -36,5 +38,7 @@ router.post('/inventory/refuse/:id', inventoryController.inventoryRefuseItem)
 router.post('/inventory/change/:id', inventoryController.inventoryChangeItem)
 
 router.post('/inventory/update_record', inventoryController.inventoryUpdateRecord)
+
+router.post('/inventory/request_supplement', inventoryController.inventoryRequestSupplement)
 
 module.exports = router

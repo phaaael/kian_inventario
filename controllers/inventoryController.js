@@ -48,6 +48,41 @@ const inventory = async (req, res) => {
     }
 }
 
+const inventoryRequestSupplement = async (req, res) => {
+    try {
+        if (req.method === 'GET') {
+            const itemQuery = 'SELECT item, qtd_item FROM kian_suprimentos'
+            const [items] = await inventoryDatabase.pool.execute(itemQuery)
+            res.render('inventory_requestsupplement', { items })
+        } else if (req.method === 'POST') {
+            const { exit_sector, item, request_reason } = req.body
+            const userData = await inventoryDatabase.getUserByUsername(req.session.username)
+
+            if (!userData || !userData.nome) { throw new Error('Usuário não encontrado ou não logado') }
+
+            const itemQuery = 'SELECT item, qtd_item FROM kian_suprimentos WHERE item = ?'
+            const [[{ item: itemName, qtd_item: itemQuantity }]] = await inventoryDatabase.pool.execute(itemQuery, [item])
+
+            if (!itemName) { throw new Error('Item não encontrado.') }
+            if (itemQuantity <= 0) { throw new Error('Estoque insuficiente.') }
+
+            const insertQuery = `
+                INSERT INTO kian_solicitacoes_suprimentos (solicitante, saida_setor, equipamento, motivo_solicitacao)
+                VALUES (?, ?, ?, ?)
+            `
+            await inventoryDatabase.pool.execute(insertQuery, [userData.nome, exit_sector, itemName, request_reason])
+
+            const updateItemQuantityQuery = 'UPDATE kian_suprimentos SET qtd_item = qtd_item - 1 WHERE item = ?';
+            await inventoryDatabase.pool.execute(updateItemQuantityQuery, [item]);
+            
+            res.json({ success: true, message: "Solicitação de Suprimento Enviada" })
+        }
+    } catch (error) {
+        console.error(error)
+        res.render('error', { error: 'Erro ao solicitar suprimento: ' + error.message })
+    }
+}
+
 const inventoryRequestLoan = async (req, res) => {
     try {
         if (req.method === 'GET') {
@@ -636,6 +671,7 @@ module.exports = {
     inventoryAcceptItem,
     inventoryRefuseItem,
     inventoryRequestLoan,
+    inventoryRequestSupplement,
     inventoryRegistration,
     inventoryRegisterItem,
     inventoryItemDelivered,
