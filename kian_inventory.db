@@ -23,7 +23,7 @@ CREATE TABLE `kian_emprestimos` (
   entregue BOOLEAN DEFAULT false
 );
 
-CREATE TABLE `kian_solicitacoes` (
+CREATE TABLE `kian_solicitacoes_equipamentos` (
   id INT AUTO_INCREMENT PRIMARY KEY,
   solicitante VARCHAR(255) NOT NULL,
   saida_setor DATE NOT NULL,
@@ -36,10 +36,26 @@ CREATE TABLE `kian_solicitacoes` (
   solicitacao_recusada BOOLEAN DEFAULT false
 );
 
-CREATE TABLE `kian_estoque` (
+CREATE TABLE `kian_solicitacoes_suprimentos` (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  solicitante VARCHAR(255) NOT NULL,
+  saida_setor DATE NOT NULL,
+  equipamento VARCHAR(255) NOT NULL,
+  motivo_solicitacao VARCHAR(255) NOT NULL,
+  motivo_recusa VARCHAR(255),
+  status_solicitacao BOOLEAN DEFAULT false,
+  solicitacao_recusada BOOLEAN DEFAULT false
+);
+
+CREATE TABLE `kian_equipamentos` (
   id INT AUTO_INCREMENT PRIMARY KEY,
   item VARCHAR(255) NOT NULL,
   codigo_identificacao VARCHAR(255) NOT NULL,
-  ultimo_solicitante VARCHAR(255),
   emprestado BOOLEAN DEFAULT false
+);
+
+CREATE TABLE `kian_suprimentos` (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  item VARCHAR(255) NOT NULL,
+  qtd_item INT NOT NULL
 );
