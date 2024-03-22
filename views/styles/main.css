@@ -40,7 +40,7 @@ input {
   box-sizing: border-box;
 }
 
-.container h1 {
+.container h1, h5 {
   display: flex;
   justify-content: center;
   margin-top: 15px;
