@@ -21,6 +21,8 @@ router.get('/inventory/all_requests', inventoryController.inventoryListAllReques
 
 router.get ('/inventory/requests', inventoryController.inventoryRequests)
 
+router.get('/inventory/all_supplements', inventoryController.inventoryAllSupplements)
+
 router.get('/inventory/export_allloans', inventoryController.exportInventoryListAllLoans)
 
 router.get('/inventory/export_allrequests', inventoryController.exportinventoryListAllRequests)

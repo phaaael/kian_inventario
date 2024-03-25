@@ -48,6 +48,55 @@ const inventory = async (req, res) => {
     }
 }
 
+const inventoryAllSupplements = async (req, res) => {
+    try {
+        if (req.session && req.session.username) {
+            const userData = await inventoryDatabase.getUserByUsername(req.session.username)
+            if (!userData || userData.cargo !== 'Administrador') return res.send('Usuário sem permissão')
+
+            const { searchChar, searchField, startDate, endDate } = req.query
+
+            const allowedFields = [ 'id', 'solicitante', 'equipamento' ]
+
+            let query = 'SELECT * FROM kian_solicitacoes_suprimentos WHERE 1=1'
+            let queryParams = [];
+
+            if (searchChar && allowedFields.includes(searchField)) {
+                query += ` AND ${searchField} LIKE ?`
+                queryParams.push(`%${searchChar}%`)
+            }
+
+            if (startDate) {
+                query += ' AND saida_setor >= ?'
+                queryParams.push(startDate)
+            }
+            
+            if (endDate) {
+                query += ' AND saida_setor <= ?'
+                queryParams.push(endDate)
+            }
+
+            const [rows] = await inventoryDatabase.pool.execute(query, queryParams);
+
+            const actives = rows.map(active => ({
+                id: active.id,
+                requester: active.solicitante,
+                exit_sector: notice.formatDate(new Date(active.saida_setor)),
+                equipment: active.equipamento,
+                reason_refusal: active.motivo_recusa,
+                supplement_reason: active.motivo_solicitacao,
+                request_status: active.status_solicitacao
+            }))
+
+            res.render('inventory_allsupplements', { actives, searchField, searchChar, startDate, endDate })
+        } else {
+            res.redirect('/')
+        }
+    } catch (error) {
+        res.render('error', { error: 'Erro ao obter dados do inventário' })
+    }
+}
+
 const inventoryRequestSupplement = async (req, res) => {
     try {
         if (req.method === 'GET') {
@@ -671,6 +720,7 @@ module.exports = {
     inventoryAcceptItem,
     inventoryRefuseItem,
     inventoryRequestLoan,
+    inventoryAllSupplements,
     inventoryRequestSupplement,
     inventoryRegistration,
     inventoryRegisterItem,

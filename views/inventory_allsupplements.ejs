@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventário TI - Kian Iluminação</title>
+    <link rel="icon" href="https://kian.com.br/wp-content/themes/kian-site/styles/images/favicon.png">
+    <link rel="stylesheet" href="/styles/inventory_allrequests.css">
+    <link rel="stylesheet" href="/styles/alert.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Histórico de Solicitações de Suprimentos:</h1>
+            <div class="search-container">
+
+                <form class="search" action="/inventory/all_supplements" method="get">
+                    <select name="searchField" style="cursor: pointer; margin-right: 10px; margin-bottom: 10px;">
+                        <option value="id">Identificação da Solicitação</option>
+                        <option value="solicitante">Solicitante</option>
+                        <option value="equipamento">Equipamento</option>
+                        <option value="codigo_identificacao">Código de Identificação</option>
+                        <option value="finalizacao_emprestimo">Solicitação finalizada por</option>
+                    </select>
+                    <input type="text" name="searchChar" placeholder="Buscar Registro" value="<%= typeof searchChar !== 'undefined' ? searchChar : '' %>" style="margin-right: 10px; margin-bottom: 10px;">
+                    <label for="startDate" style="margin-right: 5px; margin-bottom: 10px;">Data de Início:</label>
+                    <input type="date" id="startDate" name="startDate" style="cursor: pointer; margin-right: 10px; margin-bottom: 10px;">
+                    <label for="endDate" style="margin-right: 5px; margin-bottom: 10px;">Data de Término:</label>
+                    <input type="date" id="endDate" name="endDate" style="cursor: pointer; margin-right: 10px; margin-bottom: 10px;">
+                    <button type="submit" style="margin-bottom: 10px;">Buscar</button>
+                </form>
+                <form style="margin-right: 5px; margin-bottom: 5px;" action="/inventory/export_allrequests" method="get">
+                    <input type="hidden" name="searchField" value="<%= searchField %>">
+                    <input type="hidden" name="searchChar" value="<%= searchChar %>">
+                    <input type="hidden" name="startDate" value="<%= startDate %>">
+                    <input type="hidden" name="endDate" value="<%= endDate %>">
+                    <button style="background-color: transparent;" type="submit">
+                        <img style="cursor: pointer; margin-left: 5px; width: 40px;" class="logo_excel" src="https://img.icons8.com/?size=256&id=117561&format=png" alt="Excel">
+                    </button>
+                </form>
+            </div>            
+        </div>
+        <div class="table-container">
+            <table class="items-table">
+                <thead>
+                    <tr>
+                        <th>Identificação da Solicitação</th>
+                        <th>Solicitante</th>
+                        <th>Saída do Setor</th>
+                        <th>Equipamento</th>
+                        <th>Motivo da Solicitação</th>
+                        <th>Status da Solicitação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (actives.length > 0) { %>
+                        <% actives.forEach((active, index) => { %>
+                            <tr data-index="<%= index %>">
+                                <td>#<%= active.id %></td>
+                                <td><%= active.requester %></td>
+                                <td><%= active.exit_sector %></td>
+                                <td><%= active.equipment %></td>
+                                <td>
+                                    <span class="reason" style="cursor: pointer; font-weight: bold;" onclick="alertReason('<%= active.supplement_reason %>')">Exibir Motivo</span>
+                                </td>
+                                <td>
+                                    <% if (active.reason_refusal && active.reason_refusal.trim() !== '') { %>
+                                        <span class="reason-refusal" style="cursor: pointer; font-weight: bold;" onclick="alertStatus('<%- active.reason_refusal %>')">Exibir Motivo</span>
+                                    <% } else if (active.request_status === 0) { %>
+                                        Solicitação Pendente
+                                    <% } else { %>
+                                        Solicitação Aprovada
+                                    <% } %>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="9">Nenhuma solicitação encontrada</td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+        <a href="/inventory/menu">Voltar</a>
+    </div>
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="/scripts/allrequests.js"></script>
+</body>
+</html>
