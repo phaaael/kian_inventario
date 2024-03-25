@@ -86,8 +86,8 @@ const inventoryAllSupplements = async (req, res) => {
                 reason_refusal: active.motivo_recusa,
                 supplement_reason: active.motivo_solicitacao,
                 request_status: active.status_solicitacao,
-                response_completion: active.finalizacao_solicitacao,
-                end_date: notice.formatDate(new Date(active.dt_finalizacao))
+                response_completion: active.finalizacao_solicitacao ? active.finalizacao_solicitacao : 'Pendente',
+                end_date: active.dt_finalizacao ? notice.formatDateWithCheck(active.dt_finalizacao) : 'Pendente'
             }))
 
             res.render('inventory_allsupplements', { actives, searchField, searchChar, startDate, endDate })
@@ -254,7 +254,7 @@ const inventoryAcceptSupplement = async (req, res) => {
                 const userEmailQuery = `SELECT email FROM kian_usuarios WHERE nome = ?`
                 const [[userEmail]] = await inventoryDatabase.pool.execute(userEmailQuery, [loan.solicitante])
                 
-                // await notice.requestApproved(userEmail.email, loan.solicitante, itemId, userData.nome)
+                await notice.requestApproved(userEmail.email, loan.solicitante, itemId, userData.nome)
                 
                 res.json({ success: true, message: "Solicitação Aceita" })
             } else {
@@ -331,7 +331,7 @@ const inventoryRefuseSupplement = async (req, res) => {
                 const userEmailQuery = `SELECT email FROM kian_usuarios WHERE nome = ?`
                 const [[userEmail]] = await inventoryDatabase.pool.execute(userEmailQuery, [loan.solicitante])
                 
-                // await notice.requestApproved(userEmail.email, loan.solicitante, itemId, userData.nome)
+                await notice.requestRefused(userEmail.email, loan.solicitante, itemId, userData.nome)
                 
                 res.json({ success: true, message: "Solicitação Recusada" })
             } else {
