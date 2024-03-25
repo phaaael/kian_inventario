@@ -405,6 +405,55 @@ const exportInventoryListAllLoans = async (req, res) => {
         res.render('error', { error: 'Erro ao obter dados do inventário' })
     }
 }
+const exportinventoryListAllSupplements = async (req, res) => {
+    try {
+        if (req.session && req.session.username) {
+            const { searchChar, searchField, startDate, endDate } = req.query
+
+            let query = 'SELECT * FROM kian_solicitacoes_suprimentos WHERE 1=1'
+            let queryParams = []
+
+            if (searchChar && searchField) {
+                query += ` AND ${searchField} LIKE ?`
+                queryParams.push(`%${searchChar}%`)
+            }
+
+            if (startDate) {
+                query += ' AND saida_setor >= ?'
+                queryParams.push(startDate)
+            }
+
+            if (endDate) {
+                query += ' AND saida_setor <= ?'
+                queryParams.push(endDate)
+            }
+
+            const [rows] = await inventoryDatabase.pool.execute(query, queryParams)
+            const userData = await inventoryDatabase.getUserByUsername(req.session.username)
+
+            if (userData.cargo === 'Administrador') {
+                const actives = rows.map(active => ({
+                    'Identificação da Solicitação': active.id,
+                    'Solicitante': active.solicitante,
+                    'Saída do Setor': notice.formatDate(new Date(active.saida_setor)),
+                    'Equipamento': active.equipamento,
+                    'Motivo da Solicitação': active.motivo_solicitacao,
+                    'Status da Solicitação': (active.status_solicitacao === 0 && (!active.motivo_recusa || active.motivo_recusa.trim() === '')) ? 'Solicitação Pendente' :
+                    (active.status_solicitacao === 1 && (!active.motivo_recusa || active.motivo_recusa.trim() === '')) ? 'Solicitação Aprovada' :
+                    (active.status_solicitacao === 1 && active.motivo_recusa && active.motivo_recusa.trim() !== '') ? active.motivo_recusa : active.motivo_recusa
+                }))
+
+                spreadsheet.exportToExcel(actives, res, { searchChar, searchField, startDate, endDate })
+            } else {
+                res.send('Usuário sem permissão')
+            }
+        } else {
+            res.redirect('/')
+        }
+    } catch (error) {
+        res.render('error', { error: 'Erro ao obter dados do inventário' })
+    }
+}
 
 const exportinventoryListAllRequests = async (req, res) => {
     try {
@@ -730,6 +779,7 @@ module.exports = {
     inventoryChangeItem,
     inventoryUpdateRecord,
     exportInventoryListAllLoans,
+    exportinventoryListAllSupplements,
     exportinventoryListAllRequests,
     logout
 }
