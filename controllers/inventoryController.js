@@ -569,6 +569,8 @@ const exportinventoryListAllSupplements = async (req, res) => {
                     'Saída do Setor': notice.formatDate(new Date(active.saida_setor)),
                     'Equipamento': active.equipamento,
                     'Motivo da Solicitação': active.motivo_solicitacao,
+                    'Responsável por Finalizar Solicitação': active.finalizacao_solicitacao ? active.finalizacao_solicitacao : 'Pendente',
+                    'Data da Finalização da Solicitação': active.dt_finalizacao ? notice.formatDateWithCheck(active.dt_finalizacao) : 'Pendente',
                     'Status da Solicitação': (active.status_solicitacao === 0 && (!active.motivo_recusa || active.motivo_recusa.trim() === '')) ? 'Solicitação Pendente' :
                     (active.status_solicitacao === 1 && (!active.motivo_recusa || active.motivo_recusa.trim() === '')) ? 'Solicitação Aprovada' :
                     (active.status_solicitacao === 1 && active.motivo_recusa && active.motivo_recusa.trim() !== '') ? active.motivo_recusa : active.motivo_recusa
