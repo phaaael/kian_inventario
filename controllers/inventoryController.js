@@ -231,8 +231,11 @@ const inventoryAcceptSupplement = async (req, res) => {
 
         if (!itemId) return res.status(400).json({ success: false, message: 'ID do item não fornecido' })
 
-        const updateQuery = 'UPDATE kian_solicitacoes_suprimentos SET status_solicitacao = ? WHERE id = ?'
-        const [updateResult] = await inventoryDatabase.pool.execute(updateQuery, [true, itemId])
+        const currentDate = new Date()
+        const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ')
+
+        const updateQuery = 'UPDATE kian_solicitacoes_suprimentos SET status_solicitacao = ?, finalizacao_solicitacao = ?, dt_finalizacao = ? WHERE id = ?;'
+        const [updateResult] = await inventoryDatabase.pool.execute(updateQuery, [true, userData.nome, formattedDate, itemId])
 
         if (updateResult.affectedRows > 0) {
             const updateStock = 'UPDATE kian_suprimentos SET qtd_item = qtd_item - 1;'
@@ -247,7 +250,7 @@ const inventoryAcceptSupplement = async (req, res) => {
                 const userEmailQuery = `SELECT email FROM kian_usuarios WHERE nome = ?`
                 const [[userEmail]] = await inventoryDatabase.pool.execute(userEmailQuery, [loan.solicitante])
                 
-                await notice.requestApproved(userEmail.email, loan.solicitante, itemId, userData.nome)
+                // await notice.requestApproved(userEmail.email, loan.solicitante, itemId, userData.nome)
                 
                 res.json({ success: true, message: "Solicitação Aceita" })
             } else {
@@ -308,8 +311,11 @@ const inventoryRefuseSupplement = async (req, res) => {
 
         if (!itemId) return res.status(400).json({ success: false, message: 'ID do item não fornecido' })
 
-        const updateQuery = 'UPDATE kian_solicitacoes_suprimentos SET status_solicitacao = ?, solicitacao_recusada = ?, motivo_recusa = ? WHERE id = ?'
-        const [updateResult] = await inventoryDatabase.pool.execute(updateQuery, [true, true, reason, itemId])
+        const currentDate = new Date()
+        const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ')
+
+        const updateQuery = 'UPDATE kian_solicitacoes_suprimentos SET status_solicitacao = ?, solicitacao_recusada = ?, motivo_recusa = ?, finalizacao_solicitacao = ?, dt_finalizacao = ? WHERE id = ?'
+        const [updateResult] = await inventoryDatabase.pool.execute(updateQuery, [true, true, reason, userData.nome, formattedDate, itemId])
 
         if (updateResult.affectedRows > 0) {
             const selectQuery = `SELECT solicitante, saida_setor, equipamento, motivo_solicitacao FROM kian_solicitacoes_suprimentos WHERE id = ?`
@@ -321,7 +327,7 @@ const inventoryRefuseSupplement = async (req, res) => {
                 const userEmailQuery = `SELECT email FROM kian_usuarios WHERE nome = ?`
                 const [[userEmail]] = await inventoryDatabase.pool.execute(userEmailQuery, [loan.solicitante])
                 
-                await notice.requestApproved(userEmail.email, loan.solicitante, itemId, userData.nome)
+                // await notice.requestApproved(userEmail.email, loan.solicitante, itemId, userData.nome)
                 
                 res.json({ success: true, message: "Solicitação Recusada" })
             } else {
