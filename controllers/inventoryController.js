@@ -85,7 +85,9 @@ const inventoryAllSupplements = async (req, res) => {
                 equipment: active.equipamento,
                 reason_refusal: active.motivo_recusa,
                 supplement_reason: active.motivo_solicitacao,
-                request_status: active.status_solicitacao
+                request_status: active.status_solicitacao,
+                response_completion: active.finalizacao_solicitacao,
+                end_date: notice.formatDate(new Date(active.dt_finalizacao))
             }))
 
             res.render('inventory_allsupplements', { actives, searchField, searchChar, startDate, endDate })
@@ -135,7 +137,9 @@ const inventorySupplements = async (req, res) => {
                 exit_sector: notice.formatDate(new Date(active.saida_setor)),
                 equipment: active.equipamento,
                 supplement_reason: active.motivo_solicitacao,
-                request_status: active.status_solicitacao
+                request_status: active.status_solicitacao,
+                response_completion: active.finalizacao_solicitacao,
+                end_date: notice.formatDate(new Date(active.dt_finalizacao))
             }))
 
             res.render('inventory_supplements', { actives, searchField, searchChar, startDate, endDate })

@@ -49,6 +49,8 @@
                         <th>Saída do Setor</th>
                         <th>Equipamento</th>
                         <th>Motivo da Solicitação</th>
+                        <th>Responsável por Finalizar Solicitação</th>
+                        <th>Data da Finalização da Solicitação</th>
                         <th>Status da Solicitação</th>
                     </tr>
                 </thead>
@@ -63,6 +65,8 @@
                                 <td>
                                     <span class="reason" style="cursor: pointer; font-weight: bold;" onclick="alertReason('<%= active.supplement_reason %>')">Exibir Motivo</span>
                                 </td>
+                                <td><%= active.response_completion %></td>
+                                <td><%= active.end_date %></td>
                                 <td>
                                     <% if (active.reason_refusal && active.reason_refusal.trim() !== '') { %>
                                         <span class="reason-refusal" style="cursor: pointer; font-weight: bold;" onclick="alertStatus('<%- active.reason_refusal %>')">Exibir Motivo</span>
