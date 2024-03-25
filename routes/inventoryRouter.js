@@ -19,6 +19,8 @@ router.get('/inventory/all_loans', inventoryController.inventoryListAllLoans)
 
 router.get('/inventory/all_requests', inventoryController.inventoryListAllRequests)
 
+router.get('/inventory/all_requests_supplements', inventoryController.inventorySupplements)
+
 router.get ('/inventory/requests', inventoryController.inventoryRequests)
 
 router.get('/inventory/all_supplements', inventoryController.inventoryAllSupplements)
@@ -36,6 +38,10 @@ router.post('/inventory/request_loan', inventoryController.inventoryRequestLoan)
 router.post('/inventory/delivered/:id', inventoryController.inventoryItemDelivered)
 
 router.post('/inventory/accept/:id', inventoryController.inventoryAcceptItem)
+
+router.post('/inventory/supplement_accept/:id', inventoryController.inventoryAcceptSupplement)
+
+router.post('/inventory/supplement_refuse/:id', inventoryController.inventoryRefuseSupplement)  
 
 router.post('/inventory/refuse/:id', inventoryController.inventoryRefuseItem)
 

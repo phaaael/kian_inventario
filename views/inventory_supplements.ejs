@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventário TI - Kian Iluminação</title>
+    <link rel="icon" href="https://kian.com.br/wp-content/themes/kian-site/styles/images/favicon.png">
+    <link rel="stylesheet" href="/styles/inventory_requests.css">
+    <link rel="stylesheet" href="/styles/alert.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Solicitações Pendentes de Suprimentos:</h1>          
+            <div class="search-container">
+
+                <form class="search" action="/inventory/all_requests_supplements" method="get">
+                    <select name="searchField" style="cursor: pointer; margin-right: 10px; margin-bottom: 10px;">
+                        <option value="id">Identificação da Solicitação</option>
+                        <option value="solicitante">Solicitante</option>
+                        <option value="equipamento">Equipamento</option>
+                        <option value="codigo_identificacao">Código de Identificação</option>
+                    </select>
+                    <input type="text" name="searchChar" placeholder="Buscar Registro" value="<%= typeof searchChar !== 'undefined' ? searchChar : '' %>" style="margin-right: 10px; margin-bottom: 10px;">
+                    <label for="startDate" style="margin-right: 5px; margin-bottom: 10px;">Data de Início:</label>
+                    <input type="date" id="startDate" name="startDate" style="cursor: pointer; margin-right: 10px; margin-bottom: 10px;">
+                    <label for="endDate" style="margin-right: 5px; margin-bottom: 10px;">Data de Término:</label>
+                    <input type="date" id="endDate" name="endDate" style="cursor: pointer; margin-right: 10px; margin-bottom: 10px;">
+                    <button type="submit" style="margin-bottom: 10px;">Buscar</button>
+                </form>
+            </div>            
+        </div>
+        <div class="table-container">
+            <table class="items-table">
+                <thead>
+                    <tr>
+                        <th>Identificação da Solicitação</th>
+                        <th>Solicitante</th>
+                        <th>Saída do Setor</th>
+                        <th>Suprimento</th>
+                        <th>Motivo da Solicitação</th>
+                        <th>Aceitar Solicitação</th>
+                        <th>Recusar Solicitação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (actives && actives.length > 0) { %>
+                        <% const filteredActives = actives.filter(active => active.request_status !== 1); %>
+                        <% if (filteredActives.length > 0) { %>
+                            <% filteredActives.forEach((active, index) => { %>
+                                <tr data-index="<%= index %>">
+                                    <td>#<%= active.id %></td>
+                                    <td><%= active.requester %></td>
+                                    <td><%= active.exit_sector %></td>
+                                    <td><%= active.equipment %></td>
+                                    <td>
+                                        <span class="supplement_reason" style="cursor: pointer; font-weight: bold;" onclick="showAlert('<%= active.supplement_reason %>')">Exibir Motivo</span>
+                                    </td>
+                                    <td>
+                                        <button style="cursor: pointer; background-color: transparent; font-size: 20px;" class="accept" type="button" onclick="handleRequest('<%= active.id %>', 'accept')">✔️</button>
+                                    </td>
+                                    <td>
+                                        <button style="cursor: pointer; background-color: transparent; font-size: 20px;" class="refuse" type="button" onclick="handleRequest('<%= active.id %>', 'refuse')">❌</button>  
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="9">Nenhuma solicitação encontrada</td>
+                            </tr>
+                        <% } %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="9">Nenhuma solicitação encontrada</td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+        <a href="/inventory/menu">Voltar</a>
+
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <script src="/scripts/supplements.js"></script>
+    </body>
+</html>

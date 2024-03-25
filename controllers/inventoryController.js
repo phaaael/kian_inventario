@@ -97,6 +97,56 @@ const inventoryAllSupplements = async (req, res) => {
     }
 }
 
+const inventorySupplements = async (req, res) => {
+    try {
+        if (req.session && req.session.username) {
+            const userData = await inventoryDatabase.getUserByUsername(req.session.username)
+            if (!userData || userData.cargo !== 'Administrador') {
+                return res.send('Usuário sem permissão')
+            }
+
+            const { searchChar, searchField, startDate, endDate } = req.query
+
+            const allowedFields = ['id', 'solicitante', 'equipamento']
+
+            let query = 'SELECT * FROM kian_solicitacoes_suprimentos WHERE 1=1'
+            let queryParams = [];
+
+            if (searchChar && allowedFields.includes(searchField)) {
+                query += ` AND ${searchField} LIKE ?`
+                queryParams.push(`%${searchChar}%`)
+            }
+
+            if (startDate) {
+                query += ' AND saida_setor >= ?'
+                queryParams.push(startDate)
+            }
+            
+            if (endDate) {
+                query += ' AND saida_setor <= ?'
+                queryParams.push(endDate)
+            }
+
+            const [rows] = await inventoryDatabase.pool.execute(query, queryParams);
+
+            const actives = rows.map(active => ({
+                id: active.id,
+                requester: active.solicitante,
+                exit_sector: notice.formatDate(new Date(active.saida_setor)),
+                equipment: active.equipamento,
+                supplement_reason: active.motivo_solicitacao,
+                request_status: active.status_solicitacao
+            }))
+
+            res.render('inventory_supplements', { actives, searchField, searchChar, startDate, endDate })
+        } else {
+            res.redirect('/')
+        }
+    } catch (error) {
+        res.render('error', { error: 'Erro ao obter dados do inventário' })
+    }
+}
+
 const inventoryRequestSupplement = async (req, res) => {
     try {
         if (req.method === 'GET') {
@@ -120,9 +170,6 @@ const inventoryRequestSupplement = async (req, res) => {
                 VALUES (?, ?, ?, ?)
             `
             await inventoryDatabase.pool.execute(insertQuery, [userData.nome, exit_sector, itemName, request_reason])
-
-            const updateItemQuantityQuery = 'UPDATE kian_suprimentos SET qtd_item = qtd_item - 1 WHERE item = ?';
-            await inventoryDatabase.pool.execute(updateItemQuantityQuery, [item]);
             
             res.json({ success: true, message: "Solicitação de Suprimento Enviada" })
         }
@@ -177,6 +224,44 @@ const inventoryRequestLoan = async (req, res) => {
     }
 }
 
+const inventoryAcceptSupplement = async (req, res) => {
+    try {
+        const itemId = req.params.id
+        const userData = await inventoryDatabase.getUserByUsername(req.session.username)
+
+        if (!itemId) return res.status(400).json({ success: false, message: 'ID do item não fornecido' })
+
+        const updateQuery = 'UPDATE kian_solicitacoes_suprimentos SET status_solicitacao = ? WHERE id = ?'
+        const [updateResult] = await inventoryDatabase.pool.execute(updateQuery, [true, itemId])
+
+        if (updateResult.affectedRows > 0) {
+            const updateStock = 'UPDATE kian_suprimentos SET qtd_item = qtd_item - 1;'
+            await inventoryDatabase.pool.execute(updateStock)
+
+            const selectQuery = `SELECT solicitante, saida_setor, equipamento, motivo_solicitacao FROM kian_solicitacoes_suprimentos WHERE id = ?`
+            const [rows] = await inventoryDatabase.pool.execute(selectQuery, [itemId])
+
+            if (rows.length > 0) {
+                const loan = rows[0]
+
+                const userEmailQuery = `SELECT email FROM kian_usuarios WHERE nome = ?`
+                const [[userEmail]] = await inventoryDatabase.pool.execute(userEmailQuery, [loan.solicitante])
+                
+                await notice.requestApproved(userEmail.email, loan.solicitante, itemId, userData.nome)
+                
+                res.json({ success: true, message: "Solicitação Aceita" })
+            } else {
+                res.status(404).json({ success: false, message: 'Nenhum registro encontrado para atualizar' })
+            }
+        } else {
+            res.status(404).json({ success: false, message: 'Atualização da solicitação falhou' })
+        }
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ success: false, message: 'Erro ao aceitar solicitação' })
+    }
+}
+
 const inventoryAcceptItem = async (req, res) => {
     try {
         const itemId = req.params.id
@@ -203,6 +288,42 @@ const inventoryAcceptItem = async (req, res) => {
                 await notice.requestApproved(userEmail.email, loan.solicitante, itemId, userData.nome)
                 
                 res.json({ success: true, message: "Solicitação Aceita" })
+            } else {
+                res.status(404).json({ success: false, message: 'Nenhum registro encontrado para atualizar' })
+            }
+        } else {
+            res.status(404).json({ success: false, message: 'Atualização da solicitação falhou' })
+        }
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ success: false, message: 'Erro ao aceitar solicitação' })
+    }
+}
+
+const inventoryRefuseSupplement = async (req, res) => {
+    try {
+        const itemId = req.params.id
+        const reason = req.body.reason
+        const userData = await inventoryDatabase.getUserByUsername(req.session.username)
+
+        if (!itemId) return res.status(400).json({ success: false, message: 'ID do item não fornecido' })
+
+        const updateQuery = 'UPDATE kian_solicitacoes_suprimentos SET status_solicitacao = ?, solicitacao_recusada = ?, motivo_recusa = ? WHERE id = ?'
+        const [updateResult] = await inventoryDatabase.pool.execute(updateQuery, [true, true, reason, itemId])
+
+        if (updateResult.affectedRows > 0) {
+            const selectQuery = `SELECT solicitante, saida_setor, equipamento, motivo_solicitacao FROM kian_solicitacoes_suprimentos WHERE id = ?`
+            const [rows] = await inventoryDatabase.pool.execute(selectQuery, [itemId])
+
+            if (rows.length > 0) {
+                const loan = rows[0]
+
+                const userEmailQuery = `SELECT email FROM kian_usuarios WHERE nome = ?`
+                const [[userEmail]] = await inventoryDatabase.pool.execute(userEmailQuery, [loan.solicitante])
+                
+                await notice.requestApproved(userEmail.email, loan.solicitante, itemId, userData.nome)
+                
+                res.json({ success: true, message: "Solicitação Recusada" })
             } else {
                 res.status(404).json({ success: false, message: 'Nenhum registro encontrado para atualizar' })
             }
@@ -766,11 +887,14 @@ module.exports = {
     inventory,
     getMenuInventory,
     inventoryRequests,
+    inventoryAcceptSupplement,
     inventoryAcceptItem,
     inventoryRefuseItem,
+    inventoryRefuseSupplement,
     inventoryRequestLoan,
     inventoryAllSupplements,
     inventoryRequestSupplement,
+    inventorySupplements,
     inventoryRegistration,
     inventoryRegisterItem,
     inventoryItemDelivered,

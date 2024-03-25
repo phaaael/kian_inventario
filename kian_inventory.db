@@ -44,7 +44,9 @@ CREATE TABLE `kian_solicitacoes_suprimentos` (
   motivo_solicitacao VARCHAR(255) NOT NULL,
   motivo_recusa VARCHAR(255),
   status_solicitacao BOOLEAN DEFAULT false,
-  solicitacao_recusada BOOLEAN DEFAULT false
+  solicitacao_recusada BOOLEAN DEFAULT false,
+  finalizacao_solicitacao VARCHAR(255),
+  dt_finalizacao DATE
 );
 
 CREATE TABLE `kian_equipamentos` (
