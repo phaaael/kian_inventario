@@ -237,29 +237,32 @@ const inventoryAcceptSupplement = async (req, res) => {
         const itemId = req.params.id
         const userData = await inventoryDatabase.getUserByUsername(req.session.username)
 
-        if (!itemId) return res.status(400).json({ success: false, message: 'ID do item não fornecido' })
+        if (!itemId) return res.status(400).json({ success: false, message: 'ID da solicitação não fornecido' })
 
         const currentDate = new Date()
         const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ')
 
-        const updateQuery = 'UPDATE kian_solicitacoes_suprimentos SET status_solicitacao = ?, finalizacao_solicitacao = ?, dt_finalizacao = ? WHERE id = ?;'
+        const updateQuery = 'UPDATE kian_solicitacoes_suprimentos SET status_solicitacao = ?, finalizacao_solicitacao = ?, dt_finalizacao = ? WHERE id = ?'
         const [updateResult] = await inventoryDatabase.pool.execute(updateQuery, [true, userData.nome, formattedDate, itemId])
 
         if (updateResult.affectedRows > 0) {
-            const updateStock = 'UPDATE kian_suprimentos SET qtd_item = qtd_item - 1;'
-            await inventoryDatabase.pool.execute(updateStock)
+            const itemNameQuery = 'SELECT equipamento FROM kian_solicitacoes_suprimentos WHERE id = ?'
+            const [[itemNameResult]] = await inventoryDatabase.pool.execute(itemNameQuery, [itemId])
+            if (!itemNameResult) return res.status(404).json({ success: false, message: 'Nome do item não encontrado' })
 
-            const selectQuery = `SELECT solicitante, saida_setor, equipamento, motivo_solicitacao FROM kian_solicitacoes_suprimentos WHERE id = ?`
+            const updateStock = 'UPDATE kian_suprimentos SET qtd_item = qtd_item - 1 WHERE item = ?'
+            await inventoryDatabase.pool.execute(updateStock, [itemNameResult.equipamento])
+
+            const selectQuery = 'SELECT solicitante, saida_setor, equipamento, motivo_solicitacao FROM kian_solicitacoes_suprimentos WHERE id = ?'
             const [rows] = await inventoryDatabase.pool.execute(selectQuery, [itemId])
 
             if (rows.length > 0) {
-                const loan = rows[0]
+                const supplement = rows[0]
+                const userEmailQuery = 'SELECT email FROM kian_usuarios WHERE nome = ?'
+                const [[userEmail]] = await inventoryDatabase.pool.execute(userEmailQuery, [supplement.solicitante])
 
-                const userEmailQuery = `SELECT email FROM kian_usuarios WHERE nome = ?`
-                const [[userEmail]] = await inventoryDatabase.pool.execute(userEmailQuery, [loan.solicitante])
-                
-                await notice.requestApproved(userEmail.email, loan.solicitante, itemId, userData.nome)
-                
+                await notice.requestApproved(userEmail.email, supplement.solicitante, itemId, userData.nome)
+
                 res.json({ success: true, message: "Solicitação Aceita" })
             } else {
                 res.status(404).json({ success: false, message: 'Nenhum registro encontrado para atualizar' })
@@ -272,6 +275,7 @@ const inventoryAcceptSupplement = async (req, res) => {
         res.status(500).json({ success: false, message: 'Erro ao aceitar solicitação' })
     }
 }
+
 
 const inventoryAcceptItem = async (req, res) => {
     try {
@@ -330,12 +334,12 @@ const inventoryRefuseSupplement = async (req, res) => {
             const [rows] = await inventoryDatabase.pool.execute(selectQuery, [itemId])
 
             if (rows.length > 0) {
-                const loan = rows[0]
+                const supplement = rows[0]
 
                 const userEmailQuery = `SELECT email FROM kian_usuarios WHERE nome = ?`
-                const [[userEmail]] = await inventoryDatabase.pool.execute(userEmailQuery, [loan.solicitante])
+                const [[userEmail]] = await inventoryDatabase.pool.execute(userEmailQuery, [supplement.solicitante])
                 
-                await notice.requestRefused(userEmail.email, loan.solicitante, itemId, userData.nome)
+                await notice.requestRefused(userEmail.email, supplement.solicitante, reason, itemId, userData.nome)
                 
                 res.json({ success: true, message: "Solicitação Recusada" })
             } else {
