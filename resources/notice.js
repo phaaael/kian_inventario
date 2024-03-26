@@ -163,7 +163,53 @@ async function requestConfirmation(recipientEmail, id, requester) {
         const mailToAdmin = `
         Prezados,
         
-        Recebemos uma nova solicitação. Identificação da Solicitação: #${id}.
+        Recebemos uma nova solicitação de empréstimo. Identificação da Solicitação: #${id}.
+
+        Atenciosamente,
+
+        Equipe de Inventário Kian`
+
+        const mailToUserOptions = {
+            from: 'iluminacaokian@gmail.com',
+            to: recipientEmail,
+            // cc: '',
+            subject: 'Kian Inventário - Solicitação Recebida',
+            text: mailToUser
+        }
+
+        const mailToAdminOptions = {
+            from: 'iluminacaokian@gmail.com',
+            to: recipientEmail, // ti@kian.com.br
+            // cc: '',
+            subject: 'Kian Inventário - Solicitação Registrada',
+            text: mailToAdmin
+        }
+
+
+        await transporter.sendMail(mailToUserOptions)
+        await transporter.sendMail(mailToAdminOptions)
+    } catch {
+        throw error
+    }
+}
+
+async function requestConfirmationSupplement(recipientEmail, id, requester) {
+    try {
+        const mailToUser = `
+        Prezado(a), ${requester} !
+        
+        Recebemos sua solicitação, e ela será analisada por nossa equipe.
+
+        Identificação da Solicitação: #${id}.
+
+        Atenciosamente,
+
+        Equipe de Inventário Kian`
+
+        const mailToAdmin = `
+        Prezados,
+        
+        Recebemos uma nova solicitação de suprimento. Identificação da Solicitação: #${id}.
 
         Atenciosamente,
 
@@ -338,7 +384,8 @@ async function checkAndSendEmail() {
 
 module.exports = { 
     checkAndSendEmail, 
-    sendDeliveryConfirmationEmail, 
+    sendDeliveryConfirmationEmail,
+    requestConfirmationSupplement,
     requestConfirmation,
     requestApproved,
     requestRefused,

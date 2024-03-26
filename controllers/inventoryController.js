@@ -173,9 +173,13 @@ const inventoryRequestSupplement = async (req, res) => {
                 INSERT INTO kian_solicitacoes_suprimentos (solicitante, saida_setor, equipamento, motivo_solicitacao)
                 VALUES (?, ?, ?, ?)
             `
-            await inventoryDatabase.pool.execute(insertQuery, [userData.nome, exit_sector, itemName, request_reason])
-            
+        
+            const [ insertResult ] = await inventoryDatabase.pool.execute(insertQuery, [userData.nome, exit_sector, itemName, request_reason])
+            const insertedId = insertResult.insertId
+
             res.json({ success: true, message: "Solicitação de Suprimento Enviada" })
+
+            await notice.requestConfirmationSupplement(userData.email, insertedId, userData.nome)
         }
     } catch (error) {
         console.error(error)
