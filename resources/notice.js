@@ -45,8 +45,7 @@ async function updateRecord(recipientEmail, requester, changesText, id, admin) {
 
 async function requestRefused(recipientEmail, requester, reason, id, admin) {
     try {
-        const mailToUser = `
-        Prezado(a), ${requester} ! \n\nSua solicitação foi recusada. \n\nTécnico responsável pela recusa: ${admin}. \n\nMotivo: "${reason}" \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
+        const mailToUser = `Prezado(a), ${requester} ! \n\nSua solicitação de equipamento foi recusada. \n\nTécnico responsável pela recusa: ${admin}. \n\nMotivo: "${reason}" \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
 
         const mailToUserOptions = {
             from: 'iluminacaokian@gmail.com',
@@ -56,7 +55,7 @@ async function requestRefused(recipientEmail, requester, reason, id, admin) {
             text: mailToUser
         }
 
-        const mailToAdmin = `Prezados, \n\nSolicitação #${id} foi recusada pelo técnico ${admin}. \n\nMotivo da Recusa: ${reason} \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
+        const mailToAdmin = `Prezados, \n\nSolicitação de equipamento foi recusada pelo técnico ${admin}. \n\nIdentificação da Solicitação: #${id}. \n\nMotivo da Recusa: ${reason} \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
 
         const mailToAdminOptions = {
             from: 'iluminacaokian@gmail.com',
@@ -76,7 +75,7 @@ async function requestRefused(recipientEmail, requester, reason, id, admin) {
 
 async function requestApproved(recipientEmail, requester, id, admin) {
     try {
-        const mailToUser = `Prezado(a), ${requester} ! \n\nSua solicitação foi aprovada. Nossa equipe está prosseguindo com o processo e em breve entrará em contato com você. \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
+        const mailToUser = `Prezado(a), ${requester} ! \n\nSua solicitação de equipamento foi aprovada. Nossa equipe está prosseguindo com o processo e em breve entrará em contato com você. \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
 
         const mailToUserOptions = {
             from: 'iluminacaokian@gmail.com',
@@ -86,7 +85,7 @@ async function requestApproved(recipientEmail, requester, id, admin) {
             text: mailToUser
         }
 
-        const mailToAdmin = `Prezados, \n\nSolicitação #${id} foi aprovada pelo técnico ${admin}. \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
+        const mailToAdmin = `Prezados, \n\nSolicitação de equipamento foi aprovada pelo técnico ${admin}. \n\nIdentificação da Solicitação: #${id}. \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
 
         const mailToAdminOptions = {
             from: 'iluminacaokian@gmail.com',
@@ -105,7 +104,7 @@ async function requestApproved(recipientEmail, requester, id, admin) {
 
 async function requestConfirmation(recipientEmail, id, requester) {
     try {
-        const mailToUser = `Prezado(a), ${requester} ! \n\nRecebemos sua solicitação, e ela será analisada por nossa equipe. \n\nIdentificação da Solicitação: #${id}. \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
+        const mailToUser = `Prezado(a), ${requester} ! \n\nRecebemos sua solicitação de equipamento, e ela será analisada por nossa equipe. \n\nIdentificação da Solicitação: #${id}. \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
 
         const mailToAdmin = `Prezados, \n\nRecebemos uma nova solicitação de empréstimo. Identificação da Solicitação: #${id}. \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
 
@@ -133,11 +132,97 @@ async function requestConfirmation(recipientEmail, id, requester) {
     }
 }
 
+async function sendDeliveryConfirmationEmail(recipientEmail, id, username, itemName, requester, deliveryDate, hostname) {
+    try {
+        const mailToUser = `Prezado(a) ${requester}, \n\nInformamos que o equipamento foi entregue com sucesso na data ${dateUtils.formatDate(deliveryDate)}. \n\nIdentificação do Empréstimo: #${id}. \n\nTécnico responsável pela finalização: ${username}. \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
+
+        const mailToAdmin = `Prezados, \n\nInformamos que o equipamento ${itemName}, identificação "${hostname}" foi entregue com sucesso pelo usuário ${requester} na data ${dateUtils.formatDate(deliveryDate)}. \n\nIdentificação do Empréstimo: #${id}. \n\nTécnico responsável pela finalização: ${username}. \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
+
+        const mailToUserOptions = {
+            from: 'iluminacaokian@gmail.com',
+            to: recipientEmail,
+            subject: 'Kian Inventário - Confirmação de Entrega',
+            text: mailToUser
+        }
+
+        const mailToAdminOptions = {
+            from: 'iluminacaokian@gmail.com',
+            to: recipientEmail, // ti@kian.com.br
+            subject: 'Kian Inventário - Finalização de Empréstimo',
+            text: mailToAdmin
+        }
+
+        await transporter.sendMail(mailToUserOptions)
+        await transporter.sendMail(mailToAdminOptions)
+    } catch (error) {
+        throw error
+    }
+}
+
+async function requestRefusedSupplement(recipientEmail, requester, reason, id, admin) {
+    try {
+        const mailToUser = `Prezado(a), ${requester} ! \n\nSua solicitação de suprimento foi recusada. \n\nTécnico responsável pela recusa: ${admin}. \n\nMotivo: "${reason}" \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
+
+        const mailToUserOptions = {
+            from: 'iluminacaokian@gmail.com',
+            to: recipientEmail,
+            // cc: '',
+            subject: 'Kian Inventário - Solicitação Recusada',
+            text: mailToUser
+        }
+
+        const mailToAdmin = `Prezados, \n\nSolicitação de suprimento foi recusada pelo técnico ${admin}. \n\nIdentificação da Solicitação: #${id}. \n\nMotivo da Recusa: ${reason} \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
+
+        const mailToAdminOptions = {
+            from: 'iluminacaokian@gmail.com',
+            to: 'raphael.sousa@kian.com.br', // ti@kian.com.br
+            // cc: '',
+            subject: 'Kian Inventário - Atualização de Solicitação',
+            text: mailToAdmin
+        }
+
+
+        await transporter.sendMail(mailToUserOptions)
+        await transporter.sendMail(mailToAdminOptions)
+    } catch {
+        throw error
+    }
+}
+
+async function requestApprovedSupplement(recipientEmail, requester, id, admin) {
+    try {
+        const mailToUser = `Prezado(a), ${requester} ! \n\nSua solicitação de suprimento foi aprovada. Nossa equipe está prosseguindo com o processo e em breve entrará em contato com você. \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
+
+        const mailToUserOptions = {
+            from: 'iluminacaokian@gmail.com',
+            to: recipientEmail,
+            // cc: '',
+            subject: 'Kian Inventário - Solicitação Aprovada',
+            text: mailToUser
+        }
+
+        const mailToAdmin = `Prezados, \n\nSolicitação de suprimento foi aprovada pelo técnico ${admin}. \n\nIdentificação da Solicitação: #${id}. \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
+
+        const mailToAdminOptions = {
+            from: 'iluminacaokian@gmail.com',
+            to: 'raphael.sousa@kian.com.br', // ti@kian.com.br
+            // cc: '',
+            subject: 'Kian Inventário - Atualização de Solicitação',
+            text: mailToAdmin
+        }
+
+        await transporter.sendMail(mailToUserOptions)
+        await transporter.sendMail(mailToAdminOptions)
+    } catch {
+        throw error
+    }
+}
+
 async function requestConfirmationSupplement(recipientEmail, id, requester) {
     try {
-        const mailToUser = `Prezado(a), ${requester} ! \n\nRecebemos sua solicitação, e ela será analisada por nossa equipe. \n\nIdentificação da Solicitação: #${id}. \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
+        const mailToUser = `Prezado(a), ${requester} ! \n\nRecebemos sua solicitação de suprimento, e ela será analisada por nossa equipe. \n\nIdentificação da Solicitação: #${id}. \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
 
-        const mailToAdmin = `Prezados, \n\nRecebemos uma nova solicitação de suprimento. Identificação da Solicitação: #${id}. \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
+        const mailToAdmin = `Prezados, \n\nRecebemos uma nova solicitação de suprimento. \n\nIdentificação da Solicitação: #${id}. \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
 
         const mailToUserOptions = {
             from: 'iluminacaokian@gmail.com',
@@ -159,33 +244,6 @@ async function requestConfirmationSupplement(recipientEmail, id, requester) {
         await transporter.sendMail(mailToUserOptions)
         await transporter.sendMail(mailToAdminOptions)
     } catch {
-        throw error
-    }
-}
-
-async function sendDeliveryConfirmationEmail(recipientEmail, id, username, itemName, requester, deliveryDate) {
-    try {
-        const mailToUser = `Prezado(a) ${requester}, \n\nInformamos que o equipamento "${itemName}" foi entregue com sucesso na data ${dateUtils.formatDate(deliveryDate)}. \n\nIdentificação do Empréstimo: #${id}. \n\nTécnico responsável pela finalização: ${username}. \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
-
-        const mailToAdmin = `Prezados, \n\nInformamos que o equipamento "${itemName}" foi entregue com sucesso pelo usuário ${requester} na data ${dateUtils.formatDate(deliveryDate)}. \n\nIdentificação do Empréstimo: #${id}. \n\nTécnico responsável pela finalização: ${username}. \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
-
-        const mailToUserOptions = {
-            from: 'iluminacaokian@gmail.com',
-            to: recipientEmail,
-            subject: 'Kian Inventário - Confirmação de Entrega',
-            text: mailToUser
-        }
-
-        const mailToAdminOptions = {
-            from: 'iluminacaokian@gmail.com',
-            to: recipientEmail, // ti@kian.com.br
-            subject: 'Kian Inventário - Finalização de Empréstimo',
-            text: mailToAdmin
-        }
-
-        await transporter.sendMail(mailToUserOptions)
-        await transporter.sendMail(mailToAdminOptions)
-    } catch (error) {
         throw error
     }
 }
@@ -249,7 +307,9 @@ module.exports = {
     checkAndSendEmail,
     updateRecord,
     sendDeliveryConfirmationEmail,
+    requestApprovedSupplement,
     requestConfirmationSupplement,
+    requestRefusedSupplement,
     requestConfirmation,
     requestApproved,
     requestRefused

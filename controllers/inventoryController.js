@@ -262,7 +262,7 @@ const inventoryAcceptSupplement = async (req, res) => {
                 const userEmailQuery = 'SELECT email FROM kian_usuarios WHERE nome = ?'
                 const [[userEmail]] = await inventoryDatabase.pool.execute(userEmailQuery, [supplement.solicitante])
 
-                await notice.requestApproved(userEmail.email, supplement.solicitante, itemId, userData.nome)
+                await notice.requestApprovedSupplement(userEmail.email, supplement.solicitante, itemId, userData.nome)
 
                 res.json({ success: true, message: "Solicitação Aceita" })
             } else {
@@ -340,7 +340,7 @@ const inventoryRefuseSupplement = async (req, res) => {
                 const userEmailQuery = `SELECT email FROM kian_usuarios WHERE nome = ?`
                 const [[userEmail]] = await inventoryDatabase.pool.execute(userEmailQuery, [supplement.solicitante])
                 
-                await notice.requestRefused(userEmail.email, supplement.solicitante, reason, itemId, userData.nome)
+                await notice.requestRefusedSupplement(userEmail.email, supplement.solicitante, reason, itemId, userData.nome)
                 
                 res.json({ success: true, message: "Solicitação Recusada" })
             } else {
@@ -861,7 +861,7 @@ const inventoryItemDelivered = async (req, res) => {
                 throw new Error('Código de identificação do item não encontrado.')
             }
 
-            await notice.sendDeliveryConfirmationEmail('raphael.sousa@kian.com.br', itemId, userData.nome, item.equipamento, item.solicitante, formattedDate)
+            await notice.sendDeliveryConfirmationEmail('raphael.sousa@kian.com.br', itemId, userData.nome, item.equipamento, item.solicitante, formattedDate, item.codigo_identificacao)
 
             res.json({ success: true, message: "Empréstimo Finalizado" })
         } else {
