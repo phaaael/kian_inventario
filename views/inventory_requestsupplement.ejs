@@ -24,7 +24,8 @@
             <select name="item" id="supply" required>
                 <option value="">Escolha Suprimento</option>
                 <% items.forEach(function(item) { %>
-                    <option value="<%= item.item %>"><%= item.item %> - Estoque: <%= item.qtd_item %></option>
+                    <!-- <option value="<%= item.item %>"><%= item.item %> - Estoque: <%= item.qtd_item %></option> -->
+                    <option value="<%= item.item %>"><%= item.item %></option>
                 <% }); %>
             </select><br> 
 
