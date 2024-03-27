@@ -4,8 +4,7 @@ CREATE TABLE `kian_usuarios` (
   usuario VARCHAR(255) NOT NULL UNIQUE,
   senha VARCHAR(255) NOT NULL,
   email VARCHAR(255) NOT NULL,
-  nome VARCHAR(255) DEFAULT('Sem'),
-  sobrenome VARCHAR(255) DEFAULT('Registro'),
+  nome VARCHAR(255) DEFAULT('Sem Registro'),
   setor VARCHAR(255) NOT NULL,
   cargo VARCHAR(255) DEFAULT('Membro')
 );
