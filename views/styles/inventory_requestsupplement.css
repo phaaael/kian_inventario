@@ -22,7 +22,7 @@ body {
     font-family: 'Open sans', sans-serif;
 }
 
-a, p, h1, li, select {
+a, p, h1, li, select, label {
     text-decoration: none;
     color: var(--background-color-darker);
     display: flex;
