@@ -449,13 +449,12 @@ const inventoryUpdateRecord = async (req, res) => {
             fieldsChanged = true
         }
 
-        if (exit_sector && exit_sector !== active.dt_req) {
+        if (exit_sector) {
             const formattedExitSector = dateUtils.formatDateForUpdate(exit_sector)
-            if (formattedExitSector) {
+            const currentExitSector = dateUtils.formatDateForUpdate(active.dt_req)
+            if (formattedExitSector !== currentExitSector) {
                 updateFields.dt_req = formattedExitSector
                 fieldsChanged = true
-            } else {
-                throw new Error('Data de saída inválida')
             }
         }
 
@@ -469,13 +468,12 @@ const inventoryUpdateRecord = async (req, res) => {
             fieldsChanged = true
         }
 
-        if (delivery_forecast && delivery_forecast !== active.previsao_entrega) {
+        if (delivery_forecast) {
             const formattedDeliveryForecast = dateUtils.formatDateForUpdate(delivery_forecast)
-            if (formattedDeliveryForecast) {
+            const currentDeliveryForecast = dateUtils.formatDateForUpdate(active.previsao_entrega)
+            if (formattedDeliveryForecast !== currentDeliveryForecast) {
                 updateFields.previsao_entrega = formattedDeliveryForecast
                 fieldsChanged = true
-            } else {
-                throw new Error('Data de entrega prevista inválida')
             }
         }
 
@@ -497,18 +495,16 @@ const inventoryUpdateRecord = async (req, res) => {
 
             await inventoryDatabase.pool.execute(updateQuery, updateParams)
 
-            
             res.json({ success: true, message: "Empréstimo alterado com sucesso" })
             
             const fieldNamesMap = {
                 dt_req: 'Data de Requisição',
                 codigo_identificacao: 'Código de Identificação',
                 previsao_entrega: 'Previsão de Entrega'
-                // Adicione mais mapeamentos conforme necessário
             }
             
             const dateFields = new Set(['dt_req', 'previsao_entrega'])
-                       
+
             const changesDescription = Object.entries(updateFields)
                 .map(([field, value]) => {
                     const readableName = fieldNamesMap[field] || field
