@@ -26,7 +26,7 @@
             <label for="identification_code">Código de Identificação:</label>
             <input type="text" name="identification_code" value="<%= active.identification_code %>"><br>
             <label for="delivery_forecast">Previsão de Entrega:</label>
-            <input type="text" name="delivery_forecast" value="<%= active.delivery_forecast %>"><br>
+            <input type="date" name="delivery_forecast" value="<%= formatDateForInput(active.delivery_forecast) %>"><br>
             <button type="submit">Salvar Alterações</button>
             <a class="back" href="/inventory">Voltar</a>
         </form>

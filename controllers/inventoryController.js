@@ -411,11 +411,12 @@ const inventoryChangeItem = async (req, res) => {
                 exit_sector: dateUtils.formatDate(new Date(active.dt_req)),
                 equipment: active.equipamento,
                 identification_code: active.codigo_identificacao,
-                delivery_forecast: dateUtils.formatDate(new Date(active.previsao_entrega)),
+                delivery_forecast: active.previsao_entrega,
                 delivered: active.entregue,
                 loan_completed: active.finalizacao_emprestimo,
                 completion_date: dateUtils.formatDateWithCheck(active.dt_finalizacao)
             }
+
             res.render('inventory_changeitem', { active: activeData, formatDateForInput: dateUtils.formatDateForInput })
         } else {
             res.send('Usuário sem permissão ou item não encontrado')
