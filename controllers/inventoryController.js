@@ -428,26 +428,32 @@ const inventoryChangeItem = async (req, res) => {
 }
 
 const inventoryUpdateRecord = async (req, res) => {
-    try {       
-        const { id, responsible_loan, requester, exit_sector, equipment, identification_code, delivery_forecast, delivered } = req.body
+    try {
+        const { id, responsible_loan, requester, exit_sector, equipment, identification_code, delivery_forecast, delivered, email } = req.body
+
+        const userData = await inventoryDatabase.getUserByUsername(req.session.username)
 
         const [rows] = await inventoryDatabase.pool.execute('SELECT * FROM kian_emprestimos WHERE id = ?', [id])
         const active = rows[0]
 
         const updateFields = {}
+        let fieldsChanged = false
 
         if (responsible_loan && responsible_loan !== active.responsavel_emprestimo) {
             updateFields.responsavel_emprestimo = responsible_loan
+            fieldsChanged = true
         }
 
         if (requester && requester !== active.solicitante) {
             updateFields.solicitante = requester
+            fieldsChanged = true
         }
 
         if (exit_sector && exit_sector !== active.dt_req) {
             const formattedExitSector = dateUtils.formatDateForUpdate(exit_sector)
             if (formattedExitSector) {
                 updateFields.dt_req = formattedExitSector
+                fieldsChanged = true
             } else {
                 throw new Error('Data de saída inválida')
             }
@@ -455,16 +461,19 @@ const inventoryUpdateRecord = async (req, res) => {
 
         if (equipment && equipment !== active.equipamento) {
             updateFields.equipamento = equipment
+            fieldsChanged = true
         }
 
         if (identification_code && identification_code !== active.codigo_identificacao) {
             updateFields.codigo_identificacao = identification_code
+            fieldsChanged = true
         }
 
         if (delivery_forecast && delivery_forecast !== active.previsao_entrega) {
             const formattedDeliveryForecast = dateUtils.formatDateForUpdate(delivery_forecast)
             if (formattedDeliveryForecast) {
                 updateFields.previsao_entrega = formattedDeliveryForecast
+                fieldsChanged = true
             } else {
                 throw new Error('Data de entrega prevista inválida')
             }
@@ -472,26 +481,49 @@ const inventoryUpdateRecord = async (req, res) => {
 
         if (delivered !== undefined && delivered !== active.entregue) {
             updateFields.entregue = delivered
+            fieldsChanged = true
         }
 
-        const updateParams = []
-        let updateQuery = 'UPDATE kian_emprestimos SET '
+        if (fieldsChanged) {
+            const updateParams = []
+            let updateQuery = 'UPDATE kian_emprestimos SET '
+            for (const field in updateFields) {
+                updateQuery += `${field} = ?, `
+                updateParams.push(updateFields[field])
+            }
+            updateQuery = updateQuery.slice(0, -2)
+            updateQuery += ' WHERE id = ?'
+            updateParams.push(id)
 
-        for (const field in updateFields) {
-            updateQuery += `${field} = ?, `
-            updateParams.push(updateFields[field])
+            await inventoryDatabase.pool.execute(updateQuery, updateParams)
+
+            
+            res.json({ success: true, message: "Empréstimo alterado com sucesso" })
+            
+            const fieldNamesMap = {
+                dt_req: 'Data de Requisição',
+                codigo_identificacao: 'Código de Identificação',
+                previsao_entrega: 'Previsão de Entrega'
+                // Adicione mais mapeamentos conforme necessário
+            };
+            
+            const dateFields = new Set(['dt_req', 'previsao_entrega']);  // Adicione os campos de data aqui
+                       
+            const changesDescription = Object.entries(updateFields)
+                .map(([field, value]) => {
+                    const readableName = fieldNamesMap[field] || field;  // Mapeia para nome amigável
+                    const formattedValue = dateFields.has(field) ? dateUtils.formatDate(value) : value;  // Formata valor se for data
+                    return `${readableName}: ${formattedValue}`;  // Combina nome e valor
+                })
+                .join('\n');  // Separa as alterações por nova linha
+
+            await notice.updateRecord("raphael.sousa@Kian.com.br", requester, changesDescription, id, userData.nome) // O problema está aqui, verificar os parametros da função updateRecord dentro do notice
+        } else {
+            res.json({ success: false, message: "Nenhuma alteração detectada" })
         }
-
-        updateQuery = updateQuery.slice(0, -2)
-        updateQuery += ' WHERE id = ?'
-        updateParams.push(id)
-
-        await inventoryDatabase.pool.execute(updateQuery, updateParams)
-
-        res.json({ success: true, message: "Empréstimo Alterado" })
     } catch (error) {
         console.error('Erro ao atualizar registro:', error)
-        res.render('error', { error: 'Erro ao atualizar registro' })
+        res.status(500).render('error', { error: 'Erro ao atualizar registro' })
     }
 }
 
