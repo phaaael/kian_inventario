@@ -60,7 +60,7 @@ const inventoryAllSupplements = async (req, res) => {
             const allowedFields = [ 'id', 'solicitante', 'equipamento' ]
 
             let query = 'SELECT * FROM kian_solicitacoes_suprimentos WHERE 1=1'
-            let queryParams = [];
+            let queryParams = []
 
             if (searchChar && allowedFields.includes(searchField)) {
                 query += ` AND ${searchField} LIKE ?`
@@ -77,7 +77,7 @@ const inventoryAllSupplements = async (req, res) => {
                 queryParams.push(endDate)
             }
 
-            const [rows] = await inventoryDatabase.pool.execute(query, queryParams);
+            const [rows] = await inventoryDatabase.pool.execute(query, queryParams)
 
             const actives = rows.map(active => ({
                 id: active.id,
@@ -113,7 +113,7 @@ const inventorySupplements = async (req, res) => {
             const allowedFields = ['id', 'solicitante', 'equipamento']
 
             let query = 'SELECT * FROM kian_solicitacoes_suprimentos WHERE 1=1'
-            let queryParams = [];
+            let queryParams = []
 
             if (searchChar && allowedFields.includes(searchField)) {
                 query += ` AND ${searchField} LIKE ?`
@@ -130,7 +130,7 @@ const inventorySupplements = async (req, res) => {
                 queryParams.push(endDate)
             }
 
-            const [rows] = await inventoryDatabase.pool.execute(query, queryParams);
+            const [rows] = await inventoryDatabase.pool.execute(query, queryParams)
 
             const actives = rows.map(active => ({
                 id: active.id,
@@ -370,7 +370,7 @@ const inventoryRefuseItem = async (req, res) => {
 
         const itemInfoQuery = 'SELECT solicitante, equipamento, codigo_identificacao FROM kian_solicitacoes_equipamentos WHERE id = ?'
         const [itemRows] = await inventoryDatabase.pool.query(itemInfoQuery, [itemId])
-        const item = itemRows[0];
+        const item = itemRows[0]
 
         if (!item || !item.codigo_identificacao) {
             return res.status(404).json({ success: false, message: 'Código de identificação do item não encontrado.' })
@@ -505,19 +505,19 @@ const inventoryUpdateRecord = async (req, res) => {
                 codigo_identificacao: 'Código de Identificação',
                 previsao_entrega: 'Previsão de Entrega'
                 // Adicione mais mapeamentos conforme necessário
-            };
+            }
             
-            const dateFields = new Set(['dt_req', 'previsao_entrega']);  // Adicione os campos de data aqui
+            const dateFields = new Set(['dt_req', 'previsao_entrega'])
                        
             const changesDescription = Object.entries(updateFields)
                 .map(([field, value]) => {
-                    const readableName = fieldNamesMap[field] || field;  // Mapeia para nome amigável
-                    const formattedValue = dateFields.has(field) ? dateUtils.formatDate(value) : value;  // Formata valor se for data
-                    return `${readableName}: ${formattedValue}`;  // Combina nome e valor
+                    const readableName = fieldNamesMap[field] || field
+                    const formattedValue = dateFields.has(field) ? dateUtils.formatDate(value) : value
+                    return `${readableName}: ${formattedValue}`
                 })
-                .join('\n');  // Separa as alterações por nova linha
+                .join('\n')
 
-            await notice.updateRecord("raphael.sousa@Kian.com.br", requester, changesDescription, id, userData.nome) // O problema está aqui, verificar os parametros da função updateRecord dentro do notice
+            await notice.updateRecord("raphael.sousa@Kian.com.br", requester, changesDescription, id, userData.nome)
         } else {
             res.json({ success: false, message: "Nenhuma alteração detectada" })
         }
@@ -696,7 +696,7 @@ const inventoryRequests = async (req, res) => {
             const allowedFields = ['id', 'solicitante', 'equipamento', 'codigo_identificacao']
 
             let query = 'SELECT * FROM kian_solicitacoes_equipamentos WHERE 1=1'
-            let queryParams = [];
+            let queryParams = []
 
             if (searchChar && allowedFields.includes(searchField)) {
                 query += ` AND ${searchField} LIKE ?`
@@ -713,7 +713,7 @@ const inventoryRequests = async (req, res) => {
                 queryParams.push(endDate)
             }
 
-            const [rows] = await inventoryDatabase.pool.execute(query, queryParams);
+            const [rows] = await inventoryDatabase.pool.execute(query, queryParams)
 
             const actives = rows.map(active => ({
                 id: active.id,
@@ -862,7 +862,7 @@ const inventoryItemDelivered = async (req, res) => {
                 const updateInventoryQuery = 'UPDATE kian_equipamentos SET emprestado = 0 WHERE codigo_identificacao = ?'
                 await inventoryDatabase.pool.execute(updateInventoryQuery, [item.codigo_identificacao])
             } else {
-                throw new Error('Código de identificação do item não encontrado.');
+                throw new Error('Código de identificação do item não encontrado.')
             }
 
             await notice.sendDeliveryConfirmationEmail('raphael.sousa@kian.com.br', itemId, userData.nome, item.equipamento, item.solicitante, formattedDate)
