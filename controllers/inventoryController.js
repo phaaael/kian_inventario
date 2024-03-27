@@ -1,6 +1,7 @@
 const inventoryDatabase = require('../resources/database')
 const spreadsheet = require('../resources/spreadsheet_export')
 const notice = require('../resources/notice')
+const dateUtils = require('../resources/dateUtils')
 
 const inventory = async (req, res) => {
     try {     
@@ -32,10 +33,10 @@ const inventory = async (req, res) => {
                 id: active.id,
                 responsible_loan: active.responsavel_emprestimo,
                 requester: active.solicitante,
-                exit_sector: notice.formatDate(new Date (active.dt_req)),
+                exit_sector: dateUtils.formatDate(new Date (active.dt_req)),
                 equipment: active.equipamento,
                 identification_code: active.codigo_identificacao,
-                delivery_forecast: notice.formatDate(new Date (active.previsao_entrega)),
+                delivery_forecast: dateUtils.formatDate(new Date (active.previsao_entrega)),
                 delivered: active.entregue
             }))
 
@@ -81,13 +82,13 @@ const inventoryAllSupplements = async (req, res) => {
             const actives = rows.map(active => ({
                 id: active.id,
                 requester: active.solicitante,
-                exit_sector: notice.formatDate(new Date(active.dt_req)),
+                exit_sector: dateUtils.formatDate(new Date(active.dt_req)),
                 equipment: active.equipamento,
                 reason_refusal: active.motivo_recusa,
                 supplement_reason: active.motivo_solicitacao,
                 request_status: active.status_solicitacao,
                 response_completion: active.finalizacao_solicitacao ? active.finalizacao_solicitacao : 'Pendente',
-                end_date: active.dt_finalizacao ? notice.formatDateWithCheck(active.dt_finalizacao) : 'Pendente'
+                end_date: active.dt_finalizacao ? dateUtils.formatDateWithCheck(active.dt_finalizacao) : 'Pendente'
             }))
 
             res.render('inventory_allsupplements', { actives, searchField, searchChar, startDate, endDate })
@@ -134,12 +135,12 @@ const inventorySupplements = async (req, res) => {
             const actives = rows.map(active => ({
                 id: active.id,
                 requester: active.solicitante,
-                exit_sector: notice.formatDate(new Date(active.dt_req)),
+                exit_sector: dateUtils.formatDate(new Date(active.dt_req)),
                 equipment: active.equipamento,
                 supplement_reason: active.motivo_solicitacao,
                 request_status: active.status_solicitacao,
                 response_completion: active.finalizacao_solicitacao,
-                end_date: notice.formatDate(new Date(active.dt_finalizacao))
+                end_date: dateUtils.formatDate(new Date(active.dt_finalizacao))
             }))
 
             res.render('inventory_supplements', { actives, searchField, searchChar, startDate, endDate })
@@ -407,15 +408,15 @@ const inventoryChangeItem = async (req, res) => {
                 id: active.id,
                 responsible_loan: active.responsavel_emprestimo,
                 requester: active.solicitante,
-                exit_sector: notice.formatDate(new Date(active.dt_req)),
+                exit_sector: dateUtils.formatDate(new Date(active.dt_req)),
                 equipment: active.equipamento,
                 identification_code: active.codigo_identificacao,
-                delivery_forecast: notice.formatDate(new Date(active.previsao_entrega)),
+                delivery_forecast: dateUtils.formatDate(new Date(active.previsao_entrega)),
                 delivered: active.entregue,
                 loan_completed: active.finalizacao_emprestimo,
-                completion_date: notice.formatDateWithCheck(active.dt_finalizacao)
+                completion_date: dateUtils.formatDateWithCheck(active.dt_finalizacao)
             }
-            res.render('inventory_changeitem', { active: activeData })
+            res.render('inventory_changeitem', { active: activeData, formatDateForInput: dateUtils.formatDateForInput })
         } else {
             res.send('Usuário sem permissão ou item não encontrado')
         }
@@ -443,7 +444,7 @@ const inventoryUpdateRecord = async (req, res) => {
         }
 
         if (exit_sector && exit_sector !== active.dt_req) {
-            const formattedExitSector = notice.formatDateForUpdate(exit_sector)
+            const formattedExitSector = dateUtils.formatDateForUpdate(exit_sector)
             if (formattedExitSector) {
                 updateFields.dt_req = formattedExitSector
             } else {
@@ -460,7 +461,7 @@ const inventoryUpdateRecord = async (req, res) => {
         }
 
         if (delivery_forecast && delivery_forecast !== active.previsao_entrega) {
-            const formattedDeliveryForecast = notice.formatDateForUpdate(delivery_forecast)
+            const formattedDeliveryForecast = dateUtils.formatDateForUpdate(delivery_forecast)
             if (formattedDeliveryForecast) {
                 updateFields.previsao_entrega = formattedDeliveryForecast
             } else {
@@ -524,13 +525,13 @@ const exportInventoryListAllLoans = async (req, res) => {
                     'Identificação da Solicitação': active.id,
                     'Responsável pelo Empréstimo': active.responsavel_emprestimo,
                     'Solicitante': active.solicitante,
-                    'Data da Requisição': notice.formatDate(new Date(active.dt_req)),
+                    'Data da Requisição': dateUtils.formatDate(new Date(active.dt_req)),
                     'Equipamento': active.equipamento,
                     'Identificação do Equipamento': active.codigo_identificacao,
-                    'Previsão de Entrega': notice.formatDate(new Date(active.previsao_entrega)),
+                    'Previsão de Entrega': dateUtils.formatDate(new Date(active.previsao_entrega)),
                     'Solicitação Entregue': active.entregue,
                     'Responsável por Finalizar Solicitação': active.finalizacao_emprestimo ? active.finalizacao_emprestimo : 'Pendente',
-                    'Data da Finalização da Solicitação': active.dt_finalizacao ? notice.formatDateWithCheck(active.dt_finalizacao) : 'Pendente'
+                    'Data da Finalização da Solicitação': active.dt_finalizacao ? dateUtils.formatDateWithCheck(active.dt_finalizacao) : 'Pendente'
                 }))
 
                 spreadsheet.exportToExcel(actives, res, { searchChar, searchField, startDate, endDate })
@@ -574,11 +575,11 @@ const exportinventoryListAllSupplements = async (req, res) => {
                 const actives = rows.map(active => ({
                     'Identificação da Solicitação': active.id,
                     'Solicitante': active.solicitante,
-                    'Data da Requisição': notice.formatDate(new Date(active.dt_req)),
+                    'Data da Requisição': dateUtils.formatDate(new Date(active.dt_req)),
                     'Equipamento': active.equipamento,
                     'Motivo da Solicitação': active.motivo_solicitacao,
                     'Responsável por Finalizar Solicitação': active.finalizacao_solicitacao ? active.finalizacao_solicitacao : 'Pendente',
-                    'Data da Finalização da Solicitação': active.dt_finalizacao ? notice.formatDateWithCheck(active.dt_finalizacao) : 'Pendente',
+                    'Data da Finalização da Solicitação': active.dt_finalizacao ? dateUtils.formatDateWithCheck(active.dt_finalizacao) : 'Pendente',
                     'Status da Solicitação': (active.status_solicitacao === 0 && (!active.motivo_recusa || active.motivo_recusa.trim() === '')) ? 'Solicitação Pendente' :
                     (active.status_solicitacao === 1 && (!active.motivo_recusa || active.motivo_recusa.trim() === '')) ? 'Solicitação Aprovada' :
                     (active.status_solicitacao === 1 && active.motivo_recusa && active.motivo_recusa.trim() !== '') ? active.motivo_recusa : active.motivo_recusa
@@ -626,10 +627,10 @@ const exportinventoryListAllRequests = async (req, res) => {
                 const actives = rows.map(active => ({
                     'Identificação da Solicitação': active.id,
                     'Solicitante': active.solicitante,
-                    'Data da Requisição': notice.formatDate(new Date(active.dt_req)),
+                    'Data da Requisição': dateUtils.formatDate(new Date(active.dt_req)),
                     'Equipamento': active.equipamento,
                     'Identificação do Equipamento': active.codigo_identificacao,
-                    'Previsão de Entrega': notice.formatDate(new Date(active.previsao_entrega)),
+                    'Previsão de Entrega': dateUtils.formatDate(new Date(active.previsao_entrega)),
                     'Motivo da Solicitação': active.motivo_emprestimo,
                     'Status da Solicitação': (active.status_solicitacao === 0 && (!active.motivo_recusa || active.motivo_recusa.trim() === '')) ? 'Solicitação Pendente' :
                     (active.status_solicitacao === 1 && (!active.motivo_recusa || active.motivo_recusa.trim() === '')) ? 'Solicitação Aprovada' :
@@ -684,10 +685,10 @@ const inventoryRequests = async (req, res) => {
             const actives = rows.map(active => ({
                 id: active.id,
                 requester: active.solicitante,
-                exit_sector: notice.formatDate(new Date(active.dt_req)),
+                exit_sector: dateUtils.formatDate(new Date(active.dt_req)),
                 equipment: active.equipamento,
                 identification_code: active.codigo_identificacao,
-                delivery_forecast: notice.formatDate(new Date(active.previsao_entrega)), 
+                delivery_forecast: dateUtils.formatDate(new Date(active.previsao_entrega)), 
                 loan_reason: active.motivo_emprestimo,
                 request_status: active.status_solicitacao
             }))
@@ -731,10 +732,10 @@ const inventoryListAllRequests = async (req, res) => {
                 const actives = rows.map(active => ({
                     id: active.id,
                     requester: active.solicitante,
-                    exit_sector: notice.formatDate(new Date(active.dt_req)),
+                    exit_sector: dateUtils.formatDate(new Date(active.dt_req)),
                     equipment: active.equipamento,
                     identification_code: active.codigo_identificacao,
-                    delivery_forecast: notice.formatDate(new Date(active.previsao_entrega)),
+                    delivery_forecast: dateUtils.formatDate(new Date(active.previsao_entrega)),
                     delivered: active.entregue,
                     reason: active.motivo_emprestimo,      
                     reason_refusal: active.motivo_recusa,
@@ -784,13 +785,13 @@ const inventoryListAllLoans = async (req, res) => {
                     id: active.id,
                     responsible_loan: active.responsavel_emprestimo,
                     requester: active.solicitante,
-                    exit_sector: notice.formatDate(new Date(active.dt_req)),
+                    exit_sector: dateUtils.formatDate(new Date(active.dt_req)),
                     equipment: active.equipamento,
                     identification_code: active.codigo_identificacao,
-                    delivery_forecast: notice.formatDate(new Date(active.previsao_entrega)),
+                    delivery_forecast: dateUtils.formatDate(new Date(active.previsao_entrega)),
                     delivered: active.entregue,
                     loan_completed: active.finalizacao_emprestimo,
-                    completion_date: notice.formatDateWithCheck(active.dt_finalizacao)
+                    completion_date: dateUtils.formatDateWithCheck(active.dt_finalizacao)
                 }))
 
                 res.render('inventory_allloans', { actives, searchField, searchChar, startDate, endDate })
