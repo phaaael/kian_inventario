@@ -13,7 +13,7 @@ CREATE TABLE `kian_emprestimos` (
   id INT AUTO_INCREMENT PRIMARY KEY,
   responsavel_emprestimo VARCHAR(255) NOT NULL,
   solicitante VARCHAR(255) NOT NULL,
-  saida_setor DATE NOT NULL,
+  dt_req DATE NOT NULL,
   equipamento VARCHAR(255) NOT NULL,
   codigo_identificacao VARCHAR(255) NOT NULL,
   motivo_emprestimo VARCHAR(255) NOT NULL,
@@ -26,7 +26,7 @@ CREATE TABLE `kian_emprestimos` (
 CREATE TABLE `kian_solicitacoes_equipamentos` (
   id INT AUTO_INCREMENT PRIMARY KEY,
   solicitante VARCHAR(255) NOT NULL,
-  saida_setor DATE NOT NULL,
+  dt_req DATE NOT NULL,
   equipamento VARCHAR(255) NOT NULL,
   codigo_identificacao VARCHAR(255) NOT NULL,
   motivo_emprestimo VARCHAR(255) NOT NULL,
@@ -39,7 +39,7 @@ CREATE TABLE `kian_solicitacoes_equipamentos` (
 CREATE TABLE `kian_solicitacoes_suprimentos` (
   id INT AUTO_INCREMENT PRIMARY KEY,
   solicitante VARCHAR(255) NOT NULL,
-  saida_setor DATE NOT NULL,
+  dt_req DATE NOT NULL,
   equipamento VARCHAR(255) NOT NULL,
   motivo_solicitacao VARCHAR(255) NOT NULL,
   motivo_recusa VARCHAR(255),

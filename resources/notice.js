@@ -310,7 +310,7 @@ async function checkAndSendEmail() {
                 - Identificação da Solicitação: #${row.id}
                 - Responsável pelo Empréstimo: ${row.responsavel_emprestimo}
                 - Solicitante: ${row.solicitante}
-                - Data de Saída do Setor: ${formatDate(row.saida_setor)}
+                - Data da Requisição: ${formatDate(row.dt_req)}
                 - Equipamento: ${row.equipamento}
                 - Código de Identificação: ${row.codigo_identificacao}
 
@@ -334,7 +334,7 @@ async function checkAndSendEmail() {
                 - Identificação da Solicitação: #${row.id}
                 - Responsável pelo Empréstimo: ${row.responsavel_emprestimo}
                 - Solicitante: ${row.solicitante}
-                - Data de Saída do Setor: ${formatDate(row.saida_setor)}
+                - Data da Requisição: ${formatDate(row.dt_req)}
                 - Equipamento: ${row.equipamento}
                 - Código de Identificação: ${row.codigo_identificacao}
 
@@ -358,7 +358,7 @@ async function checkAndSendEmail() {
                 - Identificação da Solicitação: #${row.id}
                 - Responsável pelo Empréstimo: ${row.responsavel_emprestimo}
                 - Solicitante: ${row.solicitante}
-                - Data de Saída do Setor: ${formatDate(row.saida_setor)}
+                - Data da Requisição: ${formatDate(row.dt_req)}
                 - Equipamento: ${row.equipamento}
                 - Código de Identificação: ${row.codigo_identificacao}
 
