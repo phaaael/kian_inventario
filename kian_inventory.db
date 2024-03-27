@@ -6,6 +6,7 @@ CREATE TABLE `kian_usuarios` (
   email VARCHAR(255) NOT NULL,
   nome VARCHAR(255) DEFAULT('Sem'),
   sobrenome VARCHAR(255) DEFAULT('Registro'),
+  setor VARCHAR(255) NOT NULL,
   cargo VARCHAR(255) DEFAULT('Membro')
 );
 
