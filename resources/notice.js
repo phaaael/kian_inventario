@@ -1,5 +1,6 @@
 const nodemailer = require('nodemailer')
 const database = require('./database')
+const dateUtils = require('./dateUtils')
 
 const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
@@ -10,51 +11,6 @@ const transporter = nodemailer.createTransport({
         pass: 'vgps snsg tvjv alit'
     }
 })
-
-function formatDate(data) {
-    if (!(data instanceof Date)) {
-        data = new Date(data)
-    }
-
-    if (isNaN(data.getTime())) {
-        return 'Data inválida'
-    }
-
-    const dia = data.getDate() < 10 ? '0' + data.getDate() : data.getDate()
-    const mes = (data.getMonth() + 1) < 10 ? '0' + (data.getMonth() + 1) : data.getMonth() + 1
-    const ano = data.getFullYear()
-
-    return `${dia}/${mes}/${ano}`
-}
-
-
-function formatDateForUpdate(input) {
-    if (!input) return null
-    
-    if (input instanceof Date) return input
-    
-    if (/^\d{4}-\d{2}-\d{2}$/.test(input)) {
-        return new Date(input)
-    }
-
-    const parts = input.split('/');
-    if (parts.length === 3) {
-        const day = parseInt(parts[0], 10)
-        const month = parseInt(parts[1], 10) - 1
-        const year = parseInt(parts[2], 10)
-        return new Date(year, month, day)
-    }
-
-    return null
-}
-
-function formatDateWithCheck(data) {
-    if (data && data !== '1969-12-31T00:00:00.000Z') {
-        return formatDate(data)
-    } else {
-        return 'Pendente'
-    }
-}
 
 async function requestRefused(recipientEmail, requester, reason, id, admin) {
     try {
@@ -244,7 +200,7 @@ async function sendDeliveryConfirmationEmail(recipientEmail, id, username, itemN
         const mailToUser = `
         Prezados,
 
-        Informamos que o equipamento ${itemName} foi entregue com sucesso pelo usuário ${requester} na data ${formatDate(deliveryDate)}.
+        Informamos que o equipamento ${itemName} foi entregue com sucesso pelo usuário ${requester} na data ${dateUtils.formatDate(deliveryDate)}.
             
         Identificação do Empréstimo: #${id}.
             
@@ -257,7 +213,7 @@ async function sendDeliveryConfirmationEmail(recipientEmail, id, username, itemN
         const mailToAdmin = `
         Prezados,
 
-        Informamos que o equipamento ${itemName} foi entregue com sucesso pelo usuário ${requester} na data ${formatDate(deliveryDate)}.
+        Informamos que o equipamento ${itemName} foi entregue com sucesso pelo usuário ${requester} na data ${dateUtils.formatDate(deliveryDate)}.
             
         Identificação do Empréstimo: #${id}.
             
@@ -306,11 +262,11 @@ async function checkAndSendEmail() {
                 const mailBody = `
         Prezados,
                     
-            Este é um lembrete de que a seguinte entrega está prevista para amanhã (${formatDate(row.previsao_entrega)}):
+            Este é um lembrete de que a seguinte entrega está prevista para amanhã (${dateUtils.formatDate(row.previsao_entrega)}):
                 - Identificação da Solicitação: #${row.id}
                 - Responsável pelo Empréstimo: ${row.responsavel_emprestimo}
                 - Solicitante: ${row.solicitante}
-                - Data da Requisição: ${formatDate(row.dt_req)}
+                - Data da Requisição: ${dateUtils.formatDate(row.dt_req)}
                 - Equipamento: ${row.equipamento}
                 - Código de Identificação: ${row.codigo_identificacao}
 
@@ -330,11 +286,11 @@ async function checkAndSendEmail() {
                 const mailBody = `
         Prezados,
                     
-            Este é um lembrete de que a seguinte entrega está prevista para hoje (${formatDate(row.previsao_entrega)}):
+            Este é um lembrete de que a seguinte entrega está prevista para hoje (${dateUtils.formatDate(row.previsao_entrega)}):
                 - Identificação da Solicitação: #${row.id}
                 - Responsável pelo Empréstimo: ${row.responsavel_emprestimo}
                 - Solicitante: ${row.solicitante}
-                - Data da Requisição: ${formatDate(row.dt_req)}
+                - Data da Requisição: ${dateUtils.formatDate(row.dt_req)}
                 - Equipamento: ${row.equipamento}
                 - Código de Identificação: ${row.codigo_identificacao}
 
@@ -354,11 +310,11 @@ async function checkAndSendEmail() {
                 const mailBody = `
         Prezados,
                     
-            Este é um lembrete de que a seguinte entrega está atrasada (${formatDate(row.previsao_entrega)}):
+            Este é um lembrete de que a seguinte entrega está atrasada (${dateUtils.formatDate(row.previsao_entrega)}):
                 - Identificação da Solicitação: #${row.id}
                 - Responsável pelo Empréstimo: ${row.responsavel_emprestimo}
                 - Solicitante: ${row.solicitante}
-                - Data da Requisição: ${formatDate(row.dt_req)}
+                - Data da Requisição: ${dateUtils.formatDate(row.dt_req)}
                 - Equipamento: ${row.equipamento}
                 - Código de Identificação: ${row.codigo_identificacao}
 
@@ -388,8 +344,5 @@ module.exports = {
     requestConfirmationSupplement,
     requestConfirmation,
     requestApproved,
-    requestRefused,
-    formatDateWithCheck,
-    formatDateForUpdate, 
-    formatDate
+    requestRefused
 }
