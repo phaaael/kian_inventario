@@ -22,76 +22,76 @@ body {
   font-family: 'Open sans', sans-serif;
 }
 
-a, p, h1, li, .search {
-  text-decoration: none;
-  color: var(--background-color-darker);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.items-container {
-  max-height: 60vh;
-  overflow-y: auto;
-  background-color: var(--primary-color);
-  padding: 20px;
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.search {
-  margin-bottom: 10px;
-}
-
-li {
-  background-color: #d3d3d3;
-  padding: 10px;
-  border-radius: 10px;
-  margin-bottom: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
-a {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
-  box-sizing: border-box;
-}
-
-a, input, button[type="submit"] {
-  margin-top: 10px;
-  display: inline-block;
-  padding: 10px 20px;
-  background-color: #383838;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  text-align: center;
-  text-decoration: none;
-  transition: background-color 0.3s;
-}
-
-a:hover, input:hover, button[type="submit"]:hover {
-  background-color: rgb(29, 28, 28)
-}
-
-.desconectar {
-  background-color: #f11a1a;
-}
-
-.desconectar:hover {
-  background-color: #f33b3b;
-}
-
 .container {
   background: var(--background-color);
   border-radius: 10px;
   padding: 30px;
-  width: 800px;
+  width: 80%; 
+  max-width: 800px;
+  text-align: center;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.menu-item {
+  cursor: pointer;
+  padding: 10px;
+  background-color: var(--primary-color-darker);
+  color: #fff;
+  margin-bottom: 5px;
+  width: 90%;
+  transition: background-color 0.3s ease;
+  border-radius: 5px;
+}
+
+.menu-item:hover {
+  background-color: var(--primary-color);
+}
+
+.submenu {
+  width: 90%;
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: opacity 0.5s, max-height 0.5s ease-out;
+  background-color: var(--primary-color);
+  margin-bottom: 10px;
+}
+
+.submenu.expanded {
+  opacity: 1;
+  max-height: 500px;
+  border-radius: 5px;
+}
+
+
+.submenu a {
+  display: block;
+  margin: 10px 0;
+  color: #ffffff;
+  padding: 5px;
+  text-decoration: none;
+}
+
+a:hover, .submenu a:hover {
+  background-color: rgb(29, 28, 28);
+}
+
+.desconectar {
+  padding: 10px 20px;
+  background-color: #f11a1a;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.desconectar:hover {
+  background-color: #f33b3b;
 }

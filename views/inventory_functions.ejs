@@ -1,41 +1,44 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inventário TI - Kian Iluminação</title>
-
     <link rel="icon" href="https://kian.com.br/wp-content/themes/kian-site/styles/images/favicon.png">
-
     <link rel="stylesheet" href="/styles/inventory_functions.css">
 </head>
-
 <body>
 
-    <section class="container">
-        <h1>Seja Bem-vindo, <%= data.name %> <%= data.surname %> !</h1><br>
+<section class="container">
+    <h1>Seja Bem-vindo, <%= data.name %> <%= data.surname %> !</h1><br>
 
+    <div class="menu">
         <% if (data.charge === 'Administrador') { %>
-            <p>Administração:</p>
-            <!-- <a href="/inventory/registration">Cadastrar Empréstimos</a><br> -->
-            <a href="/inventory/requests"><strong>Equipamentos: </strong> Solicitações Pendentes</a>
-            <a href="/inventory"><strong>Equipamentos: </strong>Empréstimos Pendentes</a>
-            <a href="/inventory/all_requests"><strong>Equipamentos: </strong>Histórico de Solicitações</a>
-            <a href="/inventory/all_loans"><strong>Equipamentos: </strong>Histórico de Empréstimos</a>
-            <p>ㅤ</p>
-            <a href="/inventory/all_requests_supplements"><strong>Suprimentos: </strong>Solicitações Pendentes</a>
-            <a href="/inventory/all_supplements"><strong>Suprimentos: </strong>Histórico de Solicitações</a>
-            <p>Funcionários:</p>
-            <a href="/inventory/request_loan">Solicitação de Equipamento</a><br>
-            <a href="/inventory/request_supplement">Solicitação de Suprimento</a>
-        <% } else { %>
-            <a href="/inventory/request_loan">Solicitação de Equipamento</a><br>
-            <a href="/inventory/request_supplement">Solicitação de Suprimento</a>
+            <div class="menu-item" onclick="toggleMenu('admin-equip')">Equipamentos</div>
+            <div id="admin-equip" class="submenu">
+                <a href="/inventory/requests">Solicitações Pendentes</a>
+                <a href="/inventory">Empréstimos Pendentes</a>
+                <a href="/inventory/all_requests">Histórico de Solicitações</a>
+                <a href="/inventory/all_loans">Histórico de Empréstimos</a>
+            </div>
+
+            <div class="menu-item" onclick="toggleMenu('admin-sup')">Suprimentos</div>
+            <div id="admin-sup" class="submenu">
+                <a href="/inventory/all_requests_supplements">Solicitações Pendentes</a>
+                <a href="/inventory/all_supplements">Histórico de Solicitações</a>
+            </div>
         <% } %>
+        <div class="menu-item" onclick="toggleMenu('user-menu')">Requerimentos</div>
+        <div id="user-menu" class="submenu">
+            <a href="/inventory/request_loan">Equipamento</a>
+            <a href="/inventory/request_supplement">Suprimento</a>
+        </div>
+    </div>
 
-        <a class="desconectar" href="/inventory/logout">Desconectar-se</a>
-    </section>
+    <a class="desconectar" href="/inventory/logout">Desconectar-se</a>
+</section>
+
+<script src="/scripts/functions.js"></script>
+
 </body>
-
 </html>
