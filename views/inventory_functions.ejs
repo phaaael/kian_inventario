@@ -10,7 +10,7 @@
 <body>
 
 <section class="container">
-    <h1>Seja Bem-vindo, <%= data.name %> <%= data.surname %> !</h1><br>
+    <h1>Kian Inventário - Menu Principal</h1><br>
 
     <div class="menu">
         <% if (data.charge === 'Administrador') { %>
@@ -35,7 +35,14 @@
         </div>
     </div>
 
-    <a class="desconectar" href="/inventory/logout">Desconectar-se</a>
+    <div class="dropdown">
+        <button class="dropbtn"><%= data.name %></button>
+        <div class="dropdown-content">
+            <a href="#profile">Meus Requerimentos</a>
+            <a class="desconectar" href="/inventory/logout">Desconectar-se</a>
+        </div>
+    </div>
+    
 </section>
 
 <script src="/scripts/functions.js"></script>
