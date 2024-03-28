@@ -433,7 +433,7 @@ const inventoryUpdateRecord = async (req, res) => {
 
         const userData = await inventoryDatabase.getUserByUsername(req.session.username)
 
-        const [rows] = await inventoryDatabase.pool.execute('SELECT * FROM kian_emprestimos WHERE id = ?', [id])
+        const [rows] = await inventoryDatabase.pool.query('SELECT * FROM kian_emprestimos WHERE id = ?', [id])
         const active = rows[0]
 
         const updateFields = {}
@@ -482,6 +482,12 @@ const inventoryUpdateRecord = async (req, res) => {
             fieldsChanged = true
         }
 
+        const userEmailQuery = 'SELECT email FROM kian_usuarios WHERE nome = ?'
+        const [userEmailRows] = await inventoryDatabase.pool.query(userEmailQuery, [requester])
+        const userEmail = userEmailRows[0]?.email
+
+        if (!userEmail) throw new Error('E-mail do solicitante não encontrado.')
+
         if (fieldsChanged) {
             const updateParams = []
             let updateQuery = 'UPDATE kian_emprestimos SET '
@@ -497,11 +503,7 @@ const inventoryUpdateRecord = async (req, res) => {
 
             res.json({ success: true, message: "Empréstimo alterado com sucesso" })
             
-            const fieldNamesMap = {
-                dt_req: 'Data de Requisição',
-                codigo_identificacao: 'Código de Identificação',
-                previsao_entrega: 'Previsão de Entrega'
-            }
+            const fieldNamesMap = { dt_req: 'Data de Requisição', codigo_identificacao: 'Código de Identificação', previsao_entrega: 'Previsão de Entrega' }
             
             const dateFields = new Set(['dt_req', 'previsao_entrega'])
 
@@ -512,8 +514,7 @@ const inventoryUpdateRecord = async (req, res) => {
                     return `${readableName}: ${formattedValue}`
                 })
                 .join('\n')
-
-            await notice.updateRecord("raphael.sousa@Kian.com.br", requester, changesDescription, id, userData.nome)
+            await notice.updateRecord(userEmail, requester, changesDescription, id, userData.nome)
         } else {
             res.json({ success: false, message: "Nenhuma alteração detectada" })
         }
@@ -854,14 +855,22 @@ const inventoryItemDelivered = async (req, res) => {
             const [itemRows] = await inventoryDatabase.pool.query(itemInfoQuery, [itemId])
             const item = itemRows[0]
 
-            if (item && item.codigo_identificacao) {
+            if (!item) throw new Error('Informações do item para empréstimo não encontradas.')
+
+            if (item.codigo_identificacao) {
                 const updateInventoryQuery = 'UPDATE kian_equipamentos SET emprestado = 0 WHERE codigo_identificacao = ?'
                 await inventoryDatabase.pool.execute(updateInventoryQuery, [item.codigo_identificacao])
             } else {
                 throw new Error('Código de identificação do item não encontrado.')
             }
 
-            await notice.sendDeliveryConfirmationEmail('raphael.sousa@kian.com.br', itemId, userData.nome, item.equipamento, item.solicitante, formattedDate, item.codigo_identificacao)
+            const userEmailQuery = 'SELECT email FROM kian_usuarios WHERE nome = ?'
+            const [userEmailRows] = await inventoryDatabase.pool.query(userEmailQuery, [item.solicitante])
+            const userEmail = userEmailRows[0]?.email
+
+            if (!userEmail) throw new Error('E-mail do solicitante não encontrado.')
+
+            await notice.sendDeliveryConfirmationEmail(userEmail, itemId, userData.nome, item.equipamento, item.solicitante, formattedDate, item.codigo_identificacao)
 
             res.json({ success: true, message: "Empréstimo Finalizado" })
         } else {
