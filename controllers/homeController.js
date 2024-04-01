@@ -1,7 +1,7 @@
 const getHome = (req, res) => {
     const dynamicData = { 
         title: 'Kian Inventário',
-        desc: 'Solicite Equipamentos/Suprimentos ao TI'
+        desc: 'Solicitações de Equipamentos/Suprimentos'
     }
 
     res.render('home', { data: dynamicData })
