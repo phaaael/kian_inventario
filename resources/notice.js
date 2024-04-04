@@ -29,8 +29,8 @@ async function updateRecord(recipientEmail, requester, changesText, id, admin) {
 
         const mailToAdminOptions = {
             from: 'iluminacaokian@gmail.com',
-            to: 'raphael.sousa@kian.com.br', // ti@Kian.com.br
-            // cc: '',
+            to: 'ti@Kian.com.br',
+            cc: 'servicedesk@kian.com.br',
             subject: 'Kian Inventário - Atualização de Solicitação',
             text: mailToAdmin
         }
@@ -59,8 +59,8 @@ async function requestRefused(recipientEmail, requester, reason, id, admin) {
 
         const mailToAdminOptions = {
             from: 'iluminacaokian@gmail.com',
-            to: 'raphael.sousa@kian.com.br', // ti@kian.com.br
-            // cc: '',
+            to: 'ti@Kian.com.br',
+            cc: 'servicedesk@kian.com.br',
             subject: 'Kian Inventário - Atualização de Solicitação',
             text: mailToAdmin
         }
@@ -89,8 +89,8 @@ async function requestApproved(recipientEmail, requester, id, admin) {
 
         const mailToAdminOptions = {
             from: 'iluminacaokian@gmail.com',
-            to: 'raphael.sousa@kian.com.br', // ti@kian.com.br
-            // cc: '',
+            to: 'ti@Kian.com.br',
+            cc: 'servicedesk@kian.com.br',
             subject: 'Kian Inventário - Atualização de Solicitação',
             text: mailToAdmin
         }
@@ -118,8 +118,8 @@ async function requestConfirmation(recipientEmail, id, requester) {
 
         const mailToAdminOptions = {
             from: 'iluminacaokian@gmail.com',
-            to: recipientEmail, // ti@kian.com.br
-            // cc: '',
+            to: 'ti@Kian.com.br',
+            cc: 'servicedesk@kian.com.br',
             subject: 'Kian Inventário - Solicitação Registrada',
             text: mailToAdmin
         }
@@ -147,7 +147,8 @@ async function sendDeliveryConfirmationEmail(recipientEmail, id, username, itemN
 
         const mailToAdminOptions = {
             from: 'iluminacaokian@gmail.com',
-            to: recipientEmail, // ti@kian.com.br
+            to: 'ti@Kian.com.br',
+            cc: 'servicedesk@kian.com.br',
             subject: 'Kian Inventário - Finalização de Empréstimo',
             text: mailToAdmin
         }
@@ -166,7 +167,6 @@ async function requestRefusedSupplement(recipientEmail, requester, reason, id, a
         const mailToUserOptions = {
             from: 'iluminacaokian@gmail.com',
             to: recipientEmail,
-            // cc: '',
             subject: 'Kian Inventário - Solicitação Recusada',
             text: mailToUser
         }
@@ -175,8 +175,8 @@ async function requestRefusedSupplement(recipientEmail, requester, reason, id, a
 
         const mailToAdminOptions = {
             from: 'iluminacaokian@gmail.com',
-            to: 'raphael.sousa@kian.com.br', // ti@kian.com.br
-            // cc: '',
+            to: 'ti@Kian.com.br',
+            cc: 'servicedesk@kian.com.br',
             subject: 'Kian Inventário - Atualização de Solicitação',
             text: mailToAdmin
         }
@@ -205,8 +205,8 @@ async function requestApprovedSupplement(recipientEmail, requester, id, admin) {
 
         const mailToAdminOptions = {
             from: 'iluminacaokian@gmail.com',
-            to: 'raphael.sousa@kian.com.br', // ti@kian.com.br
-            // cc: '',
+            to: 'ti@Kian.com.br',
+            cc: 'servicedesk@kian.com.br',
             subject: 'Kian Inventário - Atualização de Solicitação',
             text: mailToAdmin
         }
@@ -234,8 +234,8 @@ async function requestConfirmationSupplement(recipientEmail, id, requester) {
 
         const mailToAdminOptions = {
             from: 'iluminacaokian@gmail.com',
-            to: recipientEmail, // ti@kian.com.br
-            // cc: '',
+            to: 'ti@Kian.com.br',
+            cc: 'servicedesk@kian.com.br',
             subject: 'Kian Inventário - Solicitação Registrada',
             text: mailToAdmin
         }
@@ -255,7 +255,7 @@ async function checkAndSendEmail() {
         const [rows, fields] = await database.pool.query('SELECT * FROM kian_emprestimos WHERE previsao_entrega <= ?', [currentDate])
        
         for (const row of rows) {
-            const recipientEmail = 'raphael.sousa@kian.com.br' // ti@kian.com.br
+            const recipientEmail = 'ti@kian.com.br'
             const dateFromDatabase = new Date(row.previsao_entrega)
 
             const differenceInMilliseconds = dateFromDatabase - currentDate
