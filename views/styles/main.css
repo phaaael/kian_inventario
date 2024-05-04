@@ -63,6 +63,14 @@ input {
   justify-content: center;
 }
 
+.version {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  width: 100px;
+  color: gray;
+}
+
 input {
   margin-top: 10px;
   display: inline-block;
