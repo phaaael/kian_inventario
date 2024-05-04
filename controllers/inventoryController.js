@@ -416,7 +416,7 @@ const inventoryChangeItem = async (req, res) => {
                 identification_code: active.codigo_identificacao,
                 delivery_forecast: active.previsao_entrega,
                 delivered: active.entregue,
-                loan_completed: active.finalizacao_emprestimo,
+                loan_completed: active.tec_responsavel,
                 completion_date: dateUtils.formatDateWithCheck(active.dt_finalizacao)
             }
 
@@ -563,7 +563,7 @@ const exportInventoryListAllLoans = async (req, res) => {
                     'Identificação do Equipamento': active.codigo_identificacao,
                     'Previsão de Entrega': dateUtils.formatDate(new Date(active.previsao_entrega)),
                     'Solicitação Entregue': active.entregue,
-                    'Responsável por Finalizar Solicitação': active.finalizacao_emprestimo ? active.finalizacao_emprestimo : 'Pendente',
+                    'Responsável por Finalizar Solicitação': active.tec_responsavel ? active.tec_responsavel : 'Pendente',
                     'Data da Finalização da Solicitação': active.dt_finalizacao ? dateUtils.formatDateWithCheck(active.dt_finalizacao) : 'Pendente'
                 }))
 
