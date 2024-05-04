@@ -825,7 +825,7 @@ const inventoryListAllLoans = async (req, res) => {
                     identification_code: active.codigo_identificacao,
                     delivery_forecast: dateUtils.formatDate(new Date(active.previsao_entrega)),
                     delivered: active.entregue,
-                    loan_completed: active.finalizacao_emprestimo,
+                    loan_completed: active.tec_responsavel,
                     completion_date: dateUtils.formatDateWithCheck(active.dt_finalizacao)
                 }))
 
