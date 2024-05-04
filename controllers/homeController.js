@@ -4,7 +4,7 @@ const getHome = (req, res) => {
         desc: 'Solicitações de Equipamentos/Suprimentos ao TI'
     }
 
-    res.render('login/home', { data: dynamicData })
+    res.render('main/home', { data: dynamicData })
 };
   
 module.exports = { getHome }
