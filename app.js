@@ -6,6 +6,7 @@ const homeRouter = require('./routes/homeRouter')
 const loginRouter = require('./routes/loginRouter')
 const registerRouter = require('./routes/registerRouter')
 const inventoryRouter = require('./routes/inventoryRouter')
+const adminRouter = require('./routes/adminRouter')
 
 const notice = require('./resources/notice');
 
@@ -28,6 +29,7 @@ app.use(homeRouter)
 app.use(loginRouter)
 app.use(registerRouter)
 app.use(inventoryRouter)
+app.use(adminRouter)
 
 setInterval(notice.checkAndSendEmail, 6 * 60 * 60 * 1000)
 
