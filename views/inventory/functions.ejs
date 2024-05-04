@@ -17,6 +17,12 @@
 
     <div class="menu">
         <% if (data.charge === 'Administrador') { %>
+            <div class="menu-item" onclick="toggleMenu('admin')">Administração</div>
+            <div id="admin" class="submenu">
+                <a href="/admin/user-management">Gerenciamento de Usuários</a>
+                <a href="#">Gerenciamento de Estoque</a>
+            </div>
+
             <div class="menu-item" onclick="toggleMenu('admin-equip')">Equipamentos</div>
             <div id="admin-equip" class="submenu">
                 <a href="/inventory/requests">Solicitações Pendentes</a>
