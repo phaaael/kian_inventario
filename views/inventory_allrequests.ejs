@@ -45,6 +45,7 @@
                 <thead>
                     <tr>
                         <th>Identificação da Solicitação</th>
+                        <th>Responsável pelo Empréstimo</th>
                         <th>Solicitante</th>
                         <th>Data da Requisição</th>
                         <th>Equipamento</th>
@@ -59,6 +60,7 @@
                         <% actives.forEach((active, index) => { %>
                             <tr data-index="<%= index %>">
                                 <td>#<%= active.id %></td>
+                                <td><%= active.responsible_loan %></td>
                                 <td><%= active.requester %></td>
                                 <td><%= active.exit_sector %></td>
                                 <td><%= active.equipment %></td>
