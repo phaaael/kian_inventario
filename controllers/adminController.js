@@ -30,4 +30,45 @@ const userManagement = async (req, res) => {
     }
 }
 
-module.exports = { userManagement }
+const getUserCreation = async (req, res) => {
+    try {
+        if (req.session && req.session.username) {
+            const userData = await adminDatabase.getUserByUsername(req.session.username)
+
+            if (!userData || userData.cargo !== 'Administrador') return res.send('Usuário sem permissão')
+
+            res.render('admin/user-creation')
+        } else {
+            res.redirect('/')
+        }
+    } catch (error) {
+        res.render('error', { error: 'Erro ao obter dados de criação do usuário' })
+    }
+}
+
+const userCreation = async (req, res) => {
+    const { registration, username, password, password_validation, name, email, sector, charge } = req.body
+    try {
+        if (req.session && req.session.username) {
+            const userData = await adminDatabase.getUserByUsername(req.session.username)
+
+            if (!userData || userData.cargo !== 'Administrador') return res.send('Usuário sem permissão')
+            if (password !== password_validation) return res.json({ success: false, message: "As senhas não coincidem" })
+
+            const insert = 'INSERT INTO kian_usuarios(matricula, usuario, senha, email, nome, setor, cargo ) VALUES(?, ?, ?, ?, ?, ?, ?)'
+            await adminDatabase.pool.execute(insert, [registration, username, password, email, name, sector, charge])
+        
+            res.json({ success: true })
+        } else {
+            res.redirect('/')
+        }
+    } catch(error) {
+        res.render('error', { error: 'Erro ao cadastrar usuário' })
+    }
+}
+
+module.exports = {
+    userManagement,
+    userCreation,
+    getUserCreation
+}

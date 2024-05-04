@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventário TI - Kian Iluminação</title>
+
+    <link rel="icon" href="https://kian.com.br/wp-content/themes/kian-site/styles/images/favicon.png">
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="./styles/user-creation.css">
+    <link rel="stylesheet" href="./inventory/styles/alert.css">
+</head>
+
+<body>
+
+    <section class="container">
+        <h1>Criação de Usuário:</h1>
+
+        <form class="register" action="/admin/create-user/submit" method="post">
+            <label for="username">Usuario:</label>
+            <input type="text" id="username" name="username" required>
+        
+            <label for="password">Senha:</label>
+            <input type="password" id="password" name="password" required>
+
+            <label for="password_validation">Conforme sua Senha:</label>
+            <input type="password" id="password_validation" name="password_validation" required>
+
+            <label for="registration">Matrícula:</label>
+            <input type="registration" id="registration" name="registration" required>
+
+            <label for="name">Nome Completo:</label>
+            <input type="name" id="name" name="name" required>
+
+            <label for="email">E-mail:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="sector">Setor</label>
+            <input type="sector" id="sector" name="sector" required>
+
+            <label for="charge">Cargo</label>
+            <input type="charge" id="charge" name="charge" required>
+        
+            <input type="submit" value="Registrar Usuário">
+
+        </form>
+        
+        <a class="back" href="/inventory/menu">Voltar</a>
+    </section>
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="./scripts/register.js"></script>
+</body>
+
+</html>
