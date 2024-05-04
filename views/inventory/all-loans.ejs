@@ -8,18 +8,18 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="/styles/inventory_allrequests.css">
-    <link rel="stylesheet" href="/styles/alert.css">
+    <link rel="stylesheet" href="./styles/allloans.css">
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>Histórico de Solicitações de Suprimentos:</h1>
+            <h1>Histórico de Empréstimos de Equipamentos:</h1>
             <div class="search-container">
 
-                <form class="search" action="/inventory/all_supplements" method="get">
+                <form class="search" action="/inventory/all_loans" method="get">
                     <select name="searchField" style="cursor: pointer; margin-right: 10px; margin-bottom: 10px;">
                         <option value="id">Identificação da Solicitação</option>
+                        <option value="responsavel_emprestimo">Responsável pelo Empréstimo</option>
                         <option value="solicitante">Solicitante</option>
                         <option value="equipamento">Equipamento</option>
                         <option value="codigo_identificacao">Código de Identificação</option>
@@ -32,7 +32,7 @@
                     <input type="date" id="endDate" name="endDate" style="cursor: pointer; margin-right: 10px; margin-bottom: 10px;">
                     <button type="submit" style="margin-bottom: 10px;">Buscar</button>
                 </form>
-                <form style="margin-right: 5px; margin-bottom: 5px;" action="/inventory/export_allsupplements" method="get">
+                <form style="margin-right: 5px; margin-bottom: 5px;" action="/inventory/export_allloans" method="get">
                     <input type="hidden" name="searchField" value="<%= searchField %>">
                     <input type="hidden" name="searchChar" value="<%= searchChar %>">
                     <input type="hidden" name="startDate" value="<%= startDate %>">
@@ -41,20 +41,21 @@
                         <img style="cursor: pointer; margin-left: 5px; width: 40px;" class="logo_excel" src="https://img.icons8.com/?size=256&id=117561&format=png" alt="Excel">
                     </button>
                 </form>
-            </div>
+            </div>            
         </div>
         <div class="table-container">
             <table class="items-table">
                 <thead>
                     <tr>
                         <th>Identificação da Solicitação</th>
+                        <th>Responsável pelo Empréstimo</th>
                         <th>Solicitante</th>
                         <th>Data da Requisição</th>
                         <th>Equipamento</th>
-                        <th>Motivo da Solicitação</th>
-                        <th>Responsável por Finalizar Solicitação</th>
-                        <th>Data da Finalização da Solicitação</th>
-                        <th>Status da Solicitação</th>
+                        <th>Código de Identificação</th>
+                        <th>Previsão de Entrega</th>
+                        <th>Solicitação finalizada por</th>
+                        <th>Data da finalização</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -62,23 +63,14 @@
                         <% actives.forEach((active, index) => { %>
                             <tr data-index="<%= index %>">
                                 <td>#<%= active.id %></td>
+                                <td><%= active.responsible_loan %></td>
                                 <td><%= active.requester %></td>
                                 <td><%= active.exit_sector %></td>
                                 <td><%= active.equipment %></td>
-                                <td>
-                                    <span class="reason" style="cursor: pointer; font-weight: bold;" onclick="alertReason('<%= active.supplement_reason %>')">Exibir Motivo</span>
-                                </td>
-                                <td><%= active.response_completion %></td>
-                                <td><%= active.end_date %></td>
-                                <td>
-                                    <% if (active.reason_refusal && active.reason_refusal.trim() !== '') { %>
-                                        <span class="reason-refusal" style="cursor: pointer; font-weight: bold;" onclick="alertStatus('<%- active.reason_refusal %>')">Exibir Motivo</span>
-                                    <% } else if (active.request_status === 0) { %>
-                                        Solicitação Pendente
-                                    <% } else { %>
-                                        Solicitação Aprovada
-                                    <% } %>
-                                </td>
+                                <td><%= active.identification_code %></td>
+                                <td><%= active.delivery_forecast %></td>
+                                <td><%= active.loan_completed ? active.loan_completed : 'Pendente' %></td>
+                                <td><%= active.completion_date %></td>
                             </tr>
                         <% }); %>
                     <% } else { %>
@@ -91,8 +83,5 @@
         </div>
         <a href="/inventory/menu">Voltar</a>
     </div>
-
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    <script src="/scripts/allrequests.js"></script>
 </body>
 </html>

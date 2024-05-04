@@ -40,7 +40,7 @@ const inventory = async (req, res) => {
                 delivered: active.entregue
             }))
 
-            res.render('inventory', { actives: actives } )
+            res.render('inventory/inventory', { actives: actives } )
         } else {
             res.send('Usuário sem permissão')
         }
@@ -91,7 +91,7 @@ const inventoryAllSupplements = async (req, res) => {
                 end_date: active.dt_finalizacao ? dateUtils.formatDateWithCheck(active.dt_finalizacao) : 'Pendente'
             }))
 
-            res.render('inventory_allsupplements', { actives, searchField, searchChar, startDate, endDate })
+            res.render('inventory/all-supplements', { actives, searchField, searchChar, startDate, endDate })
         } else {
             res.redirect('/')
         }
@@ -144,7 +144,7 @@ const inventorySupplements = async (req, res) => {
                 end_date: dateUtils.formatDate(new Date(active.dt_finalizacao))
             }))
 
-            res.render('inventory_supplements', { actives, searchField, searchChar, startDate, endDate })
+            res.render('inventory/supplements', { actives, searchField, searchChar, startDate, endDate })
         } else {
             res.redirect('/')
         }
@@ -158,7 +158,7 @@ const inventoryRequestSupplement = async (req, res) => {
         if (req.method === 'GET') {
             const itemQuery = 'SELECT item, qtd_item FROM kian_suprimentos'
             const [items] = await inventoryDatabase.pool.execute(itemQuery)
-            res.render('inventory_requestsupplement', { items })
+            res.render('inventory/request-supplement', { items })
         } else if (req.method === 'POST') {
             const { exit_sector, item, request_reason } = req.body
             const userData = await inventoryDatabase.getUserByUsername(req.session.username)
@@ -202,7 +202,7 @@ const inventoryRequestLoan = async (req, res) => {
             `
             
             const [row] = await inventoryDatabase.pool.execute(query)
-            res.render('inventory_requestloan', { row })
+            res.render('inventory/request-loan', { row })
         } else if (req.method === 'POST') {
             const { exit_sector, item, request_reason, delivery_forecast } = req.body
             const userData = await inventoryDatabase.getUserByUsername(req.session.username)
@@ -420,7 +420,7 @@ const inventoryChangeItem = async (req, res) => {
                 completion_date: dateUtils.formatDateWithCheck(active.dt_finalizacao)
             }
 
-            res.render('inventory_changeitem', { active: activeData, formatDateForInput: dateUtils.formatDateForInput })
+            res.render('inventory/change-item', { active: activeData, formatDateForInput: dateUtils.formatDateForInput })
         } else {
             res.send('Usuário sem permissão ou item não encontrado')
         }
@@ -727,7 +727,7 @@ const inventoryRequests = async (req, res) => {
                 request_status: active.status_solicitacao
             }))
 
-            res.render('inventory_requests', { actives, searchField, searchChar, startDate, endDate })
+            res.render('inventory/requests', { actives, searchField, searchChar, startDate, endDate })
         } else {
             res.redirect('/')
         }
@@ -777,7 +777,7 @@ const inventoryListAllRequests = async (req, res) => {
                     status: active.status_solicitacao
                 }))
 
-                res.render('inventory_allrequests', { actives, searchField, searchChar, startDate, endDate })
+                res.render('inventory/all-requests', { actives, searchField, searchChar, startDate, endDate })
             } else {
                 res.send('Usuário sem permissão')
             }
@@ -829,7 +829,7 @@ const inventoryListAllLoans = async (req, res) => {
                     completion_date: dateUtils.formatDateWithCheck(active.dt_finalizacao)
                 }))
 
-                res.render('inventory_allloans', { actives, searchField, searchChar, startDate, endDate })
+                res.render('inventory/all-loans', { actives, searchField, searchChar, startDate, endDate })
             } else {
                 res.send('Usuário sem permissão')
             }
@@ -890,7 +890,7 @@ const inventoryItemDelivered = async (req, res) => {
 const inventoryRegistration = (req, res) => {
     try {
         if (req.session && req.session.username) {
-            res.render('inventory_registration')
+            res.render('inventory/registration')
         } else {
             res.redirect('/')
         }
@@ -925,7 +925,7 @@ const getMenuInventory = async (req, res) => {
                     charge: userData.cargo
                 }
 
-                res.render('inventory_functions', { data: data })
+                res.render('inventory/functions', { data: data })
             } else {
                 res.redirect('/')
             }

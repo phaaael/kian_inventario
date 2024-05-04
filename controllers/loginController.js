@@ -4,11 +4,11 @@ const login = async (req, res) => {
     const { username, password } = req.body
 
     try {
-        const [results, fields] = await loginDatabase.pool.execute('SELECT * FROM kian_usuarios WHERE usuario = ? AND senha = ?', [username, password])
+        const [ results ] = await loginDatabase.pool.execute('SELECT * FROM kian_usuarios WHERE usuario = ? AND senha = ?', [username, password])
 
         if (results.length > 0) {
             req.session.username = results[0].usuario
-            res.json({ success: true, message: "Login bem-sucedido", redirectUrl: '/inventory/menu' })
+            res.redirect('/inventory/menu')
         } else {
             res.json({ success: false, message: "Credenciais Inválidas" })
         }             

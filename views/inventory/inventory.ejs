@@ -7,22 +7,23 @@
     <link rel="icon" href="https://kian.com.br/wp-content/themes/kian-site/styles/images/favicon.png">
 
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="/styles/inventory_requests.css">
-    <link rel="stylesheet" href="/styles/alert.css">
+
+    <link rel="stylesheet" href="./styles/allrequests.css">
+    <link rel="stylesheet" href="./styles/alert.css">
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>Solicitações Pendentes de Equipamentos:</h1>          
+            <h1>Empréstimos Pendentes de Equipamentos:</h1>
             <div class="search-container">
-
-                <form class="search" action="/inventory/requests" method="get">
+                <form class="search" action="/inventory" method="get">
                     <select name="searchField" style="cursor: pointer; margin-right: 10px; margin-bottom: 10px;">
                         <option value="id">Identificação da Solicitação</option>
+                        <option value="responsavel_emprestimo">Responsável pelo Empréstimo</option>
                         <option value="solicitante">Solicitante</option>
                         <option value="equipamento">Equipamento</option>
                         <option value="codigo_identificacao">Código de Identificação</option>
+                        <option value="finalizacao_emprestimo">Solicitação finalizada por</option>
                     </select>
                     <input type="text" name="searchChar" placeholder="Buscar Registro" value="<%= typeof searchChar !== 'undefined' ? searchChar : '' %>" style="margin-right: 10px; margin-bottom: 10px;">
                     <label for="startDate" style="margin-right: 5px; margin-bottom: 10px;">Data de Início:</label>
@@ -37,40 +38,39 @@
             <table class="items-table">
                 <thead>
                     <tr>
-                        <th>Identificação da Solicitação</th>
+                        <th>Identificação do Empréstimo</th>
+                        <th>Responsável pelo Empréstimo</th>
                         <th>Solicitante</th>
                         <th>Data da Requisição</th>
                         <th>Equipamento</th>
                         <th>Código de Identificação</th>
                         <th>Previsão de Entrega</th>
-                        <th>Motivo da Solicitação</th>
-                        <th>Aceitar Solicitação</th>
-                        <th>Recusar Solicitação</th>
+                        <th>Finalizar Empréstimo</th>
+                        <th>Alterar Empréstimo</th>
                     </tr>
                 </thead>
                 <tbody>
                     <% if (actives && actives.length > 0) { %>
-                        <% const filteredActives = actives.filter(active => active.request_status !== 1); %>
+                        <% const filteredActives = actives.filter(active => active.delivered !== 1); %>
                         <% if (filteredActives.length > 0) { %>
                             <% filteredActives.forEach((active, index) => { %>
                                 <tr data-index="<%= index %>">
                                     <td>#<%= active.id %></td>
+                                    <td><%= active.responsible_loan %></td>
                                     <td><%= active.requester %></td>
                                     <td><%= active.exit_sector %></td>
                                     <td><%= active.equipment %></td>
                                     <td><%= active.identification_code %></td>
                                     <td><%= active.delivery_forecast %></td>
                                     <td>
-                                        <span class="loan_reason" style="cursor: pointer; font-weight: bold;" onclick="showAlert('<%= active.loan_reason %>')">Exibir Motivo</span>
-                                    </td>
-                                    <td>
-                                        <form action="/inventory/accept/<%= active.id %>" method="POST">
-                                            <button style="cursor: pointer; background-color: transparent; font-size: 20px;" class="accept" type="button" onclick="handleRequest('<%= active.id %>', 'accept')">✔️</button>
+                                        <form class="delivery-form" action="/inventory" method="POST">
+                                            <input type="hidden" name="activeId" value="<%= active.id %>">
+                                            <button style="cursor: pointer;" class="finish" type="submit">❌</button>
                                         </form>
                                     </td>
                                     <td>
-                                        <form action="/inventory/refuse/<%= active.id %>" method="POST">
-                                            <button style="cursor: pointer; background-color: transparent; font-size: 20px;" class="refuse" type="button" onclick="handleRequest('<%= active.id %>', 'refuse')">❌</button>
+                                        <form action="/inventory/change/<%= active.id %>" method="POST">
+                                            <button style="cursor: pointer;" class="alter" type="submit">⚙️</button>
                                         </form>
                                     </td>
                                 </tr>
@@ -85,12 +85,13 @@
                             <td colspan="9">Nenhuma solicitação encontrada</td>
                         </tr>
                     <% } %>
-                </tbody>
+                </tbody>                      
             </table>
         </div>
         <a href="/inventory/menu">Voltar</a>
 
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-        <script src="/scripts/requests.js"></script>
-    </body>
+        <script src="./scripts/inventory.js"></script>
+    </div>
+</body>
 </html>
