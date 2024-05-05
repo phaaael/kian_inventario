@@ -8,6 +8,8 @@ router.get('/admin/create-user', adminController.getUserCreation)
 
 router.get('/admin/supply-management', adminController.supplyManagement)
 
+router.get('/admin/equipament-management', adminController.equipmentManagement)
+
 router.post('/admin/create-user/submit', adminController.userCreation)
 
 module.exports = router

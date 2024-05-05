@@ -93,9 +93,37 @@ const supplyManagement = async (req, res) => {
     }
 }
 
+const equipmentManagement = async (req, res) => {
+    try {
+        if (req.session && req.session.username) {
+            const userData = await adminDatabase.getUserByUsername(req.session.username)
+            if (!userData || userData.cargo !== 'Administrador') return res.send('Usuário sem permissão')
+
+            let query = 'SELECT * FROM kian_equipamentos WHERE 1=1'
+            const [rows] = await adminDatabase.pool.execute(query)
+
+            if (rows && userData.cargo === 'Administrador') {
+                const actives = rows.map(active => ({
+                    id: active.id,
+                    item: active.item,
+                    identifier: active.codigo_identificacao,
+                    borrowed: active.emprestado === 1 ? 'Emprestado' : 'Em Estoque'
+                }))
+
+                res.render('admin/equipament-management', { actives })
+            }
+        } else {
+            res.redirect('/')
+        }
+    } catch (error) {
+        res.render('error', { error: 'Erro ao obter dados de administrador' })
+    }
+}
+
 module.exports = {
     userManagement,
     userCreation,
     getUserCreation,
+    equipmentManagement,
     supplyManagement
 }
