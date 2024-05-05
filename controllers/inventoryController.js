@@ -32,7 +32,7 @@ const inventory = async (req, res) => {
             const actives = rows.map(active => ({
                 id: active.id,
                 responsible_loan: active.responsavel_emprestimo,
-                requester: active.solicitante,
+                requester: active.requerente,
                 exit_sector: dateUtils.formatDate(new Date (active.dt_req)),
                 equipment: active.equipamento,
                 identification_code: active.codigo_identificacao,
@@ -57,7 +57,7 @@ const inventoryAllSupplements = async (req, res) => {
 
             const { searchChar, searchField, startDate, endDate } = req.query
 
-            const allowedFields = [ 'id', 'solicitante', 'equipamento' ]
+            const allowedFields = [ 'id', 'requerente', 'equipamento' ]
 
             let query = `SELECT * FROM kian_solicitacoes WHERE tipo = 'Suprimento' `
             let queryParams = []
@@ -81,7 +81,7 @@ const inventoryAllSupplements = async (req, res) => {
 
             const actives = rows.map(active => ({
                 id: active.id,
-                requester: active.solicitante,
+                requester: active.requerente,
                 exit_sector: dateUtils.formatDate(new Date(active.dt_req)),
                 equipment: active.equipamento,
                 reason_refusal: active.motivo_recusa,
@@ -110,7 +110,7 @@ const inventorySupplements = async (req, res) => {
 
             const { searchChar, searchField, startDate, endDate } = req.query
 
-            const allowedFields = ['id', 'solicitante', 'equipamento']
+            const allowedFields = ['id', 'requerente', 'equipamento']
 
             // let query = 'SELECT * FROM kian_solicitacoes_suprimentos WHERE 1=1'
             let query = `SELECT * FROM kian_solicitacoes WHERE tipo = 'Suprimento' `
@@ -135,7 +135,7 @@ const inventorySupplements = async (req, res) => {
 
             const actives = rows.map(active => ({
                 id: active.id,
-                requester: active.solicitante,
+                requester: active.requerente,
                 exit_sector: dateUtils.formatDate(new Date(active.dt_req)),
                 equipment: active.equipamento,
                 supplement_reason: active.motivo,
@@ -172,7 +172,7 @@ const inventoryRequestSupplement = async (req, res) => {
             if (itemQuantity <= 0) { throw new Error('Estoque insuficiente.') }
 
             const insertQuery = `
-                INSERT INTO kian_solicitacoes(solicitante, tipo, dt_req, equipamento, motivo)
+                INSERT INTO kian_solicitacoes(requerente, tipo, dt_req, equipamento, motivo)
                 VALUES (?, ?, ?, ?, ?)
             `
             const tipo = "Suprimento"
@@ -216,7 +216,7 @@ const inventoryRequestLoan = async (req, res) => {
             
             const tipo = 'Equipamento'
             const insertQuery = `
-                INSERT INTO kian_solicitacoes (solicitante, tipo, dt_req, equipamento, codigo_identificacao, motivo, previsao_entrega)
+                INSERT INTO kian_solicitacoes (requerente, tipo, dt_req, equipamento, codigo_identificacao, motivo, previsao_entrega)
                 VALUES (?, ?, ?, ?, ?, ?, ?)
             `
             
@@ -257,15 +257,15 @@ const inventoryAcceptSupplement = async (req, res) => {
             const updateStock = 'UPDATE kian_suprimentos SET qtd_item = qtd_item - 1 WHERE item = ?'
             await inventoryDatabase.pool.execute(updateStock, [itemNameResult.equipamento])
 
-            const selectQuery = 'SELECT solicitante, dt_req, equipamento, motivo FROM kian_solicitacoes WHERE id = ?'
+            const selectQuery = 'SELECT requerente, dt_req, equipamento, motivo FROM kian_solicitacoes WHERE id = ?'
             const [rows] = await inventoryDatabase.pool.execute(selectQuery, [itemId])
 
             if (rows.length > 0) {
                 const supplement = rows[0]
                 const userEmailQuery = 'SELECT email FROM kian_usuarios WHERE nome = ?'
-                const [[userEmail]] = await inventoryDatabase.pool.execute(userEmailQuery, [supplement.solicitante])
+                const [[userEmail]] = await inventoryDatabase.pool.execute(userEmailQuery, [supplement.requerente])
 
-                await notice.requestApprovedSupplement(userEmail.email, supplement.solicitante, itemId, userData.nome)
+                await notice.requestApprovedSupplement(userEmail.email, supplement.requerente, itemId, userData.nome)
 
                 res.json({ success: true, message: "Requerimento Aceito" })
             } else {
@@ -292,19 +292,19 @@ const inventoryAcceptItem = async (req, res) => {
         const [updateResult] = await inventoryDatabase.pool.execute(updateQuery, [true, userData.nome, itemId])
 
         if (updateResult.affectedRows > 0) {
-            const selectQuery = `SELECT solicitante, dt_req, equipamento, codigo_identificacao, motivo, previsao_entrega FROM kian_solicitacoes WHERE id = ?`
+            const selectQuery = `SELECT requerente, dt_req, equipamento, codigo_identificacao, motivo, previsao_entrega FROM kian_solicitacoes WHERE id = ?`
             const [rows] = await inventoryDatabase.pool.execute(selectQuery, [itemId])
 
             if (rows.length > 0) {
                 const loan = rows[0]
 
                 const userEmailQuery = `SELECT email FROM kian_usuarios WHERE nome = ?`
-                const [[userEmail]] = await inventoryDatabase.pool.execute(userEmailQuery, [loan.solicitante])
+                const [[userEmail]] = await inventoryDatabase.pool.execute(userEmailQuery, [loan.requerente])
 
-                const insertQuery = `INSERT INTO kian_emprestimos (responsavel_emprestimo, solicitante, dt_req, equipamento, codigo_identificacao, motivo, previsao_entrega) VALUES (?, ?, ?, ?, ?, ?, ?)`
-                await inventoryDatabase.pool.execute(insertQuery, [userData.nome, loan.solicitante, loan.dt_req, loan.equipamento, loan.codigo_identificacao, loan.motivo, loan.previsao_entrega])
+                const insertQuery = `INSERT INTO kian_emprestimos (responsavel_emprestimo, requerente, dt_req, equipamento, codigo_identificacao, motivo, previsao_entrega) VALUES (?, ?, ?, ?, ?, ?, ?)`
+                await inventoryDatabase.pool.execute(insertQuery, [userData.nome, loan.requerente, loan.dt_req, loan.equipamento, loan.codigo_identificacao, loan.motivo, loan.previsao_entrega])
                 
-                // await notice.requestApproved(userEmail.email, loan.solicitante, itemId, userData.nome)
+                // await notice.requestApproved(userEmail.email, loan.requerente, itemId, userData.nome)
                 
                 res.json({ success: true, message: "Requerimento Aceito" })
             } else {
@@ -334,16 +334,16 @@ const inventoryRefuseSupplement = async (req, res) => {
         const [updateResult] = await inventoryDatabase.pool.execute(updateQuery, [true, true, reason, userData.nome, formattedDate, itemId])
 
         if (updateResult.affectedRows > 0) {
-            const selectQuery = `SELECT solicitante, dt_req, equipamento, motivo FROM kian_solicitacoes WHERE id = ?`
+            const selectQuery = `SELECT requerente, dt_req, equipamento, motivo FROM kian_solicitacoes WHERE id = ?`
             const [rows] = await inventoryDatabase.pool.execute(selectQuery, [itemId])
 
             if (rows.length > 0) {
                 const supplement = rows[0]
 
                 const userEmailQuery = `SELECT email FROM kian_usuarios WHERE nome = ?`
-                const [[userEmail]] = await inventoryDatabase.pool.execute(userEmailQuery, [supplement.solicitante])
+                const [[userEmail]] = await inventoryDatabase.pool.execute(userEmailQuery, [supplement.requerente])
                 
-                // await notice.requestRefusedSupplement(userEmail.email, supplement.solicitante, reason, itemId, userData.nome)
+                // await notice.requestRefusedSupplement(userEmail.email, supplement.requerente, reason, itemId, userData.nome)
                 
                 res.json({ success: true, message: "Requerimento Recusado" })
             } else {
@@ -371,7 +371,7 @@ const inventoryRefuseItem = async (req, res) => {
         const updateQuery = 'UPDATE kian_solicitacoes SET status_solicitacao = ?, solicitacao_recusada = ?, motivo_recusa = ? WHERE id = ?'
         await inventoryDatabase.pool.execute(updateQuery, [true, true, reason, itemId])
 
-        const itemInfoQuery = 'SELECT solicitante, equipamento, codigo_identificacao FROM kian_solicitacoes WHERE id = ?'
+        const itemInfoQuery = 'SELECT requerente, equipamento, codigo_identificacao FROM kian_solicitacoes WHERE id = ?'
         const [itemRows] = await inventoryDatabase.pool.query(itemInfoQuery, [itemId])
         const item = itemRows[0]
 
@@ -383,16 +383,16 @@ const inventoryRefuseItem = async (req, res) => {
         await inventoryDatabase.pool.execute(updateInventoryQuery, [item.codigo_identificacao])
 
         const userEmailQuery = 'SELECT email FROM kian_usuarios WHERE nome = ?'
-        const [userRows] = await inventoryDatabase.pool.query(userEmailQuery, [item.solicitante])
+        const [userRows] = await inventoryDatabase.pool.query(userEmailQuery, [item.requerente])
         const user = userRows[0]
 
         if (!user || !user.email) {
-            return res.status(404).json({ success: false, message: 'E-mail do solicitante não encontrado.' })
+            return res.status(404).json({ success: false, message: 'E-mail do requerente não encontrado.' })
         }
 
         res.json({ success: true, message: "Requerimento Recusado" })
 
-        // await notice.requestRefused(user.email, item.solicitante, reason, itemId, userData.nome)
+        // await notice.requestRefused(user.email, item.requerente, reason, itemId, userData.nome)
     } catch (error) {
         console.error('Erro ao recusar requerimento:', error)
         res.status(500).json({ success: false, message: 'Erro ao recusar requerimento' })
@@ -410,7 +410,7 @@ const inventoryChangeItem = async (req, res) => {
             const activeData = {
                 id: active.id,
                 responsible_loan: active.responsavel_emprestimo,
-                requester: active.solicitante,
+                requester: active.requerente,
                 exit_sector: dateUtils.formatDate(new Date(active.dt_req)),
                 equipment: active.equipamento,
                 identification_code: active.codigo_identificacao,
@@ -447,8 +447,8 @@ const inventoryUpdateRecord = async (req, res) => {
             fieldsChanged = true
         }
 
-        if (requester && requester !== active.solicitante) {
-            updateFields.solicitante = requester
+        if (requester && requester !== active.requerente) {
+            updateFields.requerente = requester
             fieldsChanged = true
         }
 
@@ -489,7 +489,7 @@ const inventoryUpdateRecord = async (req, res) => {
         const [userEmailRows] = await inventoryDatabase.pool.query(userEmailQuery, [requester])
         const userEmail = userEmailRows[0]?.email
 
-        if (!userEmail) throw new Error('E-mail do solicitante não encontrado.')
+        if (!userEmail) throw new Error('E-mail do requerente não encontrado.')
 
         if (fieldsChanged) {
             const updateParams = []
@@ -557,7 +557,7 @@ const exportInventoryListAllLoans = async (req, res) => {
                 const actives = rows.map(active => ({
                     'Identificação de Requerimento': active.id,
                     'Responsável pelo Empréstimo': active.responsavel_emprestimo,
-                    'Solicitante': active.solicitante,
+                    'Requerente': active.requerente,
                     'Data da Requisição': dateUtils.formatDate(new Date(active.dt_req)),
                     'Equipamento': active.equipamento,
                     'Identificação do Equipamento': active.codigo_identificacao,
@@ -608,7 +608,7 @@ const exportinventoryListAllSupplements = async (req, res) => {
             if (userData.cargo === 'Administrador') {
                 const actives = rows.map(active => ({
                     'Identificação de Requerimento': active.id,
-                    'Solicitante': active.solicitante,
+                    'Requerente': active.requerente,
                     'Data da Requisição': dateUtils.formatDate(new Date(active.dt_req)),
                     'Equipamento': active.equipamento,
                     'Motivo do Requerimento': active.motivo,
@@ -660,7 +660,7 @@ const exportinventoryListAllRequests = async (req, res) => {
             if (userData.cargo === 'Administrador') {
                 const actives = rows.map(active => ({
                     'Identificação do Requerimento': active.id,
-                    'Solicitante': active.solicitante,
+                    'Requerente': active.requerente,
                     'Data da Requisição': dateUtils.formatDate(new Date(active.dt_req)),
                     'Equipamento': active.equipamento,
                     'Identificação do Equipamento': active.codigo_identificacao,
@@ -694,7 +694,7 @@ const inventoryRequests = async (req, res) => {
 
             const { searchChar, searchField, startDate, endDate } = req.query
 
-            const allowedFields = ['id', 'solicitante', 'equipamento', 'codigo_identificacao']
+            const allowedFields = ['id', 'requerente', 'equipamento', 'codigo_identificacao']
 
             let query = ` SELECT * FROM kian_solicitacoes WHERE tipo = 'Equipamento' `
             let queryParams = []
@@ -718,7 +718,7 @@ const inventoryRequests = async (req, res) => {
 
             const actives = rows.map(active => ({
                 id: active.id,
-                requester: active.solicitante,
+                requester: active.requerente,
                 exit_sector: dateUtils.formatDate(new Date(active.dt_req)),
                 equipment: active.equipamento,
                 identification_code: active.codigo_identificacao,
@@ -766,7 +766,7 @@ const inventoryListAllRequests = async (req, res) => {
                 const actives = rows.map(active => ({
                     id: active.id,
                     responsible_loan: active.tec_responsavel,
-                    requester: active.solicitante,
+                    requester: active.requerente,
                     exit_sector: dateUtils.formatDate(new Date(active.dt_req)),
                     equipment: active.equipamento,
                     identification_code: active.codigo_identificacao,
@@ -819,7 +819,7 @@ const inventoryListAllLoans = async (req, res) => {
                 const actives = rows.map(active => ({
                     id: active.id,
                     responsible_loan: active.responsavel_emprestimo,
-                    requester: active.solicitante,
+                    requester: active.requerente,
                     exit_sector: dateUtils.formatDate(new Date(active.dt_req)),
                     equipment: active.equipamento,
                     identification_code: active.codigo_identificacao,
@@ -856,7 +856,7 @@ const inventoryItemDelivered = async (req, res) => {
             const updateLoanQuery = 'UPDATE kian_emprestimos SET tec_responsavel = ?, dt_finalizacao = ?, entregue = ? WHERE id = ?'
             await inventoryDatabase.pool.execute(updateLoanQuery, [userData.nome, formattedDate, true, itemId])
 
-            const itemInfoQuery = 'SELECT solicitante, equipamento, codigo_identificacao FROM kian_emprestimos WHERE id = ?'
+            const itemInfoQuery = 'SELECT requerente, equipamento, codigo_identificacao FROM kian_emprestimos WHERE id = ?'
             const [itemRows] = await inventoryDatabase.pool.query(itemInfoQuery, [itemId])
             const item = itemRows[0]
 
@@ -870,12 +870,12 @@ const inventoryItemDelivered = async (req, res) => {
             }
 
             const userEmailQuery = 'SELECT email FROM kian_usuarios WHERE nome = ?'
-            const [userEmailRows] = await inventoryDatabase.pool.query(userEmailQuery, [item.solicitante])
+            const [userEmailRows] = await inventoryDatabase.pool.query(userEmailQuery, [item.requerente])
             const userEmail = userEmailRows[0]?.email
 
-            if (!userEmail) throw new Error('E-mail do solicitante não encontrado.')
+            if (!userEmail) throw new Error('E-mail do requerente não encontrado.')
 
-            // await notice.sendDeliveryConfirmationEmail(userEmail, itemId, userData.nome, item.equipamento, item.solicitante, formattedDate, item.codigo_identificacao)
+            // await notice.sendDeliveryConfirmationEmail(userEmail, itemId, userData.nome, item.equipamento, item.requerente, formattedDate, item.codigo_identificacao)
 
             res.json({ success: true, message: "Empréstimo Finalizado" })
         } else {
@@ -902,7 +902,7 @@ const inventoryRegistration = (req, res) => {
 const inventoryRegisterItem = async (req, res) => {
     const { responsible_loan, requester, exit_sector, equipment, request_reason, identification_code, delivery_forecast } = req.body
     try {
-        const insert = 'INSERT INTO kian_emprestimos(responsavel_emprestimo, solicitante, dt_req, equipamento, motivo, codigo_identificacao, previsao_entrega) VALUES(?,?, ?, ?, ?, ?, ?)'
+        const insert = 'INSERT INTO kian_emprestimos(responsavel_emprestimo, requerente, dt_req, equipamento, motivo, codigo_identificacao, previsao_entrega) VALUES(?,?, ?, ?, ?, ?, ?)'
         await inventoryDatabase.pool.execute(insert, [responsible_loan, requester, exit_sector, equipment, request_reason, identification_code, delivery_forecast])
 
         res.json({ success: true, message: "Empréstimo Registrado" })
