@@ -67,8 +67,35 @@ const userCreation = async (req, res) => {
     }
 }
 
+const supplyManagement = async (req, res) => {
+    try {
+        if (req.session && req.session.username) {
+            const userData = await adminDatabase.getUserByUsername(req.session.username)
+            if (!userData || userData.cargo !== 'Administrador') return res.send('Usuário sem permissão')
+
+            let query = 'SELECT * FROM kian_suprimentos WHERE 1=1'
+            const [rows] = await adminDatabase.pool.execute(query)
+
+            if (rows && userData.cargo === 'Administrador') {
+                const actives = rows.map(active => ({
+                    id: active.id,
+                    item: active.item,
+                    qtd_item: active.qtd_item
+                }))
+
+                res.render('admin/supply-management', { actives })
+            }
+        } else {
+            res.redirect('/')
+        }
+    } catch (error) {
+        res.render('error', { error: 'Erro ao obter dados de administrador' })
+    }
+}
+
 module.exports = {
     userManagement,
     userCreation,
-    getUserCreation
+    getUserCreation,
+    supplyManagement
 }

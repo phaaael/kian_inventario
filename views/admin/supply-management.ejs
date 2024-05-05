@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventário TI - Kian Iluminação</title>
+    <link rel="icon" href="https://kian.com.br/wp-content/themes/kian-site/styles/images/favicon.png">
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="./styles/user-management.css">
+    <link rel="stylesheet" href="../inventory/styles/alert.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Gerenciamento de Suprimentos:</h1>
+        </div>
+        <div class="table-container">
+            <table class="items-table">
+                <thead>
+                    <tr>
+                        <th>Identificação do Item</th>
+                        <th>Nome do Item</th>
+                        <th>Quantidade do Item</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (actives.length > 0) { %>
+                        <% actives.forEach((active, index) => { %>
+                            <tr data-index="<%= index %>">
+                                <td>#<%= active.id %></td>
+                                <td><%= active.item %></td>
+                                <td><%= active.qtd_item %></td>
+                            </tr>
+                        <% }); %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="9">Nenhuma solicitação encontrada</td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+        <a href="/inventory/menu">Voltar</a>
+    </div>
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="./scripts/user-management.js"></script>
+</body>
+</html>
