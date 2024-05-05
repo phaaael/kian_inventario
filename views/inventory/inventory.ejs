@@ -18,12 +18,12 @@
             <div class="search-container">
                 <form class="search" action="/inventory" method="get">
                     <select name="searchField" style="cursor: pointer; margin-right: 10px; margin-bottom: 10px;">
-                        <option value="id">Identificação da Solicitação</option>
+                        <option value="id">Identificação do Requerimento</option>
                         <option value="responsavel_emprestimo">Responsável pelo Empréstimo</option>
                         <option value="solicitante">Solicitante</option>
                         <option value="equipamento">Equipamento</option>
                         <option value="codigo_identificacao">Código de Identificação</option>
-                        <option value="finalizacao_emprestimo">Solicitação finalizada por</option>
+                        <option value="finalizacao_emprestimo">Requerimento finalizado por</option>
                     </select>
                     <input type="text" name="searchChar" placeholder="Buscar Registro" value="<%= typeof searchChar !== 'undefined' ? searchChar : '' %>" style="margin-right: 10px; margin-bottom: 10px;">
                     <label for="startDate" style="margin-right: 5px; margin-bottom: 10px;">Data de Início:</label>
@@ -77,12 +77,12 @@
                             <% }); %>
                         <% } else { %>
                             <tr>
-                                <td colspan="9">Nenhuma solicitação encontrada</td>
+                                <td colspan="9">Nenhum requerimento encontrado</td>
                             </tr>
                         <% } %>
                     <% } else { %>
                         <tr>
-                            <td colspan="9">Nenhuma solicitação encontrada</td>
+                            <td colspan="9">Nenhum requerimento encontrado</td>
                         </tr>
                     <% } %>
                 </tbody>                      

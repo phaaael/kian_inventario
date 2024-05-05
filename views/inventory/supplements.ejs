@@ -19,7 +19,7 @@
 
                 <form class="search" action="/inventory/all_requests_supplements" method="get">
                     <select name="searchField" style="cursor: pointer; margin-right: 10px; margin-bottom: 10px;">
-                        <option value="id">Identificação da Solicitação</option>
+                        <option value="id">Identificação do Requerimento</option>
                         <option value="solicitante">Solicitante</option>
                         <option value="equipamento">Equipamento</option>
                         <option value="codigo_identificacao">Código de Identificação</option>
@@ -37,13 +37,13 @@
             <table class="items-table">
                 <thead>
                     <tr>
-                        <th>Identificação da Solicitação</th>
+                        <th>Identificação do Requerimento</th>
                         <th>Solicitante</th>
                         <th>Data da Requisição</th>
                         <th>Suprimento</th>
-                        <th>Motivo da Solicitação</th>
-                        <th>Aceitar Solicitação</th>
-                        <th>Recusar Solicitação</th>
+                        <th>Motivo do Requerimento</th>
+                        <th>Aceitar Requerimento</th>
+                        <th>Recusar Requerimento</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -69,12 +69,12 @@
                             <% }); %>
                         <% } else { %>
                             <tr>
-                                <td colspan="9">Nenhuma solicitação encontrada</td>
+                                <td colspan="9">Nenhum requerimento encontrada</td>
                             </tr>
                         <% } %>
                     <% } else { %>
                         <tr>
-                            <td colspan="9">Nenhuma solicitação encontrada</td>
+                            <td colspan="9">Nenhum requerimento encontrada</td>
                         </tr>
                     <% } %>
                 </tbody>

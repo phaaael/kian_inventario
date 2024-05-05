@@ -1,5 +1,5 @@
 function alertReason(message) {
-    swal("Motivo da Solicitação", message)
+    swal("Motivo do Requerimento", message)
 }
 
 function alertStatus(message) {

@@ -1,7 +1,7 @@
 function handleRequest(id, action) {
     swal({
         title: "Tem certeza?",
-        text: action === 'accept' ? "Você tem certeza que deseja aceitar esta solicitação?" : "Você tem certeza que deseja recusar esta solicitação?",
+        text: action === 'accept' ? "Você tem certeza que deseja aceitar este requerimento?" : "Você tem certeza que deseja recusar este requerimento?",
         icon: "warning",
         buttons: {
             confirm: "Sim",
@@ -19,7 +19,7 @@ function handleRequest(id, action) {
                     dangerMode: true,
                 }).then((reason) => {
                     if (!reason.trim()) {
-                        swal("Aviso", "Você precisa fornecer um motivo para recusar a solicitação.", "warning");
+                        swal("Aviso", "Você precisa fornecer um motivo para recusar o requerimento.", "warning");
                     } else {
                         performAction(id, action, reason);
                     }
@@ -36,7 +36,7 @@ function handleRequest(id, action) {
 function performAction(id, action, reason = '') {
     swal({
         title: "Processando...",
-        text: "Por favor, aguarde enquanto a solicitação está sendo processada.",
+        text: "Por favor, aguarde enquanto o requerimento está sendo processado.",
         icon: "info",
         buttons: false,
         closeOnClickOutside: false,
@@ -80,7 +80,7 @@ function performAction(id, action, reason = '') {
         console.error('Houve um erro:', error);
         swal({
             title: "Erro",
-            text: "Não foi possível processar a sua solicitação: " + error.message,
+            text: "Não foi possível processar o seu requerimento: " + error.message,
             icon: "error",
             button: "OK",
         });
@@ -88,5 +88,5 @@ function performAction(id, action, reason = '') {
 }
 
 function showAlert(message) {
-    swal("Motivo da Solicitação", message);
+    swal("Motivo do Requerimento", message);
 }

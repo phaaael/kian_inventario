@@ -180,7 +180,7 @@ const inventoryRequestSupplement = async (req, res) => {
             const [ insertResult ] = await inventoryDatabase.pool.execute(insertQuery, [userData.nome, tipo ,exit_sector, itemName, request_reason])
             const insertedId = insertResult.insertId
 
-            res.json({ success: true, message: "Solicitação de Suprimento Enviada" })
+            res.json({ success: true, message: "Requemento de Suprimento Enviada" })
 
             // await notice.requestConfirmationSupplement(userData.email, insertedId, userData.nome)
         }
@@ -226,7 +226,7 @@ const inventoryRequestLoan = async (req, res) => {
             const updateQuery = 'UPDATE kian_equipamentos SET emprestado = 1 WHERE id = ?'
             await inventoryDatabase.pool.execute(updateQuery, [item])
             
-            res.json({ success: true, message: "Solicitação de Empréstimo Enviada" })
+            res.json({ success: true, message: "Requerimento de Empréstimo Enviada" })
 
             // await notice.requestConfirmation(userData.email, insertedId, userData.nome)
         }
@@ -241,7 +241,7 @@ const inventoryAcceptSupplement = async (req, res) => {
         const itemId = req.params.id
         const userData = await inventoryDatabase.getUserByUsername(req.session.username)
 
-        if (!itemId) return res.status(400).json({ success: false, message: 'ID da solicitação não fornecido' })
+        if (!itemId) return res.status(400).json({ success: false, message: 'ID de requerimento não fornecido' })
 
         const currentDate = new Date()
         const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ')
@@ -267,16 +267,16 @@ const inventoryAcceptSupplement = async (req, res) => {
 
                 await notice.requestApprovedSupplement(userEmail.email, supplement.solicitante, itemId, userData.nome)
 
-                res.json({ success: true, message: "Solicitação Aceita" })
+                res.json({ success: true, message: "Requerimento Aceito" })
             } else {
                 res.status(404).json({ success: false, message: 'Nenhum registro encontrado para atualizar' })
             }
         } else {
-            res.status(404).json({ success: false, message: 'Atualização da solicitação falhou' })
+            res.status(404).json({ success: false, message: 'Atualização de requerimento falhou' })
         }
     } catch (error) {
         console.error(error)
-        res.status(500).json({ success: false, message: 'Erro ao aceitar solicitação' })
+        res.status(500).json({ success: false, message: 'Erro ao aceitar requerimento' })
     }
 }
 
@@ -306,16 +306,16 @@ const inventoryAcceptItem = async (req, res) => {
                 
                 // await notice.requestApproved(userEmail.email, loan.solicitante, itemId, userData.nome)
                 
-                res.json({ success: true, message: "Solicitação Aceita" })
+                res.json({ success: true, message: "Requerimento Aceito" })
             } else {
                 res.status(404).json({ success: false, message: 'Nenhum registro encontrado para atualizar' })
             }
         } else {
-            res.status(404).json({ success: false, message: 'Atualização da solicitação falhou' })
+            res.status(404).json({ success: false, message: 'Atualização de requerimento falhou' })
         }
     } catch (error) {
         console.error(error)
-        res.status(500).json({ success: false, message: 'Erro ao aceitar solicitação' })
+        res.status(500).json({ success: false, message: 'Erro ao aceitar requerimento' })
     }
 }
 
@@ -345,16 +345,16 @@ const inventoryRefuseSupplement = async (req, res) => {
                 
                 // await notice.requestRefusedSupplement(userEmail.email, supplement.solicitante, reason, itemId, userData.nome)
                 
-                res.json({ success: true, message: "Solicitação Recusada" })
+                res.json({ success: true, message: "Requerimento Recusado" })
             } else {
                 res.status(404).json({ success: false, message: 'Nenhum registro encontrado para atualizar' })
             }
         } else {
-            res.status(404).json({ success: false, message: 'Atualização da solicitação falhou' })
+            res.status(404).json({ success: false, message: 'Atualização de requerimento falhou' })
         }
     } catch (error) {
         console.error(error)
-        res.status(500).json({ success: false, message: 'Erro ao aceitar solicitação' })
+        res.status(500).json({ success: false, message: 'Erro ao aceitar requerimento' })
     }
 }
 
@@ -390,12 +390,12 @@ const inventoryRefuseItem = async (req, res) => {
             return res.status(404).json({ success: false, message: 'E-mail do solicitante não encontrado.' })
         }
 
-        res.json({ success: true, message: "Solicitação Recusada" })
+        res.json({ success: true, message: "Requerimento Recusado" })
 
         // await notice.requestRefused(user.email, item.solicitante, reason, itemId, userData.nome)
     } catch (error) {
-        console.error('Erro ao recusar solicitação:', error)
-        res.status(500).json({ success: false, message: 'Erro ao recusar solicitação' })
+        console.error('Erro ao recusar requerimento:', error)
+        res.status(500).json({ success: false, message: 'Erro ao recusar requerimento' })
     }
 }
 
@@ -555,16 +555,16 @@ const exportInventoryListAllLoans = async (req, res) => {
 
             if (userData.cargo === 'Administrador') {
                 const actives = rows.map(active => ({
-                    'Identificação da Solicitação': active.id,
+                    'Identificação de Requerimento': active.id,
                     'Responsável pelo Empréstimo': active.responsavel_emprestimo,
                     'Solicitante': active.solicitante,
                     'Data da Requisição': dateUtils.formatDate(new Date(active.dt_req)),
                     'Equipamento': active.equipamento,
                     'Identificação do Equipamento': active.codigo_identificacao,
                     'Previsão de Entrega': dateUtils.formatDate(new Date(active.previsao_entrega)),
-                    'Solicitação Entregue': active.entregue,
-                    'Responsável por Finalizar Solicitação': active.tec_responsavel ? active.tec_responsavel : 'Pendente',
-                    'Data da Finalização da Solicitação': active.dt_finalizacao ? dateUtils.formatDateWithCheck(active.dt_finalizacao) : 'Pendente'
+                    'Requerimento Entregue': active.entregue,
+                    'Responsável por Finalizar Requerimento': active.tec_responsavel ? active.tec_responsavel : 'Pendente',
+                    'Data da Finalização do Requerimento': active.dt_finalizacao ? dateUtils.formatDateWithCheck(active.dt_finalizacao) : 'Pendente'
                 }))
 
                 spreadsheet.exportToExcel(actives, res, { searchChar, searchField, startDate, endDate })
@@ -607,15 +607,15 @@ const exportinventoryListAllSupplements = async (req, res) => {
 
             if (userData.cargo === 'Administrador') {
                 const actives = rows.map(active => ({
-                    'Identificação da Solicitação': active.id,
+                    'Identificação de Requerimento': active.id,
                     'Solicitante': active.solicitante,
                     'Data da Requisição': dateUtils.formatDate(new Date(active.dt_req)),
                     'Equipamento': active.equipamento,
-                    'Motivo da Solicitação': active.motivo,
-                    'Responsável por Finalizar Solicitação': active.tec_responsavel ? active.tec_responsavel : 'Pendente',
-                    'Data da Finalização da Solicitação': active.dt_finalizacao ? dateUtils.formatDateWithCheck(active.dt_finalizacao) : 'Pendente',
-                    'Status da Solicitação': (active.status_solicitacao === 0 && (!active.motivo_recusa || active.motivo_recusa.trim() === '')) ? 'Solicitação Pendente' :
-                    (active.status_solicitacao === 1 && (!active.motivo_recusa || active.motivo_recusa.trim() === '')) ? 'Solicitação Aprovada' :
+                    'Motivo do Requerimento': active.motivo,
+                    'Responsável por Finalizar Requerimento': active.tec_responsavel ? active.tec_responsavel : 'Pendente',
+                    'Data da Finalização do Requerimento': active.dt_finalizacao ? dateUtils.formatDateWithCheck(active.dt_finalizacao) : 'Pendente',
+                    'Status do Requerimento': (active.status_solicitacao === 0 && (!active.motivo_recusa || active.motivo_recusa.trim() === '')) ? 'Requerimento Pendente' :
+                    (active.status_solicitacao === 1 && (!active.motivo_recusa || active.motivo_recusa.trim() === '')) ? 'Requerimento Aprovado' :
                     (active.status_solicitacao === 1 && active.motivo_recusa && active.motivo_recusa.trim() !== '') ? active.motivo_recusa : active.motivo_recusa
                 }))
 
@@ -659,15 +659,15 @@ const exportinventoryListAllRequests = async (req, res) => {
 
             if (userData.cargo === 'Administrador') {
                 const actives = rows.map(active => ({
-                    'Identificação da Solicitação': active.id,
+                    'Identificação do Requerimento': active.id,
                     'Solicitante': active.solicitante,
                     'Data da Requisição': dateUtils.formatDate(new Date(active.dt_req)),
                     'Equipamento': active.equipamento,
                     'Identificação do Equipamento': active.codigo_identificacao,
                     'Previsão de Entrega': dateUtils.formatDate(new Date(active.previsao_entrega)),
-                    'Motivo da Solicitação': active.motivo,
-                    'Status da Solicitação': (active.status_solicitacao === 0 && (!active.motivo_recusa || active.motivo_recusa.trim() === '')) ? 'Solicitação Pendente' :
-                    (active.status_solicitacao === 1 && (!active.motivo_recusa || active.motivo_recusa.trim() === '')) ? 'Solicitação Aprovada' :
+                    'Motivo do Requerimento': active.motivo,
+                    'Status do Requerimento': (active.status_solicitacao === 0 && (!active.motivo_recusa || active.motivo_recusa.trim() === '')) ? 'Requerimento Pendente' :
+                    (active.status_solicitacao === 1 && (!active.motivo_recusa || active.motivo_recusa.trim() === '')) ? 'Requerimento Aprovado' :
                     (active.status_solicitacao === 1 && active.motivo_recusa && active.motivo_recusa.trim() !== '') ? active.motivo_recusa :
                     'Status Indefinido'                
                 }))

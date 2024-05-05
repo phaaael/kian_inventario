@@ -34,7 +34,7 @@ document.querySelector('.login').addEventListener('submit', function(event) {
     .catch(error => {
         swal({ 
             title: "Erro",
-            text: "Não foi possível concluir a solicitação",
+            text: "Não foi possível concluir o requerimento",
             icon: "error",
         })
     })

@@ -16,22 +16,22 @@ async function updateRecord(recipientEmail, requester, changesText, id, admin) {
     try {
         if (typeof changesText !== 'string') changesText = 'Não foi possível interpretar as alterações'
 
-        const mailToUser = `Prezado(a) ${requester}, \n\nSua solicitação de equipamento foi atualizada com as seguintes alterações: \n\n${changesText} \n\nIdentificação da Solicitação: #${id}. \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
+        const mailToUser = `Prezado(a) ${requester}, \n\nSeu requerimento de equipamento foi atualizada com as seguintes alterações: \n\n${changesText} \n\nIdentificação de Requerimento: #${id}. \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
 
         const mailToUserOptions = {
             from: 'iluminacaokian@gmail.com',
             to: recipientEmail,
-            subject: 'Kian Inventário - Solicitação Atualizada',
+            subject: 'Kian Inventário - Requerimento Atualizado',
             text: mailToUser
         }
 
-        const mailToAdmin = `Prezados, \n\nSolicitação #${id} foi atualizada pelo técnico ${admin} com as seguintes alterações: \n\n${changesText} \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
+        const mailToAdmin = `Prezados, \n\nRequerimento #${id} foi atualizada pelo técnico ${admin} com as seguintes alterações: \n\n${changesText} \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
 
         const mailToAdminOptions = {
             from: 'iluminacaokian@gmail.com',
             to: 'ti@Kian.com.br',
             cc: 'servicedesk@kian.com.br',
-            subject: 'Kian Inventário - Atualização de Solicitação',
+            subject: 'Kian Inventário - Atualização de Requerimento',
             text: mailToAdmin
         }
 
@@ -45,23 +45,23 @@ async function updateRecord(recipientEmail, requester, changesText, id, admin) {
 
 async function requestRefused(recipientEmail, requester, reason, id, admin) {
     try {
-        const mailToUser = `Prezado(a), ${requester} ! \n\nSua solicitação de equipamento foi recusada. \n\nTécnico responsável pela recusa: ${admin}. \n\nMotivo: "${reason}" \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
+        const mailToUser = `Prezado(a), ${requester} ! \n\nSeu requerimento de equipamento foi recusada. \n\nTécnico responsável pela recusa: ${admin}. \n\nMotivo: "${reason}" \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
 
         const mailToUserOptions = {
             from: 'iluminacaokian@gmail.com',
             to: recipientEmail,
             // cc: '',
-            subject: 'Kian Inventário - Solicitação Recusada',
+            subject: 'Kian Inventário - Requerimento Recusado',
             text: mailToUser
         }
 
-        const mailToAdmin = `Prezados, \n\nSolicitação de equipamento foi recusada pelo técnico ${admin}. \n\nIdentificação da Solicitação: #${id}. \n\nMotivo da Recusa: ${reason} \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
+        const mailToAdmin = `Prezados, \n\nRequerimento de equipamento foi recusada pelo técnico ${admin}. \n\nIdentificação do Requerimento: #${id}. \n\nMotivo da Recusa: ${reason} \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
 
         const mailToAdminOptions = {
             from: 'iluminacaokian@gmail.com',
             to: 'ti@Kian.com.br',
             cc: 'servicedesk@kian.com.br',
-            subject: 'Kian Inventário - Atualização de Solicitação',
+            subject: 'Kian Inventário - Atualização de Requerimento',
             text: mailToAdmin
         }
 
@@ -75,23 +75,23 @@ async function requestRefused(recipientEmail, requester, reason, id, admin) {
 
 async function requestApproved(recipientEmail, requester, id, admin) {
     try {
-        const mailToUser = `Prezado(a), ${requester} ! \n\nSua solicitação de equipamento foi aprovada. Nossa equipe está prosseguindo com o processo e em breve entrará em contato com você. \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
+        const mailToUser = `Prezado(a), ${requester} ! \n\nSeu requerimento de equipamento foi aprovada. Nossa equipe está prosseguindo com o processo e em breve entrará em contato com você. \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
 
         const mailToUserOptions = {
             from: 'iluminacaokian@gmail.com',
             to: recipientEmail,
             // cc: '',
-            subject: 'Kian Inventário - Solicitação Aprovada',
+            subject: 'Kian Inventário - Requerimento Aprovado',
             text: mailToUser
         }
 
-        const mailToAdmin = `Prezados, \n\nSolicitação de equipamento foi aprovada pelo técnico ${admin}. \n\nIdentificação da Solicitação: #${id}. \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
+        const mailToAdmin = `Prezados, \n\nRequerimento de equipamento foi aprovada pelo técnico ${admin}. \n\nIdentificação de Requerimento: #${id}. \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
 
         const mailToAdminOptions = {
             from: 'iluminacaokian@gmail.com',
             to: 'ti@Kian.com.br',
             cc: 'servicedesk@kian.com.br',
-            subject: 'Kian Inventário - Atualização de Solicitação',
+            subject: 'Kian Inventário - Atualização de Requerimento',
             text: mailToAdmin
         }
 
@@ -104,15 +104,15 @@ async function requestApproved(recipientEmail, requester, id, admin) {
 
 async function requestConfirmation(recipientEmail, id, requester) {
     try {
-        const mailToUser = `Prezado(a), ${requester} ! \n\nRecebemos sua solicitação de equipamento, e ela será analisada por nossa equipe. \n\nIdentificação da Solicitação: #${id}. \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
+        const mailToUser = `Prezado(a), ${requester} ! \n\nRecebemos seu requerimento de equipamento, e ela será analisada por nossa equipe. \n\nIdentificação de Requerimento: #${id}. \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
 
-        const mailToAdmin = `Prezados, \n\nRecebemos uma nova solicitação de empréstimo. Identificação da Solicitação: #${id}. \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
+        const mailToAdmin = `Prezados, \n\nRecebemos um novo requerimento de empréstimo. Identificação do Requerimento: #${id}. \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
 
         const mailToUserOptions = {
             from: 'iluminacaokian@gmail.com',
             to: recipientEmail,
             // cc: '',
-            subject: 'Kian Inventário - Solicitação Recebida',
+            subject: 'Kian Inventário - Requerimento Recebido',
             text: mailToUser
         }
 
@@ -120,7 +120,7 @@ async function requestConfirmation(recipientEmail, id, requester) {
             from: 'iluminacaokian@gmail.com',
             to: 'ti@Kian.com.br',
             cc: 'servicedesk@kian.com.br',
-            subject: 'Kian Inventário - Solicitação Registrada',
+            subject: 'Kian Inventário - Requerimento Registrado',
             text: mailToAdmin
         }
 
@@ -162,22 +162,22 @@ async function sendDeliveryConfirmationEmail(recipientEmail, id, username, itemN
 
 async function requestRefusedSupplement(recipientEmail, requester, reason, id, admin) {
     try {
-        const mailToUser = `Prezado(a), ${requester} ! \n\nSua solicitação de suprimento foi recusada. \n\nTécnico responsável pela recusa: ${admin}. \n\nMotivo: "${reason}" \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
+        const mailToUser = `Prezado(a), ${requester} ! \n\nSeu requerimento de suprimento foi recusada. \n\nTécnico responsável pela recusa: ${admin}. \n\nMotivo: "${reason}" \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
 
         const mailToUserOptions = {
             from: 'iluminacaokian@gmail.com',
             to: recipientEmail,
-            subject: 'Kian Inventário - Solicitação Recusada',
+            subject: 'Kian Inventário - Requerimento Recusado',
             text: mailToUser
         }
 
-        const mailToAdmin = `Prezados, \n\nSolicitação de suprimento foi recusada pelo técnico ${admin}. \n\nIdentificação da Solicitação: #${id}. \n\nMotivo da Recusa: ${reason} \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
+        const mailToAdmin = `Prezados, \n\nRequerimento de suprimento foi recusada pelo técnico ${admin}. \n\nIdentificação de Requerimento: #${id}. \n\nMotivo da Recusa: ${reason} \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
 
         const mailToAdminOptions = {
             from: 'iluminacaokian@gmail.com',
             to: 'ti@Kian.com.br',
             cc: 'servicedesk@kian.com.br',
-            subject: 'Kian Inventário - Atualização de Solicitação',
+            subject: 'Kian Inventário - Atualização de Requerimento',
             text: mailToAdmin
         }
 
@@ -191,23 +191,23 @@ async function requestRefusedSupplement(recipientEmail, requester, reason, id, a
 
 async function requestApprovedSupplement(recipientEmail, requester, id, admin) {
     try {
-        const mailToUser = `Prezado(a), ${requester} ! \n\nSua solicitação de suprimento foi aprovada. Nossa equipe está prosseguindo com o processo e em breve entrará em contato com você. \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
+        const mailToUser = `Prezado(a), ${requester} ! \n\nSeu requerimento de suprimento foi aprovada. Nossa equipe está prosseguindo com o processo e em breve entrará em contato com você. \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
 
         const mailToUserOptions = {
             from: 'iluminacaokian@gmail.com',
             to: recipientEmail,
             // cc: '',
-            subject: 'Kian Inventário - Solicitação Aprovada',
+            subject: 'Kian Inventário - Requerimento Aprovado',
             text: mailToUser
         }
 
-        const mailToAdmin = `Prezados, \n\nSolicitação de suprimento foi aprovada pelo técnico ${admin}. \n\nIdentificação da Solicitação: #${id}. \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
+        const mailToAdmin = `Prezados, \n\nRequerimento de suprimento foi aprovada pelo técnico ${admin}. \n\nIdentificação de Requerimento: #${id}. \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
 
         const mailToAdminOptions = {
             from: 'iluminacaokian@gmail.com',
             to: 'ti@Kian.com.br',
             cc: 'servicedesk@kian.com.br',
-            subject: 'Kian Inventário - Atualização de Solicitação',
+            subject: 'Kian Inventário - Atualização de Requerimento',
             text: mailToAdmin
         }
 
@@ -220,15 +220,15 @@ async function requestApprovedSupplement(recipientEmail, requester, id, admin) {
 
 async function requestConfirmationSupplement(recipientEmail, id, requester) {
     try {
-        const mailToUser = `Prezado(a), ${requester} ! \n\nRecebemos sua solicitação de suprimento, e ela será analisada por nossa equipe. \n\nIdentificação da Solicitação: #${id}. \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
+        const mailToUser = `Prezado(a), ${requester} ! \n\nRecebemos seu requerimento de suprimento, e ela será analisada por nossa equipe. \n\nIdentificação de Requerimento: #${id}. \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
 
-        const mailToAdmin = `Prezados, \n\nRecebemos uma nova solicitação de suprimento. \n\nIdentificação da Solicitação: #${id}. \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
+        const mailToAdmin = `Prezados, \n\nRecebemos um novo requerimento de suprimento. \n\nIdentificação de Requerimento: #${id}. \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
 
         const mailToUserOptions = {
             from: 'iluminacaokian@gmail.com',
             to: recipientEmail,
             // cc: '',
-            subject: 'Kian Inventário - Solicitação Recebida',
+            subject: 'Kian Inventário - Requerimento Recebido',
             text: mailToUser
         }
 
@@ -236,7 +236,7 @@ async function requestConfirmationSupplement(recipientEmail, id, requester) {
             from: 'iluminacaokian@gmail.com',
             to: 'ti@Kian.com.br',
             cc: 'servicedesk@kian.com.br',
-            subject: 'Kian Inventário - Solicitação Registrada',
+            subject: 'Kian Inventário - Requerimento Registrado',
             text: mailToAdmin
         }
 
@@ -263,7 +263,7 @@ async function checkAndSendEmail() {
             const differenceInDays = Math.ceil(differenceInMilliseconds / (1000 * 60 * 60 * 24))
 
             if (differenceInDays === 1) {
-                const mailBody = `Prezados, \n\nEste é um lembrete de que a seguinte entrega está prevista para amanhã (${dateUtils.formatDate(row.previsao_entrega)}): \n\n- Identificação da Solicitação: #${row.id} \n\n- Responsável pelo Empréstimo: ${row.responsavel_emprestimo} \n\n- Solicitante: ${row.solicitante} \n\n- Data da Requisição: ${dateUtils.formatDate(row.dt_req)} \n\n- Equipamento: ${row.equipamento} \n\n- Código de Identificação: ${row.codigo_identificacao} \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
+                const mailBody = `Prezados, \n\nEste é um lembrete de que a seguinte entrega está prevista para amanhã (${dateUtils.formatDate(row.previsao_entrega)}): \n\n- Identificação de Requerimento: #${row.id} \n\n- Responsável pelo Empréstimo: ${row.responsavel_emprestimo} \n\n- Solicitante: ${row.solicitante} \n\n- Data da Requisição: ${dateUtils.formatDate(row.dt_req)} \n\n- Equipamento: ${row.equipamento} \n\n- Código de Identificação: ${row.codigo_identificacao} \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
 
                 const mailOptions = {
                     from: 'iluminacaokian@gmail.com',
@@ -274,7 +274,7 @@ async function checkAndSendEmail() {
 
                 await transporter.sendMail(mailOptions)
             } else if (differenceInDays === 0) {
-                const mailBody = `Prezados, \n\nEste é um lembrete de que a seguinte entrega está prevista para hoje (${dateUtils.formatDate(row.previsao_entrega)}): \n\n- Identificação da Solicitação: #${row.id} \n\n- Responsável pelo Empréstimo: ${row.responsavel_emprestimo} \n\n- Solicitante: ${row.solicitante} \n\n- Data da Requisição: ${dateUtils.formatDate(row.dt_req)} \n\n- Equipamento: ${row.equipamento} \n\n- Código de Identificação: ${row.codigo_identificacao} \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
+                const mailBody = `Prezados, \n\nEste é um lembrete de que a seguinte entrega está prevista para hoje (${dateUtils.formatDate(row.previsao_entrega)}): \n\n- Identificação de Requerimento: #${row.id} \n\n- Responsável pelo Empréstimo: ${row.responsavel_emprestimo} \n\n- Solicitante: ${row.solicitante} \n\n- Data da Requisição: ${dateUtils.formatDate(row.dt_req)} \n\n- Equipamento: ${row.equipamento} \n\n- Código de Identificação: ${row.codigo_identificacao} \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
 
                 const mailOptions = {
                     from: 'iluminacaokian@gmail.com',
@@ -285,7 +285,7 @@ async function checkAndSendEmail() {
 
                 await transporter.sendMail(mailOptions)
             } else if (differenceInDays < 0 && !row.entregue) {
-                const mailBody = `Prezados, \n\nEste é um lembrete de que a seguinte entrega está atrasada (${dateUtils.formatDate(row.previsao_entrega)}): \n\n- Identificação da Solicitação: #${row.id} \n\n- Responsável pelo Empréstimo: ${row.responsavel_emprestimo} \n\n- Solicitante: ${row.solicitante} \n\n- Data da Requisição: ${dateUtils.formatDate(row.dt_req)} \n\n- Equipamento: ${row.equipamento} \n\n- Código de Identificação: ${row.codigo_identificacao} \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
+                const mailBody = `Prezados, \n\nEste é um lembrete de que a seguinte entrega está atrasada (${dateUtils.formatDate(row.previsao_entrega)}): \n\n- Identificação de Requerimento: #${row.id} \n\n- Responsável pelo Empréstimo: ${row.responsavel_emprestimo} \n\n- Solicitante: ${row.solicitante} \n\n- Data da Requisição: ${dateUtils.formatDate(row.dt_req)} \n\n- Equipamento: ${row.equipamento} \n\n- Código de Identificação: ${row.codigo_identificacao} \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
 
                 const mailOptions = {
                     from: 'iluminacaokian@gmail.com',

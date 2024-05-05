@@ -1,7 +1,7 @@
 function handleRequest(id, action) {
     swal({
         title: "Tem certeza?",
-        text: action === 'accept' ? "Você tem certeza que deseja aceitar esta solicitação?" : "Você tem certeza que deseja recusar esta solicitação?",
+        text: action === 'accept' ? "Você tem certeza que deseja aceitar este requerimento?" : "Você tem certeza que deseja recusar este requerimento?",
         icon: "warning",
         buttons: {
             confirm: "Sim",
@@ -24,7 +24,7 @@ function handleRequest(id, action) {
                     }
                 }).then((reason) => {
                     if (!reason) {
-                        swal("Aviso", "Você precisa fornecer um motivo para recusar a solicitação.", "warning")
+                        swal("Aviso", "Você precisa fornecer um motivo para recusar o requerimento.", "warning")
                     } else {
                         performAction(id, action, reason)
                     }
@@ -41,7 +41,7 @@ function handleRequest(id, action) {
 function performAction(id, action, reason = '') {
     swal({
         title: "Processando...",
-        text: "Por favor, aguarde enquanto a solicitação está sendo processada.",
+        text: "Por favor, aguarde enquanto o requerimento está sendo processado.",
         icon: "info",
         buttons: false,
         closeOnClickOutside: false,
@@ -69,9 +69,9 @@ function performAction(id, action, reason = '') {
         return response.json()
     }).then(data => {
         swal.close()
-        const message = action === 'accept' ? "A solicitação foi aceita com sucesso." : "A solicitação foi recusada com sucesso."
+        const message = action === 'accept' ? "O requerimento foi aceito com sucesso." : "O requerimento foi recusado com sucesso."
         swal({
-            title: action === 'accept' ? "Solicitação Aceita" : "Solicitação Recusada",
+            title: action === 'accept' ? "Requerimento Aceito" : "Requerimento Recusado",
             text: message,
             icon: "success",
             button: "OK",
@@ -82,7 +82,7 @@ function performAction(id, action, reason = '') {
         console.error('Houve um erro:', error)
         swal({
             title: "Erro",
-            text: "Não foi possível processar a sua solicitação.",
+            text: "Não foi possível processar o seu requerimento.",
             icon: "error",
             button: "OK",
         }).then(() => {
@@ -92,5 +92,5 @@ function performAction(id, action, reason = '') {
 }
 
 function showAlert(message) {
-    swal("Motivo da Solicitação", message)
+    swal("Motivo do Requerimento", message)
 }

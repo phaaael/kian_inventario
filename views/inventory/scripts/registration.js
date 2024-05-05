@@ -32,7 +32,7 @@ document.querySelector('.registration').addEventListener('submit', function(even
         } else {
             swal({ 
                 title: "Erro",
-                text: data.message || "Não foi possível concluir a solicitação",
+                text: data.message || "Não foi possível concluir o requerimento",
                 icon: "error",
             })
         }
@@ -40,7 +40,7 @@ document.querySelector('.registration').addEventListener('submit', function(even
     .catch(error => {
         swal({ 
             title: "Erro",
-            text: "Não foi possível concluir a solicitação",
+            text: "Não foi possível concluir o requerimento",
             icon: "error",
         })
     })

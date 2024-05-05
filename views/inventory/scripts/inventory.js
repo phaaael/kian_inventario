@@ -18,7 +18,7 @@ document.querySelectorAll('.delivery-form').forEach(form => {
             if (willProceed) {
                 swal({
                     title: "Processando...",
-                    text: "Por favor, aguarde enquanto a solicitação está sendo processada.",
+                    text: "Por favor, aguarde enquanto o requerimento está sendo processado.",
                     icon: "info",
                     buttons: false,
                     closeOnClickOutside: false,
@@ -58,7 +58,7 @@ document.querySelectorAll('.delivery-form').forEach(form => {
                     swal.close()
                     swal({ 
                         title: "Erro",
-                        text: "Não foi possível concluir a solicitação.",
+                        text: "Não foi possível concluir o requerimento.",
                         icon: "error"
                     })
                 })

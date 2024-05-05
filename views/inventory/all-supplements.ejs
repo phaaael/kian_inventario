@@ -19,11 +19,11 @@
 
                 <form class="search" action="/inventory/all_supplements" method="get">
                     <select name="searchField" style="cursor: pointer; margin-right: 10px; margin-bottom: 10px;">
-                        <option value="id">Identificação da Solicitação</option>
+                        <option value="id">Identificação do Requerimento</option>
                         <option value="solicitante">Solicitante</option>
                         <option value="equipamento">Equipamento</option>
                         <option value="codigo_identificacao">Código de Identificação</option>
-                        <option value="finalizacao_emprestimo">Solicitação finalizada por</option>
+                        <option value="finalizacao_emprestimo">Requerimento finalizado por</option>
                     </select>
                     <input type="text" name="searchChar" placeholder="Buscar Registro" value="<%= typeof searchChar !== 'undefined' ? searchChar : '' %>" style="margin-right: 10px; margin-bottom: 10px;">
                     <label for="startDate" style="margin-right: 5px; margin-bottom: 10px;">Data de Início:</label>
@@ -47,14 +47,14 @@
             <table class="items-table">
                 <thead>
                     <tr>
-                        <th>Identificação da Solicitação</th>
+                        <th>Identificação do Requerimento</th>
                         <th>Solicitante</th>
                         <th>Data da Requisição</th>
                         <th>Equipamento</th>
-                        <th>Motivo da Solicitação</th>
-                        <th>Responsável por Finalizar Solicitação</th>
-                        <th>Data da Finalização da Solicitação</th>
-                        <th>Status da Solicitação</th>
+                        <th>Motivo do Requerimento</th>
+                        <th>Responsável por Finalizar Requerimento</th>
+                        <th>Data da Finalização do Requerimento</th>
+                        <th>Status do Requerimento</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -74,16 +74,16 @@
                                     <% if (active.reason_refusal && active.reason_refusal.trim() !== '') { %>
                                         <span class="reason-refusal" style="cursor: pointer; font-weight: bold;" onclick="alertStatus('<%- active.reason_refusal %>')">Exibir Motivo</span>
                                     <% } else if (active.request_status === 0) { %>
-                                        Solicitação Pendente
+                                        Requerimento Pendente
                                     <% } else { %>
-                                        Solicitação Aprovada
+                                        Requerimento Aprovado
                                     <% } %>
                                 </td>
                             </tr>
                         <% }); %>
                     <% } else { %>
                         <tr>
-                            <td colspan="9">Nenhuma solicitação encontrada</td>
+                            <td colspan="9">Nenhum requerimento encontrado</td>
                         </tr>
                     <% } %>
                 </tbody>
