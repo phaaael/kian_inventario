@@ -10,8 +10,8 @@ router.get('/admin/supply-management', adminController.supplyManagement)
 
 router.get('/admin/equipament-management', adminController.equipmentManagement)
 
-router.get('/admin/supply-entry', adminController.getSupplyEntry)
-
 router.post('/admin/create-user/submit', adminController.userCreation)
+
+router.post('/admin/supply-entry/:id', adminController.supplyEntry)
 
 module.exports = router

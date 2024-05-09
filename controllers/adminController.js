@@ -4,7 +4,7 @@ const userManagement = async (req, res) => {
     try {
         if (req.session && req.session.username) {
             const userData = await adminDatabase.getUserByUsername(req.session.username)
-            if (!userData || userData.cargo !== 'Administrador') return res.send('Usuário sem permissão')
+            if (!userData || userData.cargo !== 'Administrador') return res.status(403).json({ success: false, message: 'Usuário sem permissão' })
 
             let query = 'SELECT * FROM kian_usuarios WHERE 1=1'
             const [rows] = await adminDatabase.pool.execute(query)
@@ -35,7 +35,7 @@ const getUserCreation = async (req, res) => {
         if (req.session && req.session.username) {
             const userData = await adminDatabase.getUserByUsername(req.session.username)
 
-            if (!userData || userData.cargo !== 'Administrador') return res.send('Usuário sem permissão')
+            if (!userData || userData.cargo !== 'Administrador') return res.status(403).json({ success: false, message: 'Usuário sem permissão' });
 
             res.render('admin/user-creation')
         } else {
@@ -52,7 +52,7 @@ const userCreation = async (req, res) => {
         if (req.session && req.session.username) {
             const userData = await adminDatabase.getUserByUsername(req.session.username)
 
-            if (!userData || userData.cargo !== 'Administrador') return res.send('Usuário sem permissão')
+            if (!userData || userData.cargo !== 'Administrador') return res.status(403).json({ success: false, message: 'Usuário sem permissão' });
             if (password !== password_validation) return res.json({ success: false, message: "As senhas não coincidem" })
 
             const insert = 'INSERT INTO kian_usuarios(matricula, usuario, senha, email, nome, setor, cargo ) VALUES(?, ?, ?, ?, ?, ?, ?)'
@@ -71,7 +71,7 @@ const supplyManagement = async (req, res) => {
     try {
         if (req.session && req.session.username) {
             const userData = await adminDatabase.getUserByUsername(req.session.username)
-            if (!userData || userData.cargo !== 'Administrador') return res.send('Usuário sem permissão')
+            if (!userData || userData.cargo !== 'Administrador') return res.status(403).json({ success: false, message: 'Usuário sem permissão' });
 
             let query = 'SELECT * FROM kian_suprimentos WHERE 1=1'
             const [rows] = await adminDatabase.pool.execute(query)
@@ -97,7 +97,9 @@ const equipmentManagement = async (req, res) => {
     try {
         if (req.session && req.session.username) {
             const userData = await adminDatabase.getUserByUsername(req.session.username)
-            if (!userData || userData.cargo !== 'Administrador') return res.send('Usuário sem permissão')
+            if (!userData || userData.cargo !== 'Administrador') {
+                return res.status(403).json({ success: false, message: 'Usuário sem permissão' });
+            }
 
             let query = 'SELECT * FROM kian_equipamentos WHERE 1=1'
             const [rows] = await adminDatabase.pool.execute(query)
@@ -120,27 +122,38 @@ const equipmentManagement = async (req, res) => {
     }
 }
 
-const getSupplyEntry = async (req, res) => {
+const supplyEntry = async (req, res) => {
     try {
-        if (req.session && req.session.username) {
-            const userData = await adminDatabase.getUserByUsername(req.session.username)
+        const itemId = req.params.id
+        const quantityToAdd = parseInt(req.body.quantity)
 
-            if (!userData || userData.cargo !== 'Administrador') return res.send('Usuário sem permissão')
+        const userData = await adminDatabase.getUserByUsername(req.session.username)
 
-            res.render('admin/supply-entry')
-        } else {
-            res.redirect('/')
-        }
+        if (!userData || userData.cargo !== 'Administrador') return res.status(403).json({ success: false, message: 'Usuário sem permissão' })
+
+        if (!itemId) return res.status(400).json({ success: false, message: 'ID do item não fornecido' })
+
+        if (isNaN(quantityToAdd) || quantityToAdd <= 0) return res.status(400).json({ success: false, message: 'Quantidade inválida' })
+
+        const itemData = await adminDatabase.getItemById(itemId)
+        if (!itemData) return res.status(404).json({ success: false, message: 'Item não encontrado' })
+
+        const updatedInventory = itemData.qtd_item + quantityToAdd
+        await adminDatabase.updateItemQuantity(itemId, updatedInventory)
+
+        res.json({ success: true, message: 'Estoque atualizado com sucesso', data: { itemId: itemId, newQuantity: updatedInventory } })
     } catch (error) {
-        res.render('error', { error: 'Erro ao obter dados para abastecer o estoque' })
+        console.error('Erro ao processar entrada de estoque:', error)
+        res.status(500).json({ success: false, message: 'Erro ao processar entrada de estoque' })
     }
 }
+
 
 module.exports = {
     userManagement,
     userCreation,
     getUserCreation,
     equipmentManagement,
-    getSupplyEntry,
+    supplyEntry,
     supplyManagement
 }

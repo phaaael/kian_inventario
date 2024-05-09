@@ -15,9 +15,6 @@
     <div class="container">
         <div class="header">
             <h1>Gerenciamento de Suprimentos:</h1>
-            <div class="functions-container">
-                <a class="supply-entry" href="/admin/supply-entry">Entrada de Suprimentos</a>
-            </div>
         </div>
         <div class="table-container">
             <table class="items-table">
@@ -26,6 +23,7 @@
                         <th>Identificação do Item</th>
                         <th>Nome do Item</th>
                         <th>Quantidade do Item</th>
+                        <th>Entrada</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -35,6 +33,9 @@
                                 <td>#<%= active.id %></td>
                                 <td><%= active.item %></td>
                                 <td><%= active.qtd_item %></td>
+                                <td>
+                                    <button style="cursor: pointer; background-color: transparent; font-size: 20px;" class="entry" type="button" onclick="handleStockRequest('<%= active.id %>')">➕</button>
+                                </td>
                             </tr>
                         <% }); %>
                     <% } else { %>
@@ -49,6 +50,6 @@
     </div>
 
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    <script src="./scripts/user-management.js"></script>
+    <script src="./scripts/supply-management.js"></script>
 </body>
 </html>
