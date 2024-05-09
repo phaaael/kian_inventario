@@ -120,10 +120,27 @@ const equipmentManagement = async (req, res) => {
     }
 }
 
+const getSupplyEntry = async (req, res) => {
+    try {
+        if (req.session && req.session.username) {
+            const userData = await adminDatabase.getUserByUsername(req.session.username)
+
+            if (!userData || userData.cargo !== 'Administrador') return res.send('Usuário sem permissão')
+
+            res.render('admin/supply-entry')
+        } else {
+            res.redirect('/')
+        }
+    } catch (error) {
+        res.render('error', { error: 'Erro ao obter dados para abastecer o estoque' })
+    }
+}
+
 module.exports = {
     userManagement,
     userCreation,
     getUserCreation,
     equipmentManagement,
+    getSupplyEntry,
     supplyManagement
 }

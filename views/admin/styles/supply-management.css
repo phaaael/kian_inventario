@@ -40,7 +40,6 @@ body {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  margin-bottom: 20px;
 }
 
 .header h1 {
@@ -159,22 +158,14 @@ a:hover {
   font-size: 20px;
 }
 
-.header {
-  position: relative;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 30px;
-  width: 100%;
-}
-
 .functions-container {
-  position: absolute;
-  right: 10px;
-  top: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
-.create-user {
+.supply-entry {
   background-color: #383838;
   color: #fff;
   border: none;
@@ -184,4 +175,3 @@ a:hover {
   transition: background-color 0.3s;
   width: auto;
 }
-
