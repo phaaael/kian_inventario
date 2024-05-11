@@ -578,6 +578,7 @@ const exportInventoryListAllLoans = async (req, res) => {
         res.render('error', { error: 'Erro ao obter dados do inventário' })
     }
 }
+
 const exportinventoryListAllSupplements = async (req, res) => {
     try {
         if (req.session && req.session.username) {
@@ -937,6 +938,41 @@ const getMenuInventory = async (req, res) => {
     }
 }
 
+const getMyRequirements = async (req, res) => {
+    try {
+        if (req.session && req.session.username) {
+            const userData = await inventoryDatabase.getUserByUsername(req.session.username)
+
+            const requirements = await inventoryDatabase.getRequirements(userData.nome)
+
+            if (requirements) {
+                const actives = requirements.map(active => ({
+                    id: active.id,
+                    requirement: active.requerente,
+                    type: active.tipo,
+                    dt_req: dateUtils.formatDate(new Date (active.dt_req)),
+                    status: (active.status_solicitacao === 1 && active.solicitacao_recusada === 1) ? 'Recusado' : (active.status_solicitacao === 0 ? 'Pendente' : 'Aprovado'),
+                    equipament: active.equipamento,
+                    identification: active.codigo_identificacao,
+                    reason: active.motivo,
+                    reason_refusal: active.motivo_recusa,
+                    delivery_forecast: dateUtils.formatDate(new Date (active.previsao_entrega)),
+                    responsible_technician: active.tec_responsavel ? active.tec_responsavel : 'Pendente',
+                    dt_completion: active.dt_finalizacao ? active.dt_finalizacao : 'Pendente'
+                }))
+
+                res.render('inventory/my-requirements', { actives })
+            } else {
+                res.render('error', { error: 'Erro ao carregar seus requerimentos' })
+            }
+        } else {
+            res.redirect('/')
+        }
+    } catch (error) {
+        res.render('error', { error: 'Erro ao obter os requerimentos' })
+    }
+}
+
 const logout = async (req, res) => {
     req.session.destroy((err) => {
         if (err) {
@@ -950,6 +986,7 @@ const logout = async (req, res) => {
 module.exports = {
     inventory,
     getMenuInventory,
+    getMyRequirements,
     inventoryRequests,
     inventoryAcceptSupplement,
     inventoryAcceptItem,

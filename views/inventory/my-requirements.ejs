@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meus Requerimentos | Kian</title>
+    <link rel="icon" href="https://kian.com.br/wp-content/themes/kian-site/styles/images/favicon.png">
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="./styles/my-requirements.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Meus Requerimentos:</h1>
+        <div class="table-container">
+            <table class="items-table">
+                <thead>
+                    <tr>
+                        <th>Identificação de Requerimento</th>
+                        <th>Status do Requerimento</th>
+                        <th>Tipo de Requerimento</th>
+                        <th>Data da Requisição</th>
+                        <th>Equipamento</th>
+                        <th>Código de Identificação</th>
+                        <th>Técnico Responsável</th>
+                        <th>Data da Finalização</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (actives.length > 0) { %>
+                        <% actives.forEach((active, index) => { %>
+                            <tr data-index="<%= index %>">
+                                <td>#<%= active.id %></td>
+                                <td><%= active.status %></td>
+                                <td><%= active.type %></td>
+                                <td><%= active.dt_req %></td>
+                                <td><%= active.equipament %></td>
+                                <td><%= active.identification %></td>
+                                <td><%= active.responsible_technician %></td>
+                                <td><%= active.dt_completion %></td>
+                            </tr>
+                        <% }); %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="9">Nenhum requerimento encontrado</td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+        <a href="/inventory/menu">Voltar</a>
+    </div>
+</body>
+</html>

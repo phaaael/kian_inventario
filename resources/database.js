@@ -10,17 +10,21 @@ const pool = mysql.createPool({
     queueLimit: 0
 });
 
-async function getUserByUsername(username) {
-  const [rows] = await pool.execute('SELECT * FROM kian_usuarios WHERE usuario = ?', [username])
-  return rows[0]
+const getUserByUsername = async (username) => {
+  const [ rows ] = await pool.execute('SELECT * FROM kian_usuarios WHERE usuario = ?', [username])
+  return rows[ 0 ]
 }
 
-async function getItemById(itemId) {
-  const [rows] = await pool.execute('SELECT * FROM kian_suprimentos WHERE id = ?', [itemId])
-  return rows[0]
+const getItemById = async (itemId) => {
+  const [ rows ] = await pool.execute('SELECT * FROM kian_suprimentos WHERE id = ?', [itemId])
+  return rows[ 0 ]
 }
 
-async function updateItemQuantity(itemId, newQuantity) {
+const getRequirements = async (name) => {
+  const [ rows ] = await pool.execute('SELECT * FROM kian_solicitacoes WHERE requerente = ?', [name])
+  return rows
+}
+const updateItemQuantity = async (itemId, newQuantity) => {
   try {
       const [ result ] = await pool.execute('UPDATE kian_suprimentos SET qtd_item = ? WHERE id = ?', [newQuantity, itemId])
       
@@ -36,10 +40,10 @@ async function updateItemQuantity(itemId, newQuantity) {
   }
 }
 
-
 module.exports = { 
   pool, 
   getUserByUsername, 
   getItemById,
+  getRequirements,
   updateItemQuantity
 }
