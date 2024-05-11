@@ -124,10 +124,14 @@ a:hover, .submenu a:hover {
   border-radius: 5px;
 }
 
-.dropdown-content a:hover {
-  background-color: var(--primary-color);
-}
-
 .dropdown:hover .dropdown-content {
   display: block;
+}
+
+.desconectar {
+  background-color: rgb(226, 4, 4);
+}
+
+.desconectar:hover {
+  background-color: rgb(164, 4, 4);
 }
