@@ -47,18 +47,26 @@ const getUserCreation = async (req, res) => {
 }
 
 const userCreation = async (req, res) => {
-    const { registration, username, password, password_validation, name, email, sector, charge } = req.body
+    const { registration, username, password, password_validation, name, email, sector } = req.body
     try {
         if (req.session && req.session.username) {
             const userData = await adminDatabase.getUserByUsername(req.session.username)
 
-            if (!userData || userData.cargo !== 'Administrador') return res.status(403).json({ success: false, message: 'Usuário sem permissão' });
+            if (!userData || userData.cargo !== 'Administrador') return res.status(403).json({ success: false, message: 'Usuário sem permissão' })
             if (password !== password_validation) return res.json({ success: false, message: "As senhas não coincidem" })
 
+            const userExistsQuery = 'SELECT * FROM kian_usuarios WHERE usuario = ? OR matricula = ?'
+            const [existingUsers] = await adminDatabase.pool.execute(userExistsQuery, [username, registration])
+            if (existingUsers.length > 0) {
+                return res.json({ success: false, message: "Usuário já registrado" })
+            }
+
+            const charge_default = 'Membro'
+
             const insert = 'INSERT INTO kian_usuarios(matricula, usuario, senha, email, nome, setor, cargo ) VALUES(?, ?, ?, ?, ?, ?, ?)'
-            await adminDatabase.pool.execute(insert, [registration, username, password, email, name, sector, charge])
-        
-            res.json({ success: true })
+            await adminDatabase.pool.execute(insert, [registration, username, password, email, name, sector, charge_default])
+
+            res.json({ success: true, message: 'Usuário Registrado com Sucesso' });
         } else {
             res.redirect('/')
         }
@@ -66,6 +74,7 @@ const userCreation = async (req, res) => {
         res.render('error', { error: 'Erro ao cadastrar usuário' })
     }
 }
+
 
 const supplyManagement = async (req, res) => {
     try {
