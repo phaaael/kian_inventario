@@ -182,7 +182,7 @@ const inventoryRequestSupplement = async (req, res) => {
 
             res.json({ success: true, message: "Requemento de Suprimento Enviada" })
 
-            await notice.requestConfirmationSupplement(userData.email, insertedId, userData.nome)
+            // await notice.requestConfirmationSupplement(userData.email, insertedId, userData.nome)
         }
     } catch (error) {
         console.error(error)
@@ -228,7 +228,7 @@ const inventoryRequestLoan = async (req, res) => {
             
             res.json({ success: true, message: "Requerimento de Empréstimo Enviada" })
 
-            await notice.requestConfirmation(userData.email, insertedId, userData.nome)
+            // await notice.requestConfirmation(userData.email, insertedId, userData.nome)
         }
     } catch (error) {
         console.error(error)
@@ -265,7 +265,7 @@ const inventoryAcceptSupplement = async (req, res) => {
                 const userEmailQuery = 'SELECT email FROM kian_usuarios WHERE nome = ?'
                 const [[userEmail]] = await inventoryDatabase.pool.execute(userEmailQuery, [supplement.requerente])
 
-                await notice.requestApprovedSupplement(userEmail.email, supplement.requerente, itemId, userData.nome)
+                // await notice.requestApprovedSupplement(userEmail.email, supplement.requerente, itemId, userData.nome)
 
                 res.json({ success: true, message: "Requerimento Aceito" })
             } else {
@@ -304,7 +304,7 @@ const inventoryAcceptItem = async (req, res) => {
                 const insertQuery = `INSERT INTO kian_emprestimos (responsavel_emprestimo, requerente, dt_req, equipamento, codigo_identificacao, motivo, previsao_entrega) VALUES (?, ?, ?, ?, ?, ?, ?)`
                 await inventoryDatabase.pool.execute(insertQuery, [userData.nome, loan.requerente, loan.dt_req, loan.equipamento, loan.codigo_identificacao, loan.motivo, loan.previsao_entrega])
                 
-                await notice.requestApproved(userEmail.email, loan.requerente, itemId, userData.nome)
+                // await notice.requestApproved(userEmail.email, loan.requerente, itemId, userData.nome)
                 
                 res.json({ success: true, message: "Requerimento Aceito" })
             } else {
@@ -343,7 +343,7 @@ const inventoryRefuseSupplement = async (req, res) => {
                 const userEmailQuery = `SELECT email FROM kian_usuarios WHERE nome = ?`
                 const [[userEmail]] = await inventoryDatabase.pool.execute(userEmailQuery, [supplement.requerente])
                 
-                await notice.requestRefusedSupplement(userEmail.email, supplement.requerente, reason, itemId, userData.nome)
+                // await notice.requestRefusedSupplement(userEmail.email, supplement.requerente, reason, itemId, userData.nome)
                 
                 res.json({ success: true, message: "Requerimento Recusado" })
             } else {
@@ -392,7 +392,7 @@ const inventoryRefuseItem = async (req, res) => {
 
         res.json({ success: true, message: "Requerimento Recusado" })
 
-        await notice.requestRefused(user.email, item.requerente, reason, itemId, userData.nome)
+        // await notice.requestRefused(user.email, item.requerente, reason, itemId, userData.nome)
     } catch (error) {
         console.error('Erro ao recusar requerimento:', error)
         res.status(500).json({ success: false, message: 'Erro ao recusar requerimento' })
@@ -517,7 +517,7 @@ const inventoryUpdateRecord = async (req, res) => {
                     return `${readableName}: ${formattedValue}`
                 })
                 .join('\n')
-            await notice.updateRecord(userEmail, requester, changesDescription, id, userData.nome)
+            // await notice.updateRecord(userEmail, requester, changesDescription, id, userData.nome)
         } else {
             res.json({ success: false, message: "Nenhuma alteração detectada" })
         }
@@ -876,7 +876,7 @@ const inventoryItemDelivered = async (req, res) => {
 
             if (!userEmail) throw new Error('E-mail do requerente não encontrado.')
 
-            await notice.sendDeliveryConfirmationEmail(userEmail, itemId, userData.nome, item.equipamento, item.requerente, formattedDate, item.codigo_identificacao)
+            // await notice.sendDeliveryConfirmationEmail(userEmail, itemId, userData.nome, item.equipamento, item.requerente, formattedDate, item.codigo_identificacao)
 
             res.json({ success: true, message: "Empréstimo Finalizado" })
         } else {
