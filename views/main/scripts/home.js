@@ -22,7 +22,7 @@ document.querySelector('.login').addEventListener('submit', function(event) {
     })
     .then(data => {
         if (data.success) {
-            window.location.href = data.redirectUrl
+            window.location.href = '/inventory/menu'
         } else {
             swal({ 
                 title: "Erro",
@@ -34,7 +34,7 @@ document.querySelector('.login').addEventListener('submit', function(event) {
     .catch(error => {
         swal({ 
             title: "Erro",
-            text: "Não foi possível concluir o requerimento",
+            text: "Falha ao acessar a aplicação",
             icon: "error",
         })
     })
