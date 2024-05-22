@@ -49,5 +49,6 @@ CREATE TABLE `kian_equipamentos` (
 CREATE TABLE `kian_suprimentos` (
   id INT AUTO_INCREMENT PRIMARY KEY,
   item VARCHAR(255) NOT NULL,
-  qtd_item INT NOT NULL
+  qtd_item INT NOT NULL,
+  qtd_critica INT NOT NULL DEFAULT 0
 );
