@@ -309,34 +309,6 @@ async function checkAndSendEmail() {
 async function checkStockAndSendEmail() {
     try {
         const [rows] = await database.pool.query('SELECT * FROM kian_suprimentos WHERE 1=1')
-        
-        const lowStockItems = rows.filter(item => item.qtd_item < item.qtd_critica)
-
-        console.log(lowStockItems)
-
-        if (lowStockItems.length > 0) {
-            // const emailContent = lowStockItems.map(item => `Produto: ${item.item}, Estoque: ${item.qtd_item}`).join('\n')
-
-            
-            const mailOptions = {
-                from: 'inventario@kian.com.br',
-                to: 'raphael.sousa@kian.com.br',
-                subject: 'Solicitação de Suprimentos',
-                text: mailBody
-            };
-
-            await transporter.sendMail(mailOptions)
-        } else {
-            console.log('Todos os itens estão com estoque adequado')
-        }
-    } catch (error) {
-        console.error('Erro ao executar a consulta:', error)
-    }
-}
-
-async function checkStockAndSendEmail() {
-    try {
-        const [rows] = await database.pool.query('SELECT * FROM kian_suprimentos WHERE 1=1')
 
         const lowStockItems = rows.filter(item => item.qtd_item < item.qtd_critica)
 
