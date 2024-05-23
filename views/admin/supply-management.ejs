@@ -20,10 +20,12 @@
             <table class="items-table">
                 <thead>
                     <tr>
-                        <th>Identificação do Item</th>
-                        <th>Nome do Item</th>
-                        <th>Quantidade do Item</th>
-                        <th>Entrada</th>
+                        <th>Identificação do Suprimento</th>
+                        <th>Nome do Suprimento</th>
+                        <th>Quantidade do Suprimento</th>
+                        <th>Quantidade Crítica</th>
+                        <th>Entrada de Suprimento</th>
+                        <th>Manutenção de Quantidade Crítica</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -33,8 +35,12 @@
                                 <td>#<%= active.id %></td>
                                 <td><%= active.item %></td>
                                 <td><%= active.qtd_item %></td>
+                                <td><%= active.qtd_critica %></td>
                                 <td>
                                     <button style="cursor: pointer; background-color: transparent; font-size: 20px;" class="entry" type="button" onclick="handleStockRequest('<%= active.id %>')">➕</button>
+                                </td>
+                                <td>
+                                    <button style="cursor: pointer; background-color: transparent; font-size: 20px;" class="entry" type="button" onclick="handleStockCritical('<%= active.id %>', '<%= active.qtd_critica %>')">⚙️</button>
                                 </td>
                             </tr>
                         <% }); %>

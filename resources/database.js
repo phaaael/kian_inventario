@@ -40,10 +40,24 @@ const updateItemQuantity = async (itemId, newQuantity) => {
   }
 }
 
+const updateItemQuantityCritical = async (itemId, newQuantity) => {
+  try {
+      const [ result ] = await pool.execute('UPDATE kian_suprimentos SET qtd_critica = ? WHERE id = ?', [newQuantity, itemId])
+      
+      if (result.affectedRows === 0) return false
+      
+      return true
+  } catch (error) {
+      console.error('Erro ao atualizar a quantidade do item:', error)
+      throw error
+  }
+}
+
 module.exports = { 
   pool, 
   getUserByUsername, 
   getItemById,
   getRequirements,
-  updateItemQuantity
+  updateItemQuantity,
+  updateItemQuantityCritical
 }

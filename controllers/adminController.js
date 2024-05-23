@@ -75,7 +75,6 @@ const userCreation = async (req, res) => {
     }
 }
 
-
 const supplyManagement = async (req, res) => {
     try {
         if (req.session && req.session.username) {
@@ -89,7 +88,8 @@ const supplyManagement = async (req, res) => {
                 const actives = rows.map(active => ({
                     id: active.id,
                     item: active.item,
-                    qtd_item: active.qtd_item
+                    qtd_item: active.qtd_item,
+                    qtd_critica: active.qtd_critica
                 }))
 
                 res.render('admin/supply-management', { actives })
@@ -157,12 +157,39 @@ const supplyEntry = async (req, res) => {
     }
 }
 
+const changingCriticalQuantity = async (req, res) => {
+    try {
+        const itemId = req.params.id
+        const quantity = parseInt(req.body.quantity)
+
+        const userData = await adminDatabase.getUserByUsername(req.session.username)
+
+        if (!userData || userData.cargo !== 'Administrador') return res.status(403).json({ success: false, message: 'Usuário sem permissão' })
+
+        if (!itemId) return res.status(400).json({ success: false, message: 'ID do item não fornecido' })
+
+        if (isNaN(quantity) || quantity <= 0) return res.status(400).json({ success: false, message: 'Quantidade inválida' })
+
+        const itemData = await adminDatabase.getItemById(itemId)
+        if (!itemData) return res.status(404).json({ success: false, message: 'Item não encontrado' })
+        
+        const updatedInventory = quantity
+        await adminDatabase.updateItemQuantityCritical(itemId, updatedInventory)
+    
+        res.json({ success: true, message: 'Estoque atualizado com sucesso', data: { itemId: itemId, newQuantity: updatedInventory } })
+    } catch {
+        console.error('Erro ao processar manutenção na quantidade crítica:', error)
+        res.status(500).json({ success: false, message: 'Erro ao processar manutenção na quantidade crítica' })
+    }
+}
+
 
 module.exports = {
     userManagement,
     userCreation,
     getUserCreation,
     equipmentManagement,
+    changingCriticalQuantity,
     supplyEntry,
     supplyManagement
 }
