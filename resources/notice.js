@@ -306,8 +306,61 @@ async function checkAndSendEmail() {
     }
 }
 
+async function checkStockAndSendEmail() {
+    try {
+        const [rows] = await database.pool.query('SELECT * FROM kian_suprimentos WHERE 1=1')
+        
+        const lowStockItems = rows.filter(item => item.qtd_item < item.qtd_critica)
+
+        console.log(lowStockItems)
+
+        if (lowStockItems.length > 0) {
+            // const emailContent = lowStockItems.map(item => `Produto: ${item.item}, Estoque: ${item.qtd_item}`).join('\n')
+
+            
+            const mailOptions = {
+                from: 'inventario@kian.com.br',
+                to: 'raphael.sousa@kian.com.br',
+                subject: 'Solicitação de Suprimentos',
+                text: mailBody
+            };
+
+            await transporter.sendMail(mailOptions)
+        } else {
+            console.log('Todos os itens estão com estoque adequado')
+        }
+    } catch (error) {
+        console.error('Erro ao executar a consulta:', error)
+    }
+}
+
+async function checkStockAndSendEmail() {
+    try {
+        const [rows] = await database.pool.query('SELECT * FROM kian_suprimentos WHERE 1=1')
+
+        const lowStockItems = rows.filter(item => item.qtd_item < item.qtd_critica)
+
+        if (lowStockItems.length > 0) {
+            const mailBody = `Prezados, \n\nSolicito por gentileza 14 unidades de toner para impressora Kyocera M3655. \n\nSegue os números de series:\n\n- R4P9634105\n- R4P9633715\n- R4P9634108\n- R4P9633520\n- R4P9633527\n- R4P9639482\n- R4P9633517\n- R4P9639214\n- R4P9633947\n- R4P9633786\n- R4P9639219\n- R4P9633729\n- R4P9634113\n- R4P9633722 \n\nDesde já, agradeço !`
+
+            const mailOptions = {
+                from: 'inventario@kian.com.br',
+                to: 'cac@officetotal.com.br',
+                cc: 'servicedesk@kian.com.br, ti@kian.com.br',
+                subject: 'Solicitação de Suprimentos',
+                text: mailBody
+            }
+
+            await transporter.sendMail(mailOptions)
+        }
+    } catch (error) {
+        console.error('Erro ao executar a consulta:', error);
+    }
+}
+
 module.exports = { 
     checkAndSendEmail,
+    checkStockAndSendEmail,
     updateRecord,
     sendDeliveryConfirmationEmail,
     requestApprovedSupplement,

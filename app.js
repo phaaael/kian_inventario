@@ -1,6 +1,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
-const session = require('express-session');
+const session = require('express-session')
+const cron = require('node-cron')
 
 const homeRouter = require('./routes/homeRouter')
 const loginRouter = require('./routes/loginRouter')
@@ -8,7 +9,7 @@ const registerRouter = require('./routes/registerRouter')
 const inventoryRouter = require('./routes/inventoryRouter')
 const adminRouter = require('./routes/adminRouter')
 
-const notice = require('./resources/notice');
+const notice = require('./resources/notice')
 
 const app = express()
 
@@ -32,6 +33,8 @@ app.use(inventoryRouter)
 app.use(adminRouter)
 
 setInterval(notice.checkAndSendEmail, 6 * 60 * 60 * 1000)
+
+cron.schedule('0 9 * * 1', () => { notice.checkStockAndSendEmail() }, { timezone: 'America/Sao_Paulo' })
 
 app.listen(3000, () => {
   console.log(`Servidor rodando em http://localhost:${3000}`)
