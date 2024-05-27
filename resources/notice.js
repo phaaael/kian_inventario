@@ -1,6 +1,7 @@
 const nodemailer = require('nodemailer')
 const database = require('./database')
 const dateUtils = require('./dateUtils')
+const { mainModule } = require('process')
 
 const transporter = nodemailer.createTransport({
     host: 'smtp.office365.com',
@@ -310,14 +311,18 @@ async function checkStockAndSendEmail() {
     try {
         const [rows] = await database.pool.query('SELECT * FROM kian_suprimentos WHERE 1=1')
 
-        const lowStockItems = rows.filter(item => item.qtd_item < item.qtd_critica)
+        const lowStockKyocera = rows.filter(item => item.qtd_item < item.qtd_critica && item.item === 'Toner Kyocera')
+        const lowStockVersaLinkM = rows.filter(item => item.qtd_item < item.qtd_critica && item.item === 'Toner VersaLink - Magenta')
+        const lowStockVersaLinkP = rows.filter(item => item.qtd_item < item.qtd_critica && item.item === 'Toner VersaLink - Preto')
+        const lowStockVersaLinkA = rows.filter(item => item.qtd_item < item.qtd_critica && item.item === 'Toner VersaLink - Amarelo')
+        const lowStockVersaLinkC = rows.filter(item => item.qtd_item < item.qtd_critica && item.item === 'Toner VersaLink - Ciano')
 
-        if (lowStockItems.length > 0) {
+        if (lowStockKyocera.length > 0) {
             const mailBody = `Prezados, \n\nSolicito por gentileza 14 unidades de toner para impressora Kyocera M3655. \n\nSegue os números de series:\n\n- R4P9634105\n- R4P9633715\n- R4P9634108\n- R4P9633520\n- R4P9633527\n- R4P9639482\n- R4P9633517\n- R4P9639214\n- R4P9633947\n- R4P9633786\n- R4P9639219\n- R4P9633729\n- R4P9634113\n- R4P9633722 \n\nDesde já, agradeço !`
 
             const mailOptions = {
                 from: 'inventario@kian.com.br',
-                to: 'cac@officetotal.com.br',
+                to: 'suprimentos@officetotal.com.br',
                 cc: 'servicedesk@kian.com.br, ti@kian.com.br',
                 subject: 'Solicitação de Suprimentos',
                 text: mailBody
@@ -325,6 +330,65 @@ async function checkStockAndSendEmail() {
 
             await transporter.sendMail(mailOptions)
         }
+
+        if(lowStockVersaLinkM.length > 0) {
+            const mailBody = `Prezados, \n\nSolicito por gentileza 1 unidade de toner para impressora VersaLink C7025. \n\nNúmero de serie: 7TX141779 \n\nCor: Magenta \n\nDesde já, agradeço !`
+
+            const mailOptions = {
+                from: 'inventario@kian.com.br',
+                to: 'suprimentos@officetotal.com.br',
+                cc: 'servicedesk@kian.com.br, ti@kian.com.br',
+                subject: 'Solicitação de Suprimentos',
+                text: mailBody
+            }
+
+            await transporter.sendMail(mailOptions)
+
+            console.log(mailBody)
+        }
+
+        if(lowStockVersaLinkP.length > 0) {
+            const mailBody = `Prezados, \n\nSolicito por gentileza 1 unidade de toner para impressora VersaLink C7025. \n\nNúmero de serie: 7TX141779 \n\n Cor: Preta \n\nDesde já, agradeço !`
+
+            const mailOptions = {
+                from: 'inventario@kian.com.br',
+                to: 'suprimentos@officetotal.com.br',
+                cc: 'servicedesk@kian.com.br, ti@kian.com.br',
+                subject: 'Solicitação de Suprimentos',
+                text: mailBody
+            }
+
+            await transporter.sendMail(mailOptions)
+        }
+
+        if(lowStockVersaLinkA.length > 0) {
+            const mailBody = `Prezados, \n\nSolicito por gentileza 1 unidade de toner para impressora VersaLink C7025. \n\nNúmero de serie: 7TX141779 \n\n Cor: Amarelo \n\nDesde já, agradeço !`
+
+            const mailOptions = {
+                from: 'inventario@kian.com.br',
+                to: 'suprimentos@officetotal.com.br',
+                cc: 'servicedesk@kian.com.br, ti@kian.com.br',
+                subject: 'Solicitação de Suprimentos',
+                text: mailBody
+            }
+
+            await transporter.sendMail(mailOptions)
+        }
+
+        if(lowStockVersaLinkC.length > 0) {
+            const mailBody = `Prezados, \n\nSolicito por gentileza 1 unidade de toner para impressora VersaLink C7025. \n\nNúmero de serie: 7TX141779 \n\n Cor: Ciano \n\nDesde já, agradeço !`
+
+            const mailOptions = {
+                from: 'inventario@kian.com.br',
+                to: 'suprimentos@officetotal.com.br',
+                cc: 'servicedesk@kian.com.br, ti@kian.com.br',
+                subject: 'Solicitação de Suprimentos',
+                text: mailBody
+            }
+
+            await transporter.sendMail(mailOptions)
+        }
+
     } catch (error) {
         console.error('Erro ao executar a consulta:', error);
     }
