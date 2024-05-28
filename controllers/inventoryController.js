@@ -513,11 +513,11 @@ const inventoryUpdateRecord = async (req, res) => {
             const changesDescription = Object.entries(updateFields)
                 .map(([field, value]) => {
                     const readableName = fieldNamesMap[field] || field
-                    const formattedValue = dateFields.has(field) ? dateUtils.formatDate(value) : value
+                    const formattedValue = dateFields.has(field) ? dateUtils.formatDateForUpdateRecord(value) : value
                     return `${readableName}: ${formattedValue}`
                 })
                 .join('\n')
-            // await notice.updateRecord(userEmail, requester, changesDescription, id, userData.nome)
+            await notice.updateRecord(userEmail, requester, changesDescription, id, userData.nome)
         } else {
             res.json({ success: false, message: "Nenhuma alteração detectada" })
         }

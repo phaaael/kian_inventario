@@ -14,6 +14,25 @@ function formatDate(data) {
     return `${dia}/${mes}/${ano}`
 }
 
+function formatDateForUpdateRecord(data) {
+    if (!(data instanceof Date)) {
+        data = new Date(data)
+    }
+
+    if (isNaN(data.getTime())) {
+        return 'Data inválida'
+    }
+
+    data.setMinutes(data.getMinutes() + data.getTimezoneOffset())
+
+    const dia = data.getDate() < 10 ? '0' + data.getDate() : data.getDate()
+    const mes = (data.getMonth() + 1) < 10 ? '0' + (data.getMonth() + 1) : data.getMonth() + 1
+    const ano = data.getFullYear()
+
+    return `${dia}/${mes}/${ano}`
+}
+
+
 function formatDateForInput(data) {
     if (!(data instanceof Date)) {
         let parts = data.split('-')
@@ -71,5 +90,6 @@ module.exports = {
     formatDateForInput,
     formatDateForUpdate,
     formatDateWithCheck,
+    formatDateForUpdateRecord,
     convertToLocalTimezone
 }
