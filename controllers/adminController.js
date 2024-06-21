@@ -1,4 +1,5 @@
 const adminDatabase = require('../resources/database')
+const dateUtils = require('../resources/dateUtils')
 
 const userManagement = async (req, res) => {
     try {
@@ -183,6 +184,31 @@ const changingCriticalQuantity = async (req, res) => {
     }
 }
 
+const requestManagement = async (req, res) => {
+    try {
+        if (req.session && req.session.username) {
+            const userData = await adminDatabase.getUserByUsername(req.session.username)
+            if (!userData || userData.cargo !== 'Administrador') return res.status(403).json({ success: false, message: 'Usuário sem permissão' })
+            
+            let query = 'SELECT * FROM kian_reqsuprimentos WHERE 1=1'
+            const [rows] = await adminDatabase.pool.execute(query)
+
+            if (rows && userData.cargo === 'Administrador') {
+                const actives = rows.map(active => ({
+                    id: active.id,
+                    dt_req: dateUtils.formatDate(active.dt_req),
+                    supply: active.suprimento
+                }))
+
+                res.render('admin/request-management', { actives })
+            } else {
+                res.redirect('/')
+            }
+        }
+    } catch {
+        res.status(500).json({ success: false, message: 'Erro ao carregar gerenciamento de requisições' })
+    }
+}
 
 module.exports = {
     userManagement,
@@ -191,5 +217,6 @@ module.exports = {
     equipmentManagement,
     changingCriticalQuantity,
     supplyEntry,
+    requestManagement,
     supplyManagement
 }

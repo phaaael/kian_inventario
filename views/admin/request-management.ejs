@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Requisições | Kian</title>
+    <link rel="icon" href="https://kian.com.br/wp-content/themes/kian-site/styles/images/favicon.png">
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="./styles/request-management.css">
+    <link rel="stylesheet" href="../inventory/styles/alert.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Gerenciamento de Requisições:</h1>
+        </div>
+        <div class="functions-container">
+            <a class="history" href="#">Histórico de Requisições</a>
+        </div>
+        <div class="table-container">
+            <table class="items-table">
+                <thead>
+                    <tr>
+                        <th>Identificação da Requisição</th>
+                        <th>Data da Requisição</th>
+                        <th>Nome do Suprimento</th>
+                        <th>Finalizar Requisição</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (actives.length > 0) { %>
+                        <% actives.forEach((active, index) => { %>
+                            <tr data-index="<%= index %>">
+                                <td>#<%= active.id %></td>
+                                <td><%= active.dt_req %></td>
+                                <td><%= active.supply %></td>
+                                <td>
+                                    <button style="cursor: pointer; background-color: transparent; font-size: 20px;" type="button" onclick="">✔️</button>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="9">Nenhum requerimento encontrado</td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+        <a class="back" href="/inventory/menu">Voltar</a>
+    </div>
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="./scripts/supply-management.js"></script>
+</body>
+</html>

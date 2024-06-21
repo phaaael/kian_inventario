@@ -8,7 +8,8 @@ const transporter = nodemailer.createTransport({
     secure: false,
     auth: {
         user: 'inventario@kian.com.br',
-        pass: 'Yav34246'
+        //pass: 'Yav34246'
+        pass: 'SENHA_INVALIDA'
     },
     tls: {
         ciphers: 'SSLv3'

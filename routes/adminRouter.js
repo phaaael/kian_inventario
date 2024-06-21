@@ -10,6 +10,8 @@ router.get('/admin/supply-management', adminController.supplyManagement)
 
 router.get('/admin/equipament-management', adminController.equipmentManagement)
 
+router.get('/admin/request-management', adminController.requestManagement)
+
 router.post('/admin/create-user/submit', adminController.userCreation)
 
 router.post('/admin/supply-entry/:id', adminController.supplyEntry)

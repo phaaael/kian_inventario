@@ -52,3 +52,11 @@ CREATE TABLE `kian_suprimentos` (
   qtd_item INT NOT NULL,
   qtd_critica INT NOT NULL DEFAULT 0
 );
+
+CREATE TABLE `kian_reqsuprimentos` (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  dt_req DATE NOT NULL,
+  suprimento VARCHAR(255) NOT NULL,
+  status_entrega BOOLEAN DEFAULT false,
+  dt_entrega DATE
+);
