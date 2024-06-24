@@ -136,7 +136,7 @@ body {
   text-align: center;
 }
 
-a {
+.back {
   display: block;
   width: 30%;
   padding: 10px;
@@ -150,7 +150,7 @@ a {
   text-align: center;
 }
 
-a:hover {
+.back:hover {
   background-color: rgb(29, 28, 28);
 }
 
@@ -169,19 +169,21 @@ a:hover {
 }
 
 .functions-container {
-  position: absolute;
-  right: 10px;
-  top: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  text-align: center;
+  margin-bottom: 10px;
 }
 
 .create-user {
-  background-color: #383838;
+  background-color: var(--primary-color-darker);
   color: #fff;
   border: none;
   border-radius: 4px;
   padding: 8px 15px;
   cursor: pointer;
+  text-decoration: none;
   transition: background-color 0.3s;
   width: auto;
 }
-
