@@ -39,8 +39,8 @@ async function updateRecord(recipientEmail, requester, changesText, id, admin) {
             text: mailToAdmin
         }
 
-        await transporter.sendMail(mailToUserOptions)
-        await transporter.sendMail(mailToAdminOptions)
+        // await transporter.sendMail(mailToUserOptions)
+        // await transporter.sendMail(mailToAdminOptions)
     } catch (error) {
         console.error('Erro ao enviar notificação:', error)
         throw error
@@ -70,8 +70,8 @@ async function requestRefused(recipientEmail, requester, reason, id, admin) {
         }
 
 
-        await transporter.sendMail(mailToUserOptions)
-        await transporter.sendMail(mailToAdminOptions)
+        // await transporter.sendMail(mailToUserOptions)
+        // await transporter.sendMail(mailToAdminOptions)
     } catch {
         throw error
     }
@@ -99,8 +99,8 @@ async function requestApproved(recipientEmail, requester, id, admin) {
             text: mailToAdmin
         }
 
-        await transporter.sendMail(mailToUserOptions)
-        await transporter.sendMail(mailToAdminOptions)
+        // await transporter.sendMail(mailToUserOptions)
+        // await transporter.sendMail(mailToAdminOptions)
     } catch {
         throw error
     }
@@ -129,8 +129,8 @@ async function requestConfirmation(recipientEmail, id, requester) {
         }
 
 
-        await transporter.sendMail(mailToUserOptions)
-        await transporter.sendMail(mailToAdminOptions)
+        // await transporter.sendMail(mailToUserOptions)
+        // await transporter.sendMail(mailToAdminOptions)
     } catch {
         throw error
     }
@@ -157,8 +157,8 @@ async function sendDeliveryConfirmationEmail(recipientEmail, id, username, itemN
             text: mailToAdmin
         }
 
-        await transporter.sendMail(mailToUserOptions)
-        await transporter.sendMail(mailToAdminOptions)
+        // await transporter.sendMail(mailToUserOptions)
+        // await transporter.sendMail(mailToAdminOptions)
     } catch (error) {
         throw error
     }
@@ -186,8 +186,8 @@ async function requestRefusedSupplement(recipientEmail, requester, reason, id, a
         }
 
 
-        await transporter.sendMail(mailToUserOptions)
-        await transporter.sendMail(mailToAdminOptions)
+        // await transporter.sendMail(mailToUserOptions)
+        // await transporter.sendMail(mailToAdminOptions)
     } catch {
         throw error
     }
@@ -215,8 +215,8 @@ async function requestApprovedSupplement(recipientEmail, requester, id, admin) {
             text: mailToAdmin
         }
 
-        await transporter.sendMail(mailToUserOptions)
-        await transporter.sendMail(mailToAdminOptions)
+        // await transporter.sendMail(mailToUserOptions)
+        // await transporter.sendMail(mailToAdminOptions)
     } catch {
         throw error
     }
@@ -245,8 +245,8 @@ async function requestConfirmationSupplement(recipientEmail, id, requester) {
         }
 
 
-        await transporter.sendMail(mailToUserOptions)
-        await transporter.sendMail(mailToAdminOptions)
+        // await transporter.sendMail(mailToUserOptions)
+        // await transporter.sendMail(mailToAdminOptions)
     } catch {
         throw error
     }
@@ -276,7 +276,7 @@ async function checkAndSendEmail() {
                         text: mailBody
                     }
 
-                    await transporter.sendMail(mailOptions)
+                    // // await transporter.sendMail(mailOptions)
                 } else if (differenceInDays === 0) {
                     const mailBody = `Prezados, \n\nEste é um lembrete de que a seguinte entrega está prevista para hoje (${dateUtils.formatDate(row.previsao_entrega)}): \n\n- Identificação da Solicitação: #${row.id} \n\n- Responsável pelo Empréstimo: ${row.responsavel_emprestimo} \n\n- Requerente: ${row.requerente} \n\n- Data da Requisição: ${dateUtils.formatDate(row.dt_req)} \n\n- Equipamento: ${row.equipamento} \n\n- Código de Identificação: ${row.codigo_identificacao} \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
 
@@ -287,7 +287,7 @@ async function checkAndSendEmail() {
                         text: mailBody
                     }
 
-                    await transporter.sendMail(mailOptions)
+                    // // await transporter.sendMail(mailOptions)
                 } else if (differenceInDays < 0 && !row.entregue) {
                     const mailBody = `Prezados, \n\nEste é um lembrete de que a seguinte entrega está atrasada (${dateUtils.formatDate(row.previsao_entrega)}): \n\n- Identificação da Solicitação: #${row.id} \n\n- Responsável pelo Empréstimo: ${row.responsavel_emprestimo} \n\n- Requerente: ${row.requerente} \n\n- Data da Requisição: ${dateUtils.formatDate(row.dt_req)} \n\n- Equipamento: ${row.equipamento} \n\n- Código de Identificação: ${row.codigo_identificacao} \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
 
@@ -298,7 +298,7 @@ async function checkAndSendEmail() {
                         text: mailBody
                     }
 
-                    await transporter.sendMail(mailOptions)
+                    // // await transporter.sendMail(mailOptions)
                 }
             }
         }
@@ -328,7 +328,7 @@ async function checkStockAndSendEmail() {
                 text: mailBody
             }
 
-            await transporter.sendMail(mailOptions)
+            // // await transporter.sendMail(mailOptions)
         }
 
         if(lowStockVersaLinkM.length > 0) {
@@ -342,7 +342,7 @@ async function checkStockAndSendEmail() {
                 text: mailBody
             }
 
-            await transporter.sendMail(mailOptions)
+            // // await transporter.sendMail(mailOptions)
 
             console.log(mailBody)
         }
@@ -358,7 +358,7 @@ async function checkStockAndSendEmail() {
                 text: mailBody
             }
 
-            await transporter.sendMail(mailOptions)
+            // // await transporter.sendMail(mailOptions)
         }
 
         if(lowStockVersaLinkA.length > 0) {
@@ -372,7 +372,7 @@ async function checkStockAndSendEmail() {
                 text: mailBody
             }
 
-            await transporter.sendMail(mailOptions)
+            // await transporter.sendMail(mailOptions)
         }
 
         if(lowStockVersaLinkC.length > 0) {
@@ -386,7 +386,7 @@ async function checkStockAndSendEmail() {
                 text: mailBody
             }
 
-            await transporter.sendMail(mailOptions)
+            // // await transporter.sendMail(mailOptions)
         }
 
     } catch (error) {
