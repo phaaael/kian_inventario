@@ -12,6 +12,8 @@ router.get('/admin/equipament-management', adminController.equipmentManagement)
 
 router.get('/admin/request-management', adminController.requestManagement)
 
+router.get('/admin/all-requests', adminController.allRequests)
+
 router.post('/admin/create-user/submit', adminController.userCreation)
 
 router.post('/admin/supply-entry/:id', adminController.supplyEntry)

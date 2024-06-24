@@ -517,7 +517,7 @@ const inventoryUpdateRecord = async (req, res) => {
                     return `${readableName}: ${formattedValue}`
                 })
                 .join('\n')
-            await notice.updateRecord(userEmail, requester, changesDescription, id, userData.nome)
+            // await notice.updateRecord(userEmail, requester, changesDescription, id, userData.nome)
         } else {
             res.json({ success: false, message: "Nenhuma alteração detectada" })
         }

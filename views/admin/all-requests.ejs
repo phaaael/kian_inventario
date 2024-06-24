@@ -8,16 +8,13 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="./styles/request-management.css">
+    <link rel="stylesheet" href="./styles/all-requests.css">
     <link rel="stylesheet" href="../inventory/styles/alert.css">
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>Gerenciamento de Requisições:</h1>
-        </div>
-        <div class="functions-container">
-            <a class="history" href="/admin/all-requests">Histórico de Requisições</a>
+            <h1>Histórico de Requisições:</h1>
         </div>
         <div class="table-container">
             <table class="items-table">
@@ -26,7 +23,8 @@
                         <th>Identificação da Requisição</th>
                         <th>Data da Requisição</th>
                         <th>Nome do Suprimento</th>
-                        <th>Finalizar Requisição</th>
+                        <th>Status da Entrega</th>
+                        <th>Data da Entrega</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -36,9 +34,8 @@
                                 <td>#<%= active.id %></td>
                                 <td><%= active.dt_req %></td>
                                 <td><%= active.supply %></td>
-                                <td>
-                                    <button style="cursor: pointer; background-color: transparent; font-size: 20px;" type="button" onclick="handleStockRequest('<%= active.id %>')">✔️</button>
-                                </td>
+                                <td><%= active.status %></td>
+                                <td><%= active.dt_ent %></td>
                             </tr>
                         <% }); %>
                     <% } else { %>
@@ -49,7 +46,7 @@
                 </tbody>
             </table>
         </div>
-        <a class="back" href="/inventory/menu">Voltar</a>
+        <a class="back" href="/admin/request-management">Voltar</a>
     </div>
 
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>

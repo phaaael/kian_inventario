@@ -266,6 +266,34 @@ const requestManagement = async (req, res) => {
     }
 }
 
+const allRequests = async (req, res) => {
+    try {
+        if (req.session && req.session.username) {
+            const userData = await adminDatabase.getUserByUsername(req.session.username)
+            if (!userData || userData.cargo !== 'Administrador') return res.status(403).json({ success: false, message: 'Usuário sem permissão' })
+            
+            let query = 'SELECT * FROM kian_reqsuprimentos;'
+            const [rows] = await adminDatabase.pool.execute(query)
+
+            if (rows && userData.cargo === 'Administrador') {
+                const actives = rows.map(active => ({
+                    id: active.id,
+                    dt_req: dateUtils.formatDate(active.dt_req),
+                    supply: active.suprimento,
+                    status: active.status_entrega === 0 ? 'Pendente' : 'Entregue',
+                    dt_ent: active.dt_entrega ? dateUtils.formatDate(active.dt_entrega) : 'Pendente'
+                }))
+
+                res.render('admin/all-requests', { actives })
+            } else {
+                res.redirect('/')
+            }
+        }
+    } catch {
+        res.status(500).json({ success: false, message: 'Erro ao carregar gerenciamento de requisições' })
+    }
+}
+
 module.exports = {
     userManagement,
     userCreation,
@@ -275,5 +303,6 @@ module.exports = {
     changingCriticalQuantity,
     supplyEntry,
     requestManagement,
+    allRequests,
     supplyManagement
 }
