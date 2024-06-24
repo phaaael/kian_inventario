@@ -8,7 +8,7 @@ const pool = mysql.createPool({
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0
-});
+})
 
 const getUserByUsername = async (username) => {
   const [ rows ] = await pool.execute('SELECT * FROM kian_usuarios WHERE usuario = ?', [username])
@@ -24,6 +24,7 @@ const getRequirements = async (name) => {
   const [ rows ] = await pool.execute('SELECT * FROM kian_solicitacoes WHERE requerente = ?', [name])
   return rows
 }
+
 const updateItemQuantity = async (itemId, newQuantity) => {
   try {
       const [ result ] = await pool.execute('UPDATE kian_suprimentos SET qtd_item = ? WHERE id = ?', [newQuantity, itemId])
@@ -33,6 +34,22 @@ const updateItemQuantity = async (itemId, newQuantity) => {
           return false
       }
       
+      return true
+  } catch (error) {
+      console.error('Erro ao atualizar a quantidade do item:', error)
+      throw error
+  }
+}
+
+const updateItemQuantityByName = async (itemName, newQuantity) => {
+  try {
+      const [result] = await pool.execute('UPDATE kian_suprimentos SET qtd_item = ? WHERE item = ?', [newQuantity, itemName])
+
+      if (result.affectedRows === 0) {
+          console.log('Nenhum item encontrado com o nome fornecido para atualização.')
+          return false
+      }
+
       return true
   } catch (error) {
       console.error('Erro ao atualizar a quantidade do item:', error)
@@ -57,6 +74,7 @@ module.exports = {
   pool, 
   getUserByUsername, 
   getItemById,
+  updateItemQuantityByName,
   getRequirements,
   updateItemQuantity,
   updateItemQuantityCritical

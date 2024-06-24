@@ -16,6 +16,8 @@ router.post('/admin/create-user/submit', adminController.userCreation)
 
 router.post('/admin/supply-entry/:id', adminController.supplyEntry)
 
+router.post('/admin/supply-entry-request/:id', adminController.supplyEntryOfRequest)
+
 router.post('/admin/supply-change/:id', adminController.changingCriticalQuantity)
 
 module.exports = router

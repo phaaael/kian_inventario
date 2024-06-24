@@ -37,7 +37,7 @@
                                 <td><%= active.dt_req %></td>
                                 <td><%= active.supply %></td>
                                 <td>
-                                    <button style="cursor: pointer; background-color: transparent; font-size: 20px;" type="button" onclick="">✔️</button>
+                                    <button style="cursor: pointer; background-color: transparent; font-size: 20px;" type="button" onclick="handleStockRequest('<%= active.id %>')">✔️</button>
                                 </td>
                             </tr>
                         <% }); %>
@@ -53,6 +53,6 @@
     </div>
 
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    <script src="./scripts/supply-management.js"></script>
+    <script src="./scripts/request-management.js"></script>
 </body>
 </html>

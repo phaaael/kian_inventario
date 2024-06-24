@@ -158,6 +158,62 @@ const supplyEntry = async (req, res) => {
     }
 }
 
+const supplyEntryOfRequest = async (req, res) => {
+    try {
+        const itemId = req.params.id
+        const quantityToAdd = parseInt(req.body.quantity)
+
+        const userData = await adminDatabase.getUserByUsername(req.session.username)
+        const currentDate = new Date()
+        const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ')
+
+        if (!userData || userData.cargo !== 'Administrador') {
+            return res.status(403).json({ success: false, message: 'Usuário sem permissão' })
+        }
+
+        if (!itemId) {
+            return res.status(400).json({ success: false, message: 'ID do item não fornecido' })
+        }
+
+        if (isNaN(quantityToAdd) || quantityToAdd <= 0) {
+            return res.status(400).json({ success: false, message: 'Quantidade inválida' })
+        }
+
+        const updateReq = 'UPDATE kian_reqsuprimentos SET status_entrega = ?, dt_entrega = ? WHERE id = ?'
+        await adminDatabase.pool.execute(updateReq, [1, formattedDate, itemId])
+
+        const selectSupply = 'SELECT suprimento FROM kian_reqsuprimentos WHERE id = ?'
+        const [supplyResult] = await adminDatabase.pool.execute(selectSupply, [itemId])
+
+        if (supplyResult.length === 0) {
+            return res.status(404).json({ success: false, message: 'Item não encontrado' })
+        }
+
+        const supply = supplyResult[0].suprimento
+
+        const selectQuantitySupply = 'SELECT qtd_item FROM kian_suprimentos WHERE item = ?'
+        const [quantitySupplyResult] = await adminDatabase.pool.execute(selectQuantitySupply, [supply])
+
+        if (quantitySupplyResult.length === 0) {
+            return res.status(404).json({ success: false, message: 'Suprimento não encontrado' })
+        }
+
+        const currentQuantity = quantitySupplyResult[0].qtd_item
+        const updatedInventory = currentQuantity + quantityToAdd
+
+        const updateResult = await adminDatabase.updateItemQuantityByName(supply, updatedInventory)
+
+        if (!updateResult) {
+            return res.status(500).json({ success: false, message: 'Erro ao atualizar o estoque' })
+        }
+
+        res.json({ success: true, message: 'Estoque atualizado com sucesso', data: { itemId: itemId, newQuantity: updatedInventory } })
+    } catch (error) {
+        console.error('Erro ao processar entrada de estoque:', error)
+        res.status(500).json({ success: false, message: 'Erro ao processar entrada de estoque' })
+    }
+}
+
 const changingCriticalQuantity = async (req, res) => {
     try {
         const itemId = req.params.id
@@ -190,7 +246,7 @@ const requestManagement = async (req, res) => {
             const userData = await adminDatabase.getUserByUsername(req.session.username)
             if (!userData || userData.cargo !== 'Administrador') return res.status(403).json({ success: false, message: 'Usuário sem permissão' })
             
-            let query = 'SELECT * FROM kian_reqsuprimentos WHERE 1=1'
+            let query = 'SELECT * FROM kian_reqsuprimentos WHERE status_entrega = 0'
             const [rows] = await adminDatabase.pool.execute(query)
 
             if (rows && userData.cargo === 'Administrador') {
@@ -214,6 +270,7 @@ module.exports = {
     userManagement,
     userCreation,
     getUserCreation,
+    supplyEntryOfRequest,
     equipmentManagement,
     changingCriticalQuantity,
     supplyEntry,
