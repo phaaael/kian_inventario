@@ -8,7 +8,7 @@ const transporter = nodemailer.createTransport({
     secure: false,
     auth: {
         user: 'inventario@kian.com.br',
-        //pass: 'Yav34246'
+        // pass: 'Yav34246'
         pass: 'SENHA_INVALIDA'
     },
     tls: {
@@ -39,8 +39,8 @@ async function updateRecord(recipientEmail, requester, changesText, id, admin) {
             text: mailToAdmin
         }
 
-        // await transporter.sendMail(mailToUserOptions)
-        // await transporter.sendMail(mailToAdminOptions)
+        await transporter.sendMail(mailToUserOptions)
+        await transporter.sendMail(mailToAdminOptions)
     } catch (error) {
         console.error('Erro ao enviar notificação:', error)
         throw error
@@ -70,8 +70,8 @@ async function requestRefused(recipientEmail, requester, reason, id, admin) {
         }
 
 
-        // await transporter.sendMail(mailToUserOptions)
-        // await transporter.sendMail(mailToAdminOptions)
+        await transporter.sendMail(mailToUserOptions)
+        await transporter.sendMail(mailToAdminOptions)
     } catch {
         throw error
     }
@@ -99,8 +99,8 @@ async function requestApproved(recipientEmail, requester, id, admin) {
             text: mailToAdmin
         }
 
-        // await transporter.sendMail(mailToUserOptions)
-        // await transporter.sendMail(mailToAdminOptions)
+        await transporter.sendMail(mailToUserOptions)
+        await transporter.sendMail(mailToAdminOptions)
     } catch {
         throw error
     }
@@ -129,8 +129,8 @@ async function requestConfirmation(recipientEmail, id, requester) {
         }
 
 
-        // await transporter.sendMail(mailToUserOptions)
-        // await transporter.sendMail(mailToAdminOptions)
+        await transporter.sendMail(mailToUserOptions)
+        await transporter.sendMail(mailToAdminOptions)
     } catch {
         throw error
     }
@@ -157,8 +157,8 @@ async function sendDeliveryConfirmationEmail(recipientEmail, id, username, itemN
             text: mailToAdmin
         }
 
-        // await transporter.sendMail(mailToUserOptions)
-        // await transporter.sendMail(mailToAdminOptions)
+        await transporter.sendMail(mailToUserOptions)
+        await transporter.sendMail(mailToAdminOptions)
     } catch (error) {
         throw error
     }
@@ -186,8 +186,8 @@ async function requestRefusedSupplement(recipientEmail, requester, reason, id, a
         }
 
 
-        // await transporter.sendMail(mailToUserOptions)
-        // await transporter.sendMail(mailToAdminOptions)
+        await transporter.sendMail(mailToUserOptions)
+        await transporter.sendMail(mailToAdminOptions)
     } catch {
         throw error
     }
@@ -215,8 +215,8 @@ async function requestApprovedSupplement(recipientEmail, requester, id, admin) {
             text: mailToAdmin
         }
 
-        // await transporter.sendMail(mailToUserOptions)
-        // await transporter.sendMail(mailToAdminOptions)
+        await transporter.sendMail(mailToUserOptions)
+        await transporter.sendMail(mailToAdminOptions)
     } catch {
         throw error
     }
@@ -245,8 +245,8 @@ async function requestConfirmationSupplement(recipientEmail, id, requester) {
         }
 
 
-        // await transporter.sendMail(mailToUserOptions)
-        // await transporter.sendMail(mailToAdminOptions)
+        await transporter.sendMail(mailToUserOptions)
+        await transporter.sendMail(mailToAdminOptions)
     } catch {
         throw error
     }
@@ -276,7 +276,7 @@ async function checkAndSendEmail() {
                         text: mailBody
                     }
 
-                    // // await transporter.sendMail(mailOptions)
+                    await transporter.sendMail(mailOptions)
                 } else if (differenceInDays === 0) {
                     const mailBody = `Prezados, \n\nEste é um lembrete de que a seguinte entrega está prevista para hoje (${dateUtils.formatDate(row.previsao_entrega)}): \n\n- Identificação da Solicitação: #${row.id} \n\n- Responsável pelo Empréstimo: ${row.responsavel_emprestimo} \n\n- Requerente: ${row.requerente} \n\n- Data da Requisição: ${dateUtils.formatDate(row.dt_req)} \n\n- Equipamento: ${row.equipamento} \n\n- Código de Identificação: ${row.codigo_identificacao} \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
 
@@ -287,7 +287,7 @@ async function checkAndSendEmail() {
                         text: mailBody
                     }
 
-                    // // await transporter.sendMail(mailOptions)
+                    await transporter.sendMail(mailOptions)
                 } else if (differenceInDays < 0 && !row.entregue) {
                     const mailBody = `Prezados, \n\nEste é um lembrete de que a seguinte entrega está atrasada (${dateUtils.formatDate(row.previsao_entrega)}): \n\n- Identificação da Solicitação: #${row.id} \n\n- Responsável pelo Empréstimo: ${row.responsavel_emprestimo} \n\n- Requerente: ${row.requerente} \n\n- Data da Requisição: ${dateUtils.formatDate(row.dt_req)} \n\n- Equipamento: ${row.equipamento} \n\n- Código de Identificação: ${row.codigo_identificacao} \n\nAtenciosamente, \n\nEquipe de Inventário Kian`
 
@@ -298,7 +298,7 @@ async function checkAndSendEmail() {
                         text: mailBody
                     }
 
-                    // // await transporter.sendMail(mailOptions)
+                    await transporter.sendMail(mailOptions)
                 }
             }
         }
@@ -311,86 +311,46 @@ async function checkStockAndSendEmail() {
     try {
         const [rows] = await database.pool.query('SELECT * FROM kian_suprimentos WHERE 1=1')
 
-        const lowStockKyocera = rows.filter(item => item.qtd_item < item.qtd_critica && item.item === 'Toner Kyocera')
-        const lowStockVersaLinkM = rows.filter(item => item.qtd_item < item.qtd_critica && item.item === 'Toner VersaLink - Magenta')
-        const lowStockVersaLinkP = rows.filter(item => item.qtd_item < item.qtd_critica && item.item === 'Toner VersaLink - Preto')
-        const lowStockVersaLinkA = rows.filter(item => item.qtd_item < item.qtd_critica && item.item === 'Toner VersaLink - Amarelo')
-        const lowStockVersaLinkC = rows.filter(item => item.qtd_item < item.qtd_critica && item.item === 'Toner VersaLink - Ciano')
+        const lowStockItems = [
+            { item: 'Toner Kyocera', quantity: 14, serialNumbers: ['R4P9634105', 'R4P9633715', 'R4P9634108', 'R4P9633520', 'R4P9633527', 'R4P9639482', 'R4P9633517', 'R4P9639214', 'R4P9633947', 'R4P9633786', 'R4P9639219', 'R4P9633729', 'R4P9634113', 'R4P9633722'] },
+            { item: 'Toner VersaLink - Magenta', quantity: 1, serialNumbers: ['7TX141779'], color: 'Magenta' },
+            { item: 'Toner VersaLink - Preto', quantity: 1, serialNumbers: ['7TX141779'], color: 'Preta' },
+            { item: 'Toner VersaLink - Amarelo', quantity: 1, serialNumbers: ['7TX141779'], color: 'Amarelo' },
+            { item: 'Toner VersaLink - Ciano', quantity: 1, serialNumbers: ['7TX141779'], color: 'Ciano' }
+        ]
 
-        if (lowStockKyocera.length > 0) {
-            const mailBody = `Prezados, \n\nSolicito por gentileza 14 unidades de toner para impressora Kyocera M3655. \n\nSegue os números de series:\n\n- R4P9634105\n- R4P9633715\n- R4P9634108\n- R4P9633520\n- R4P9633527\n- R4P9639482\n- R4P9633517\n- R4P9639214\n- R4P9633947\n- R4P9633786\n- R4P9639219\n- R4P9633729\n- R4P9634113\n- R4P9633722 \n\nDesde já, agradeço !`
+        for (const lowStockItem of lowStockItems) {
+            const lowStock = rows.filter(item => item.qtd_item < item.qtd_critica && item.item === lowStockItem.item)
 
-            const mailOptions = {
-                from: 'inventario@kian.com.br',
-                to: 'suprimentos@officetotal.com.br',
-                cc: 'servicedesk@kian.com.br, ti@kian.com.br',
-                subject: 'Solicitação de Suprimentos',
-                text: mailBody
+            if (lowStock.length > 0) {
+                const [pendingRequests] = await database.pool.query('SELECT * FROM kian_reqsuprimentos WHERE suprimento = ? AND status_entrega != 1', [lowStockItem.item])
+
+                if (pendingRequests.length === 0) {
+                    const currentDate = new Date()
+                    const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ')
+
+                    const insertQuery = 'INSERT INTO kian_reqsuprimentos (dt_req, suprimento, status_entrega) VALUES (?, ?, ?)'
+                    await database.pool.execute(insertQuery, [formattedDate, lowStockItem.item, 0])
+
+                    const serialNumbersText = lowStockItem.serialNumbers.map(sn => `- ${sn}`).join('\n')
+                    const mailBody = lowStockItem.color 
+                        ? `Prezados, \n\nSolicito por gentileza ${lowStockItem.quantity} unidade de toner para impressora VersaLink C7025. \n\nNúmero de serie: ${lowStockItem.serialNumbers[0]} \n\nCor: ${lowStockItem.color} \n\nDesde já, agradeço!` 
+                        : `Prezados, \n\nSolicito por gentileza ${lowStockItem.quantity} unidades de toner para impressora Kyocera M3655. \n\nSegue os números de series:\n\n${serialNumbersText}\n\nDesde já, agradeço!`
+
+                    const mailOptions = {
+                        from: 'inventario@kian.com.br',
+                        to: 'suprimentos@officetotal.com.br',
+                        cc: 'servicedesk@kian.com.br, ti@kian.com.br',
+                        subject: 'Solicitação de Suprimentos',
+                        text: mailBody
+                    }
+
+                    await transporter.sendMail(mailOptions)
+                }
             }
-
-            // // await transporter.sendMail(mailOptions)
         }
-
-        if(lowStockVersaLinkM.length > 0) {
-            const mailBody = `Prezados, \n\nSolicito por gentileza 1 unidade de toner para impressora VersaLink C7025. \n\nNúmero de serie: 7TX141779 \n\nCor: Magenta \n\nDesde já, agradeço !`
-
-            const mailOptions = {
-                from: 'inventario@kian.com.br',
-                to: 'suprimentos@officetotal.com.br',
-                cc: 'servicedesk@kian.com.br, ti@kian.com.br',
-                subject: 'Solicitação de Suprimentos',
-                text: mailBody
-            }
-
-            // // await transporter.sendMail(mailOptions)
-
-            console.log(mailBody)
-        }
-
-        if(lowStockVersaLinkP.length > 0) {
-            const mailBody = `Prezados, \n\nSolicito por gentileza 1 unidade de toner para impressora VersaLink C7025. \n\nNúmero de serie: 7TX141779 \n\n Cor: Preta \n\nDesde já, agradeço !`
-
-            const mailOptions = {
-                from: 'inventario@kian.com.br',
-                to: 'suprimentos@officetotal.com.br',
-                cc: 'servicedesk@kian.com.br, ti@kian.com.br',
-                subject: 'Solicitação de Suprimentos',
-                text: mailBody
-            }
-
-            // // await transporter.sendMail(mailOptions)
-        }
-
-        if(lowStockVersaLinkA.length > 0) {
-            const mailBody = `Prezados, \n\nSolicito por gentileza 1 unidade de toner para impressora VersaLink C7025. \n\nNúmero de serie: 7TX141779 \n\n Cor: Amarelo \n\nDesde já, agradeço !`
-
-            const mailOptions = {
-                from: 'inventario@kian.com.br',
-                to: 'suprimentos@officetotal.com.br',
-                cc: 'servicedesk@kian.com.br, ti@kian.com.br',
-                subject: 'Solicitação de Suprimentos',
-                text: mailBody
-            }
-
-            // await transporter.sendMail(mailOptions)
-        }
-
-        if(lowStockVersaLinkC.length > 0) {
-            const mailBody = `Prezados, \n\nSolicito por gentileza 1 unidade de toner para impressora VersaLink C7025. \n\nNúmero de serie: 7TX141779 \n\n Cor: Ciano \n\nDesde já, agradeço !`
-
-            const mailOptions = {
-                from: 'inventario@kian.com.br',
-                to: 'suprimentos@officetotal.com.br',
-                cc: 'servicedesk@kian.com.br, ti@kian.com.br',
-                subject: 'Solicitação de Suprimentos',
-                text: mailBody
-            }
-
-            // // await transporter.sendMail(mailOptions)
-        }
-
     } catch (error) {
-        console.error('Erro ao executar a consulta:', error);
+        console.error('Erro ao executar a consulta:', error)
     }
 }
 
