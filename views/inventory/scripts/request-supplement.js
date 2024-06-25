@@ -46,3 +46,14 @@ document.querySelector('.request_supplement').addEventListener('submit', functio
     })
 })
 
+document.getElementById('supply').addEventListener('change', function () {
+    const selectedItem = this.value
+    const specificItem = 'Toner Kyocera'
+    const newInputContainer = document.getElementById('qtd')
+
+    if (selectedItem === specificItem) {
+        newInputContainer.classList.add('show')
+    } else {
+        newInputContainer.classList.remove('show')
+    }
+})

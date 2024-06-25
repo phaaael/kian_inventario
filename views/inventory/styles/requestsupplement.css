@@ -67,3 +67,17 @@ li {
 .back:hover, .cadastrar:hover, input:hover {
     background-color: rgb(29, 28, 28)
 }
+
+#qtd {
+    display: none;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 1s ease, opacity 3s ease;
+}
+
+#qtd.show {
+    display: block;
+    opacity: 3;
+    max-height: 100px;
+}
