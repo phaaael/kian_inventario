@@ -112,7 +112,6 @@ const inventorySupplements = async (req, res) => {
 
             const allowedFields = ['id', 'requerente', 'equipamento']
 
-            // let query = 'SELECT * FROM kian_solicitacoes_suprimentos WHERE 1=1'
             let query = `SELECT * FROM kian_solicitacoes WHERE tipo = 'Suprimento' `
             let queryParams = []
 
@@ -137,7 +136,8 @@ const inventorySupplements = async (req, res) => {
                 id: active.id,
                 requester: active.requerente,
                 exit_sector: dateUtils.formatDate(new Date(active.dt_req)),
-                equipment: active.equipamento,
+                supply: active.equipamento,
+                qtd: active.qtd,
                 supplement_reason: active.motivo,
                 request_status: active.status_solicitacao,
                 response_completion: active.tec_responsavel,

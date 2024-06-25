@@ -41,6 +41,7 @@
                         <th>Requerente</th>
                         <th>Data da Requisição</th>
                         <th>Suprimento</th>
+                        <th>Quantidade</th>
                         <th>Motivo do Requerimento</th>
                         <th>Aceitar Requerimento</th>
                         <th>Recusar Requerimento</th>
@@ -55,7 +56,8 @@
                                     <td>#<%= active.id %></td>
                                     <td><%= active.requester %></td>
                                     <td><%= active.exit_sector %></td>
-                                    <td><%= active.equipment %></td>
+                                    <td><%= active.supply %></td>
+                                    <td><%= active.qtd %></td>
                                     <td>
                                         <span class="supplement_reason" style="cursor: pointer; font-weight: bold;" onclick="showAlert('<%= active.supplement_reason %>')">Exibir Motivo</span>
                                     </td>
