@@ -251,12 +251,12 @@ const inventoryAcceptSupplement = async (req, res) => {
         const [updateResult] = await inventoryDatabase.pool.execute(updateQuery, [true, userData.nome, formattedDate, itemId])
 
         if (updateResult.affectedRows > 0) {
-            const itemNameQuery = 'SELECT equipamento FROM kian_solicitacoes WHERE id = ?'
-            const [[itemNameResult]] = await inventoryDatabase.pool.execute(itemNameQuery, [itemId])
-            if (!itemNameResult) return res.status(404).json({ success: false, message: 'Nome do item não encontrado' })
+            const itemNameQuery = 'SELECT equipamento, qtd FROM kian_solicitacoes WHERE id = ?'
+            const [[itemResult]] = await inventoryDatabase.pool.execute(itemNameQuery, [itemId])
+            if (!itemResult) return res.status(404).json({ success: false, message: 'Nome do item não encontrado' })
 
-            const updateStock = 'UPDATE kian_suprimentos SET qtd_item = qtd_item - 1 WHERE item = ?'
-            await inventoryDatabase.pool.execute(updateStock, [itemNameResult.equipamento])
+            const updateStock = 'UPDATE kian_suprimentos SET qtd_item = qtd_item - ? WHERE item = ?'
+            await inventoryDatabase.pool.execute(updateStock, [itemResult.qtd, itemResult.equipamento])
 
             const selectQuery = 'SELECT requerente, dt_req, equipamento, motivo FROM kian_solicitacoes WHERE id = ?'
             const [rows] = await inventoryDatabase.pool.execute(selectQuery, [itemId])
