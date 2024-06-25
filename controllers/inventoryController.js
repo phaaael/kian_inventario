@@ -160,8 +160,10 @@ const inventoryRequestSupplement = async (req, res) => {
             const [items] = await inventoryDatabase.pool.execute(itemQuery)
             res.render('inventory/request-supplement', { items })
         } else if (req.method === 'POST') {
-            const { exit_sector, item, request_reason, additional_qtd } = req.body
+            let { exit_sector, item, request_reason, additional_qtd } = req.body
 
+            if(additional_qtd === '') additional_qtd = 1
+                
             const userData = await inventoryDatabase.getUserByUsername(req.session.username)
 
             if (!userData || !userData.nome) { throw new Error('Usuário não encontrado ou não logado') }
@@ -176,9 +178,9 @@ const inventoryRequestSupplement = async (req, res) => {
                 INSERT INTO kian_solicitacoes(requerente, tipo, dt_req, equipamento, qtd, motivo)
                 VALUES (?, ?, ?, ?, ?, ?)
             `
-            const tipo = "Suprimento"
+            const type = "Suprimento"
         
-            const [ insertResult ] = await inventoryDatabase.pool.execute(insertQuery, [userData.nome, tipo ,exit_sector, itemName, additional_qtd, request_reason])
+            const [ insertResult ] = await inventoryDatabase.pool.execute(insertQuery, [userData.nome, type ,exit_sector, itemName, additional_qtd, request_reason])
             const insertedId = insertResult.insertId
 
             res.json({ success: true, message: "Requemento de Suprimento Enviada" })
@@ -280,7 +282,6 @@ const inventoryAcceptSupplement = async (req, res) => {
         res.status(500).json({ success: false, message: 'Erro ao aceitar requerimento' })
     }
 }
-
 
 const inventoryAcceptItem = async (req, res) => {
     try {
