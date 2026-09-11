@@ -1,27 +1,87 @@
 # Kian_Inventario
 
-Sistema web para **gestão de equipamentos, empréstimos e suprimentos de TI**, desenvolvido para centralizar e organizar processos internos relacionados ao controle de ativos, solicitações, devoluções e estoque.
+Sistema web para **gestão de equipamentos, empréstimos e suprimentos de TI**, desenvolvido para atender uma necessidade específica do ambiente corporativo.
 
-O projeto surgiu a partir de uma necessidade real do ambiente corporativo, com o objetivo de substituir controles manuais por um fluxo digital mais estruturado, rastreável e eficiente.
+O projeto foi pensado e utilizado para resolver um **problema pontual e real de operação**, centralizando solicitações, empréstimos, devoluções, controle de estoque e acompanhamento de ativos que antes dependiam de processos mais manuais.
+
+Apesar de funcional e utilizado no contexto para o qual foi criado, o projeto ainda necessita de **diversos ajustes técnicos, melhorias de segurança, refatorações e evolução arquitetural** para atingir um padrão mais robusto de escalabilidade, manutenção e uso em ambientes de produção mais complexos.
 
 ---
 
 ## Sobre o projeto
 
-O **Kian_Inventario** permite que usuários solicitem equipamentos e suprimentos diretamente pela plataforma, enquanto a equipe responsável realiza a análise, aprovação, recusa e acompanhamento de cada solicitação.
+O **Kian_Inventario** nasceu a partir de uma necessidade prática identificada dentro do ambiente corporativo.
 
-Além do gerenciamento de empréstimos, a aplicação possui controle de estoque, monitoramento de devoluções, notificações por e-mail e exportação de informações para Excel.
+O objetivo inicial não foi construir uma plataforma genérica ou uma solução completa de gestão de ativos, mas solucionar de forma rápida e funcional um problema específico relacionado ao controle de equipamentos e suprimentos administrados pelo setor de TI.
 
-O sistema foi desenvolvido com foco em:
+A aplicação permitiu centralizar processos que anteriormente poderiam depender de controles paralelos, planilhas, mensagens ou acompanhamento manual.
 
-- Centralização das informações;
-- Rastreabilidade das movimentações;
-- Organização do estoque de TI;
-- Controle de equipamentos emprestados;
-- Redução de controles manuais;
-- Padronização das solicitações;
-- Maior visibilidade sobre ativos e suprimentos;
-- Automação de alertas e notificações.
+Entre os principais processos atendidos estão:
+
+- Solicitação de equipamentos;
+- Controle de empréstimos;
+- Registro de devoluções;
+- Solicitação de suprimentos;
+- Aprovação ou recusa de solicitações;
+- Controle de disponibilidade;
+- Controle de estoque;
+- Alertas de devolução;
+- Notificações por e-mail;
+- Exportação de informações.
+
+O sistema cumpriu seu objetivo inicial e serviu como uma solução funcional para o cenário em que foi aplicado.
+
+Entretanto, por ter sido desenvolvido com foco na resolução rápida de uma necessidade específica, algumas decisões técnicas foram priorizadas pela simplicidade e velocidade de implementação.
+
+Por esse motivo, o projeto deve ser entendido como uma **primeira versão funcional**, com espaço significativo para evolução.
+
+---
+
+## Objetivo
+
+O principal objetivo do projeto foi melhorar a rastreabilidade e organização dos recursos administrados pelo setor de TI.
+
+A aplicação busca responder perguntas como:
+
+```text
+Quem solicitou o equipamento?
+        │
+        ▼
+Quem aprovou?
+        │
+        ▼
+Qual equipamento foi entregue?
+        │
+        ▼
+Quem está utilizando?
+        │
+        ▼
+Quando deverá ser devolvido?
+        │
+        ▼
+O equipamento já foi devolvido?
+```
+
+Para suprimentos:
+
+```text
+Qual item foi solicitado?
+        │
+        ▼
+Quem realizou a solicitação?
+        │
+        ▼
+A solicitação foi aprovada?
+        │
+        ▼
+Qual quantidade foi retirada?
+        │
+        ▼
+Quanto ainda existe em estoque?
+        │
+        ▼
+O estoque atingiu o nível crítico?
+```
 
 ---
 
@@ -29,17 +89,15 @@ O sistema foi desenvolvido com foco em:
 
 ### Autenticação de usuários
 
-A aplicação possui sistema de autenticação para controle de acesso.
+A aplicação possui autenticação para acesso às funcionalidades da plataforma.
 
-Os usuários podem acessar funcionalidades de acordo com suas permissões dentro da plataforma.
-
-O sistema diferencia operações administrativas das funcionalidades disponíveis para usuários comuns.
+O sistema diferencia funcionalidades administrativas das disponíveis para usuários comuns.
 
 ---
 
-## Gestão de equipamentos
+### Gestão de equipamentos
 
-O sistema permite o gerenciamento dos equipamentos disponibilizados pela área de TI.
+Permite controlar equipamentos disponibilizados pela área de TI.
 
 Cada equipamento pode possuir informações como:
 
@@ -48,242 +106,149 @@ Cada equipamento pode possuir informações como:
 - Situação;
 - Disponibilidade;
 - Responsável atual;
-- Histórico de utilização.
-
-Os equipamentos disponíveis podem ser solicitados através da própria plataforma.
-
-Quando existe uma solicitação ou empréstimo ativo, a disponibilidade do equipamento é atualizada de acordo com o fluxo da operação.
+- Histórico relacionado ao empréstimo.
 
 ---
 
-## Solicitação de equipamentos
+### Solicitação de equipamentos
 
-Os usuários podem realizar solicitações de empréstimo através da aplicação.
+Usuários podem solicitar equipamentos através da própria plataforma.
 
-Cada solicitação pode conter informações como:
+As solicitações podem conter:
 
 - Usuário solicitante;
 - Equipamento;
-- Código do equipamento;
 - Data da solicitação;
 - Motivo;
-- Data prevista para devolução.
-
-Após o envio, a solicitação fica disponível para análise administrativa.
+- Previsão de devolução.
 
 ---
 
-## Aprovação de empréstimos
+### Aprovação e recusa
 
-A equipe responsável pode analisar as solicitações realizadas pelos usuários.
+A equipe responsável pode analisar as solicitações recebidas.
 
-As solicitações podem ser:
+As operações incluem:
 
-- Aprovadas;
-- Recusadas;
-- Alteradas;
-- Finalizadas.
-
-Em caso de recusa, também é possível registrar o motivo da decisão.
-
-Quando uma solicitação é aprovada, o sistema registra o empréstimo e atualiza o estado do equipamento.
+- Aprovação;
+- Recusa;
+- Registro do responsável;
+- Alteração de informações;
+- Registro do motivo da recusa.
 
 ---
 
-## Controle de devoluções
+### Controle de empréstimos
 
-O sistema mantém o acompanhamento dos equipamentos emprestados.
+Após a aprovação, o equipamento passa a possuir um empréstimo ativo.
 
-É possível controlar:
+O sistema permite acompanhar:
 
-- Data do empréstimo;
-- Usuário responsável;
+- Responsável;
+- Data de retirada;
 - Data prevista para devolução;
-- Status da devolução;
-- Equipamentos em atraso;
-- Equipamentos próximos do vencimento.
-
-Após a devolução, o equipamento pode voltar a ficar disponível para novas solicitações.
+- Situação;
+- Atrasos;
+- Finalização do empréstimo.
 
 ---
 
-## Gestão de suprimentos
+### Controle de devoluções
 
-Além dos equipamentos, o **Kian_Inventario** também permite controlar materiais consumíveis utilizados pelo setor de TI.
+Após a devolução, o equipamento pode voltar a ficar disponível para utilização.
+
+Também é possível acompanhar equipamentos:
+
+- Próximos da devolução;
+- Com devolução prevista para o dia;
+- Atrasados.
+
+---
+
+### Gestão de suprimentos
+
+A aplicação também possui controle de suprimentos utilizados pelo setor de TI.
 
 Exemplos:
 
 - Toners;
 - Materiais de impressão;
 - Consumíveis;
-- Outros suprimentos internos.
+- Outros itens internos.
 
-Cada item pode possuir informações como:
+Para cada item podem ser controlados dados como:
 
-- Nome;
 - Quantidade atual;
 - Quantidade mínima;
 - Disponibilidade;
-- Histórico de movimentação.
+- Movimentações.
 
 ---
 
-## Solicitação de suprimentos
+### Solicitação de suprimentos
 
-Usuários podem solicitar materiais disponíveis através da plataforma.
+Usuários podem solicitar itens disponíveis.
 
-A equipe responsável pode posteriormente:
+A equipe responsável pode:
 
-- Analisar a solicitação;
 - Aprovar;
 - Recusar;
 - Registrar o responsável pela decisão.
 
-Quando uma solicitação é aprovada, a quantidade correspondente é descontada automaticamente do estoque.
+Quando aprovado, o estoque é atualizado conforme a quantidade solicitada.
 
 ---
 
-## Controle de estoque mínimo
+### Controle de estoque mínimo
 
-Os suprimentos podem possuir uma quantidade mínima configurada.
+Cada item pode possuir um nível mínimo configurado.
 
-Quando determinado item atinge ou fica abaixo do nível considerado crítico, o sistema consegue identificar a necessidade de reposição.
-
-Esse controle permite que a equipe responsável atue preventivamente, reduzindo o risco de indisponibilidade de materiais essenciais.
+Quando o estoque atinge um valor considerado crítico, o sistema pode identificar a necessidade de reposição.
 
 ---
 
-## Monitoramento automático
+### Monitoramento automático
 
-O sistema possui rotinas responsáveis pelo acompanhamento periódico de informações importantes.
+A aplicação possui rotinas destinadas ao acompanhamento de informações relevantes.
 
-Entre elas estão verificações relacionadas a:
+Entre elas:
 
-- Equipamentos próximos da devolução;
-- Equipamentos com devolução prevista para o dia;
-- Empréstimos atrasados;
-- Estoque crítico;
-- Necessidade de reposição de suprimentos.
-
-Essas rotinas ajudam a reduzir a dependência de verificações manuais.
-
----
-
-## Notificações por e-mail
-
-O projeto utiliza **Nodemailer** para envio de notificações.
-
-O sistema pode trabalhar com mensagens relacionadas a eventos como:
-
-- Nova solicitação;
-- Solicitação aprovada;
-- Solicitação recusada;
-- Alteração de empréstimo;
-- Confirmação de devolução;
-- Proximidade da data de devolução;
-- Empréstimo em atraso;
+- Empréstimos próximos da devolução;
+- Empréstimos vencidos;
 - Estoque crítico;
 - Necessidade de reposição.
 
-Essa funcionalidade melhora a comunicação entre usuários e equipe responsável.
+---
+
+### Notificações por e-mail
+
+O projeto utiliza **Nodemailer** para envio de notificações.
+
+As notificações podem estar relacionadas a:
+
+- Novas solicitações;
+- Aprovações;
+- Recusas;
+- Alterações;
+- Devoluções;
+- Equipamentos atrasados;
+- Estoque crítico;
+- Reposição de suprimentos.
 
 ---
 
-## Exportação de dados
+### Exportação para Excel
 
-A aplicação possui recursos para exportação de informações para arquivos Excel.
+A plataforma possui recursos para exportação de informações para arquivos `.xlsx`.
 
-Os arquivos são gerados no formato:
+Podem ser exportados dados relacionados a:
 
-```text
-.xlsx
-```
-
-A funcionalidade pode ser utilizada para exportar informações como:
-
-- Histórico de empréstimos;
+- Empréstimos;
 - Solicitações;
-- Solicitações de suprimentos;
-- Dados administrativos.
+- Suprimentos;
+- Informações administrativas.
 
-A geração das planilhas é realizada através da biblioteca **Excel4Node**.
-
----
-
-# Fluxo de empréstimo
-
-O fluxo principal de empréstimo funciona da seguinte maneira:
-
-```text
-Usuário
-   │
-   ▼
-Seleciona um equipamento
-   │
-   ▼
-Realiza uma solicitação
-   │
-   ▼
-Solicitação pendente
-   │
-   ▼
-Equipe responsável analisa
-   │
-   ├──────────────► Recusada
-   │
-   ▼
-Aprovada
-   │
-   ▼
-Empréstimo registrado
-   │
-   ▼
-Equipamento em utilização
-   │
-   ▼
-Devolução
-   │
-   ▼
-Empréstimo finalizado
-   │
-   ▼
-Equipamento disponível
-```
-
----
-
-# Fluxo de suprimentos
-
-```text
-Usuário
-   │
-   ▼
-Seleciona um suprimento
-   │
-   ▼
-Realiza uma solicitação
-   │
-   ▼
-Equipe responsável analisa
-   │
-   ├──────────────► Recusada
-   │
-   ▼
-Aprovada
-   │
-   ▼
-Baixa automática no estoque
-   │
-   ▼
-Verificação do estoque mínimo
-   │
-   ├──── Estoque normal
-   │
-   └──── Estoque crítico
-             │
-             ▼
-      Processo de reposição
-```
+A geração dos arquivos utiliza **Excel4Node**.
 
 ---
 
@@ -306,7 +271,7 @@ Verificação do estoque mínimo
 - MySQL
 - MySQL2
 
-## Bibliotecas e dependências
+## Dependências e bibliotecas
 
 - Express
 - EJS
@@ -319,9 +284,9 @@ Verificação do estoque mínimo
 
 ---
 
-# Arquitetura
+# Arquitetura atual
 
-O projeto possui uma organização inspirada no padrão **MVC — Model, View, Controller**, separando responsabilidades e facilitando a manutenção da aplicação.
+O projeto foi organizado utilizando conceitos inspirados no padrão **MVC — Model, View, Controller**.
 
 ```text
 Kian_Inventario/
@@ -347,9 +312,6 @@ Kian_Inventario/
 │   └── registerRouter.js
 │
 ├── views/
-│   ├── admin/
-│   ├── inventory/
-│   └── ...
 │
 ├── public/
 │
@@ -358,303 +320,57 @@ Kian_Inventario/
 └── package-lock.json
 ```
 
----
+A estrutura atual foi suficiente para atender ao objetivo inicial do projeto.
 
-## Controllers
+No entanto, com o crescimento da aplicação, algumas responsabilidades acabaram ficando concentradas em determinados arquivos e camadas.
 
-A camada de controllers concentra parte das regras de negócio responsáveis pelo processamento das requisições recebidas pela aplicação.
+Uma evolução futura deve buscar uma separação mais clara entre:
 
-Exemplos:
-
-```text
-adminController.js
-inventoryController.js
-loginController.js
-```
-
----
-
-## Routes
-
-As rotas definem os endpoints HTTP disponíveis na aplicação e direcionam as requisições para seus respectivos controllers.
-
-Exemplos:
-
-```text
-adminRouter.js
-inventoryRouter.js
-loginRouter.js
-```
+- Camada HTTP;
+- Regras de negócio;
+- Acesso ao banco;
+- Serviços externos;
+- Validações;
+- Jobs;
+- Notificações;
+- Controle de permissões.
 
 ---
 
-## Views
+# Limitações atuais
 
-As interfaces são renderizadas no servidor utilizando **EJS**.
+O projeto foi desenvolvido priorizando a solução do problema existente naquele momento.
 
-As views são responsáveis pela apresentação das informações para os usuários e administradores.
+Por isso, existem pontos que precisam ser revistos antes de considerar a aplicação como uma solução madura ou preparada para maior escala.
 
----
+Entre eles:
 
-## Resources
+- Acoplamento entre algumas regras de negócio e controllers;
+- Ausência de uma camada dedicada de services;
+- Ausência de repositories;
+- Validações que podem ser centralizadas;
+- Tratamento de erros que pode ser melhorado;
+- Gerenciamento de sessão que pode evoluir;
+- Necessidade de melhorias na autenticação;
+- Necessidade de revisão de segurança;
+- Ausência de migrations estruturadas;
+- Ausência de testes automatizados;
+- Ausência de pipeline de CI/CD;
+- Necessidade de melhor observabilidade;
+- Necessidade de logs estruturados;
+- Necessidade de trilha de auditoria;
+- Possibilidade de melhorar a organização do banco de dados;
+- Possibilidade de modernizar o frontend.
 
-O diretório `resources` concentra funcionalidades auxiliares utilizadas pelo restante da aplicação.
-
-Entre elas estão:
-
-- Conexão com banco de dados;
-- Manipulação de datas;
-- Envio de notificações;
-- Geração de planilhas.
-
----
-
-# Banco de dados
-
-A aplicação utiliza **MySQL** como banco de dados relacional.
-
-Entre as principais estruturas utilizadas pelo projeto estão entidades responsáveis pelo gerenciamento de:
-
-```text
-Usuários
-Equipamentos
-Suprimentos
-Solicitações
-Empréstimos
-Requisições de suprimentos
-```
-
-Na implementação atual, são utilizadas estruturas como:
-
-```text
-kian_usuarios
-kian_equipamentos
-kian_suprimentos
-kian_solicitacoes
-kian_emprestimos
-kian_reqsuprimentos
-```
+Essas limitações não impedem que o sistema cumpra sua função atual, mas representam pontos importantes para uma futura evolução.
 
 ---
 
-# Requisitos
+# Evolução arquitetural
 
-Para executar o projeto localmente é necessário possuir:
+Uma das principais melhorias planejadas é a reorganização da arquitetura.
 
-- Node.js;
-- NPM;
-- MySQL;
-- Git;
-- Banco de dados configurado.
-
----
-
-# Instalação
-
-Clone o repositório:
-
-```bash
-git clone https://github.com/phaaael/kian_inventory.git
-```
-
-Entre no diretório:
-
-```bash
-cd kian_inventory
-```
-
-Instale as dependências:
-
-```bash
-npm install
-```
-
-Configure o banco de dados e as variáveis necessárias para execução.
-
-Depois, inicie a aplicação:
-
-```bash
-node app.js
-```
-
-A aplicação poderá ser acessada através de:
-
-```text
-http://localhost:3000
-```
-
----
-
-# Configuração através de variáveis de ambiente
-
-Informações sensíveis não devem ser armazenadas diretamente no código-fonte.
-
-A abordagem recomendada é utilizar um arquivo:
-
-```text
-.env
-```
-
-Exemplo:
-
-```env
-PORT=3000
-
-DB_HOST=localhost
-DB_PORT=3306
-DB_DATABASE=kian_inventory
-DB_USER=usuario
-DB_PASSWORD=senha
-
-SESSION_SECRET=altere-esta-chave
-
-SMTP_HOST=smtp.office365.com
-SMTP_PORT=587
-SMTP_USER=email@empresa.com
-SMTP_PASSWORD=senha
-```
-
-Também é recomendado adicionar ao `.gitignore`:
-
-```gitignore
-node_modules/
-
-.env
-.env.*
-
-logs/
-
-.DS_Store
-```
-
----
-
-# Segurança
-
-Como se trata de uma aplicação que manipula autenticação e informações corporativas, alguns cuidados são importantes.
-
-## Credenciais
-
-Nunca devem ser versionadas informações como:
-
-- Senhas;
-- Credenciais do banco;
-- Credenciais SMTP;
-- Tokens;
-- Chaves de sessão;
-- API Keys.
-
-Essas informações devem utilizar variáveis de ambiente.
-
----
-
-## Senhas de usuários
-
-As senhas nunca devem ser armazenadas em texto puro.
-
-A implementação recomendada utiliza algoritmos de hash seguros, como:
-
-```text
-bcrypt
-```
-
-ou:
-
-```text
-Argon2
-```
-
----
-
-## Sessões
-
-Em produção, é recomendado utilizar um armazenamento persistente para as sessões.
-
-Também devem ser configuradas opções de segurança para os cookies, como:
-
-```text
-httpOnly
-secure
-sameSite
-```
-
----
-
-## HTTPS
-
-Para ambientes de produção, a aplicação deve ser disponibilizada exclusivamente através de HTTPS.
-
----
-
-# Melhorias futuras
-
-O projeto pode continuar evoluindo através da implementação de funcionalidades e melhorias arquiteturais.
-
-### Segurança
-
-- [ ] Migrar todas as credenciais para `.env`;
-- [ ] Implementar hash de senhas;
-- [ ] Adicionar Helmet;
-- [ ] Implementar Rate Limiting;
-- [ ] Implementar proteção CSRF;
-- [ ] Melhorar gerenciamento de sessão;
-- [ ] Implementar política de senha.
-
-### Arquitetura
-
-- [ ] Separar completamente regras de negócio da camada HTTP;
-- [ ] Implementar camada de Services;
-- [ ] Implementar camada de Repositories;
-- [ ] Criar tratamento centralizado de erros;
-- [ ] Implementar validação de dados;
-- [ ] Criar migrations do banco;
-- [ ] Criar seed de desenvolvimento.
-
-### Controle de acesso
-
-- [ ] Implementar RBAC;
-- [ ] Criar diferentes níveis de permissão;
-- [ ] Melhorar middleware de autenticação;
-- [ ] Criar trilha de auditoria.
-
-### Observabilidade
-
-- [ ] Implementar logs estruturados;
-- [ ] Registrar operações administrativas;
-- [ ] Criar histórico completo de alterações;
-- [ ] Implementar monitoramento da aplicação.
-
-### Interface
-
-- [ ] Modernizar o frontend;
-- [ ] Melhorar responsividade;
-- [ ] Criar dashboard administrativo;
-- [ ] Criar indicadores visuais;
-- [ ] Adicionar filtros e pesquisas avançadas.
-
-### Infraestrutura
-
-- [ ] Criar Dockerfile;
-- [ ] Criar Docker Compose;
-- [ ] Automatizar inicialização do banco;
-- [ ] Criar ambiente separado de desenvolvimento;
-- [ ] Implementar CI/CD;
-- [ ] Automatizar testes durante o deploy.
-
-### Qualidade
-
-- [ ] Criar testes unitários;
-- [ ] Criar testes de integração;
-- [ ] Criar testes end-to-end;
-- [ ] Adicionar ESLint;
-- [ ] Adicionar Prettier;
-- [ ] Implementar validação automática em Pull Requests.
-
----
-
-# Possível evolução arquitetural
-
-Uma evolução futura do projeto poderia utilizar uma arquitetura semelhante a:
+Uma possível estrutura seria:
 
 ```text
 src/
@@ -665,13 +381,15 @@ src/
 │
 ├── middlewares/
 │
-├── models/
-│
-├── repositories/
-│
 ├── routes/
 │
 ├── services/
+│
+├── repositories/
+│
+├── models/
+│
+├── validators/
 │
 ├── jobs/
 │
@@ -680,7 +398,7 @@ src/
 └── views/
 ```
 
-Fluxo:
+O fluxo poderia seguir:
 
 ```text
 Request
@@ -701,78 +419,244 @@ Service
 Repository
    │
    ▼
-MySQL
+Database
 ```
 
-Essa abordagem permitiria uma separação maior de responsabilidades e facilitaria testes, manutenção e evolução da aplicação.
+Nesse modelo:
+
+**Controllers** seriam responsáveis principalmente por receber e responder às requisições.
+
+**Services** concentrariam as regras de negócio.
+
+**Repositories** seriam responsáveis pelo acesso aos dados.
+
+**Middlewares** tratariam autenticação, autorização, validações e outros comportamentos transversais.
+
+**Jobs** concentrariam tarefas automáticas e agendadas.
+
+Essa organização reduziria o acoplamento e facilitaria testes e manutenção.
 
 ---
 
-# Motivação
+# Melhorias planejadas
 
-O **Kian_Inventario** foi desenvolvido a partir de uma necessidade real encontrada no ambiente corporativo.
+## Arquitetura
 
-O gerenciamento de equipamentos e materiais de TI pode rapidamente se tornar complexo quando realizado através de planilhas, mensagens, e-mails ou controles paralelos.
+- [ ] Criar camada de Services;
+- [ ] Criar camada de Repositories;
+- [ ] Reduzir responsabilidades dos Controllers;
+- [ ] Centralizar regras de negócio;
+- [ ] Implementar tratamento global de exceções;
+- [ ] Criar validações reutilizáveis;
+- [ ] Reorganizar estrutura do projeto;
+- [ ] Aplicar princípios SOLID onde fizer sentido.
 
-O projeto busca centralizar esse processo dentro de uma única aplicação.
+## Segurança
 
-Com isso, torna-se possível identificar com maior facilidade:
+- [ ] Migrar configurações sensíveis para `.env`;
+- [ ] Implementar hash seguro de senhas;
+- [ ] Revisar autenticação;
+- [ ] Implementar autorização baseada em roles;
+- [ ] Implementar Rate Limiting;
+- [ ] Adicionar Helmet;
+- [ ] Implementar proteção CSRF;
+- [ ] Revisar cookies e sessões;
+- [ ] Remover informações sensíveis do histórico do Git.
 
-```text
-Quem solicitou?
-        │
-        ▼
-Quem aprovou?
-        │
-        ▼
-Qual equipamento foi entregue?
-        │
-        ▼
-Quem está utilizando?
-        │
-        ▼
-Quando deverá ser devolvido?
-        │
-        ▼
-O equipamento foi devolvido?
-        │
-        ▼
-Qual é a quantidade disponível?
+## Banco de dados
+
+- [ ] Criar migrations;
+- [ ] Criar seeds;
+- [ ] Revisar relacionamentos;
+- [ ] Criar constraints adequadas;
+- [ ] Revisar índices;
+- [ ] Padronizar consultas;
+- [ ] Separar acesso ao banco das regras de negócio.
+
+## Qualidade
+
+- [ ] Implementar testes unitários;
+- [ ] Implementar testes de integração;
+- [ ] Criar testes end-to-end;
+- [ ] Adicionar ESLint;
+- [ ] Adicionar Prettier;
+- [ ] Criar padrões de código;
+- [ ] Automatizar validações através do CI.
+
+## Infraestrutura
+
+- [ ] Criar Dockerfile;
+- [ ] Criar Docker Compose;
+- [ ] Criar configuração separada por ambiente;
+- [ ] Criar pipeline de CI/CD;
+- [ ] Automatizar deploy;
+- [ ] Criar health checks.
+
+## Observabilidade
+
+- [ ] Implementar logs estruturados;
+- [ ] Criar registros de auditoria;
+- [ ] Monitorar erros;
+- [ ] Monitorar execução de jobs;
+- [ ] Criar métricas da aplicação.
+
+## Interface
+
+- [ ] Modernizar a experiência do usuário;
+- [ ] Melhorar responsividade;
+- [ ] Criar dashboard;
+- [ ] Adicionar indicadores;
+- [ ] Melhorar pesquisas e filtros;
+- [ ] Padronizar componentes visuais.
+
+---
+
+# Segurança
+
+Informações sensíveis não devem permanecer diretamente no código-fonte.
+
+É recomendado utilizar variáveis de ambiente.
+
+Exemplo:
+
+```env
+PORT=3000
+
+DB_HOST=localhost
+DB_PORT=3306
+DB_DATABASE=kian_inventory
+DB_USER=usuario
+DB_PASSWORD=senha
+
+SESSION_SECRET=altere-esta-chave
+
+SMTP_HOST=smtp.office365.com
+SMTP_PORT=587
+SMTP_USER=email@empresa.com
+SMTP_PASSWORD=senha
 ```
 
-Além de melhorar o processo operacional, a aplicação fornece maior rastreabilidade e organização das informações.
+E no `.gitignore`:
+
+```gitignore
+node_modules/
+
+.env
+.env.*
+
+logs/
+```
+
+Senhas de usuários também devem ser armazenadas utilizando algoritmos seguros de hash, como:
+
+```text
+bcrypt
+```
+
+ou:
+
+```text
+Argon2
+```
+
+---
+
+# Contexto do desenvolvimento
+
+O **Kian_Inventario não nasceu como um produto comercial ou como uma plataforma genérica de inventário**.
+
+Ele foi desenvolvido para solucionar um problema específico encontrado no dia a dia da operação.
+
+A prioridade inicial foi:
+
+```text
+Identificar o problema
+        │
+        ▼
+Criar uma solução funcional
+        │
+        ▼
+Colocar a solução em utilização
+        │
+        ▼
+Validar o processo na prática
+```
+
+Essa abordagem permitiu transformar rapidamente uma necessidade operacional em uma aplicação funcional.
+
+Ao mesmo tempo, isso significa que diversas decisões arquiteturais podem e devem ser revistas em uma futura versão.
+
+O projeto representa, portanto, tanto uma solução utilizada em um cenário real quanto uma base para estudos e evolução em temas como:
+
+- Arquitetura de software;
+- Segurança;
+- Design de APIs;
+- Qualidade de código;
+- Testes;
+- Observabilidade;
+- DevOps;
+- Escalabilidade;
+- Manutenibilidade.
 
 ---
 
 # Aprendizados
 
-O desenvolvimento deste projeto envolve conceitos importantes de desenvolvimento de software, incluindo:
+O projeto permitiu trabalhar com conceitos como:
 
 - Desenvolvimento backend com Node.js;
-- Construção de aplicações web com Express;
-- Renderização server-side com EJS;
-- Modelagem de banco de dados relacional;
-- Integração com MySQL;
-- Controle de sessões;
+- Express;
+- Aplicações server-side;
+- EJS;
+- MySQL;
+- Modelagem de dados;
+- Sessões;
 - Autenticação;
-- Controle de permissões;
-- Integração SMTP;
+- Fluxos de aprovação;
+- Automação de processos;
+- SMTP;
+- Tarefas agendadas;
 - Manipulação de datas;
-- Execução de tarefas agendadas;
-- Geração de arquivos Excel;
-- Organização de aplicações utilizando conceitos de MVC;
-- Automação de processos corporativos;
-- Desenvolvimento orientado à resolução de problemas reais.
+- Exportação de dados;
+- Resolução de problemas reais através de software.
+
+Um dos principais aprendizados também foi perceber que **uma solução funcional não significa necessariamente uma solução arquiteturalmente madura**.
+
+A evolução do projeto passa justamente por transformar uma implementação inicialmente orientada à resolução rápida do problema em uma aplicação mais organizada, segura, testável e sustentável.
 
 ---
 
-# Contexto corporativo
+# Status do projeto
 
-O projeto foi originalmente criado para auxiliar processos internos relacionados ao gerenciamento de recursos de Tecnologia da Informação.
+```text
+Status: funcional / em evolução
+```
 
-Por esse motivo, informações sensíveis relacionadas à infraestrutura, usuários, banco de dados, credenciais ou ambiente corporativo não devem fazer parte do repositório público.
+A aplicação foi utilizada para atender ao problema para o qual foi originalmente desenvolvida.
 
-O código disponibilizado deve conter apenas as informações necessárias para demonstrar a arquitetura, funcionalidades e conceitos utilizados no desenvolvimento.
+Atualmente, o projeto pode ser considerado uma **versão funcional inicial**, que serve como base para uma futura refatoração e evolução arquitetural.
+
+```text
+Problema real
+     │
+     ▼
+Solução funcional
+     │
+     ▼
+Validação no uso real
+     │
+     ▼
+Refatoração
+     │
+     ▼
+Melhoria arquitetural
+     │
+     ▼
+Maior segurança
+     │
+     ▼
+Maior manutenibilidade
+```
 
 ---
 
@@ -790,33 +674,24 @@ https://github.com/phaaael
 
 ---
 
-# Licença
+# Considerações finais
 
-O projeto utiliza atualmente a licença definida no arquivo `package.json`.
+O **Kian_Inventario** demonstra a utilização do desenvolvimento de software para resolver uma necessidade concreta do ambiente corporativo.
 
-Caso o projeto permaneça disponível publicamente, recomenda-se adicionar um arquivo `LICENSE` específico ao repositório.
+Mais do que apresentar uma aplicação finalizada, o projeto também representa um processo de evolução técnica.
 
----
+A primeira etapa foi resolver o problema.
 
-# Status do projeto
+A próxima é evoluir a solução.
 
-```text
-Projeto funcional
-│
-├── Gestão de usuários
-├── Gestão de equipamentos
-├── Controle de empréstimos
-├── Gestão de suprimentos
-├── Controle de estoque
-├── Fluxo de aprovação
-├── Notificações
-└── Exportação de dados
-```
+O objetivo das futuras versões é melhorar progressivamente:
 
-O projeto continua disponível para evolução arquitetural, melhorias de segurança e modernização da experiência do usuário.
+- Arquitetura;
+- Segurança;
+- Qualidade;
+- Testabilidade;
+- Observabilidade;
+- Manutenção;
+- Escalabilidade.
 
----
-
-## Kian_Inventario
-
-**Transformando o controle de ativos e suprimentos de TI em um processo centralizado, rastreável e eficiente.**
+Dessa forma, o projeto deixa de ser apenas uma solução pontual e passa também a servir como base para aplicar boas práticas modernas de Engenharia de Software.
